@@ -1,0 +1,12 @@
+module light.gestion_ecole {
+    requires javafx.controls;
+    requires javafx.fxml;
+
+    requires com.dlsc.formsfx;
+    requires org.kordamp.bootstrapfx.core;
+
+    opens light.gestion_ecole to javafx.fxml;
+    exports light.gestion_ecole;
+    exports light.gestion_ecole.Controller;
+    opens light.gestion_ecole.Controller to javafx.fxml;
+}
