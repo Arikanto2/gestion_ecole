@@ -4,6 +4,8 @@ module light.gestion_ecole {
 
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+    requires java.sql;
+    requires javafx.graphics;
 
     opens light.gestion_ecole to javafx.fxml;
     exports light.gestion_ecole;

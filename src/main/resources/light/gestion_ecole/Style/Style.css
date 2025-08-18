@@ -1,0 +1,93 @@
+#sidebar{
+    -fx-border-color: #9ca6c5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-width: 1;
+
+    -fx-background-color: linear-gradient(to bottom, #e6f7ff, rgb(255, 255, 255));
+
+
+}
+#sidebar Label {
+    -fx-text-fill: rgba(30, 39, 45, 0.91);
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 15;
+}
+#useLettre{
+    -fx-font-size: 25;
+}
+#userImage{
+    -fx-background-color: white;
+}
+.conteneur{
+    -fx-border-color: #9ca6c5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-width: 1;
+    -fx-background-color: #ffffff;
+}
+#entete{
+    -fx-border-color: transparent transparent #9ca6c5 transparent;
+    /*-fx-background-color: linear-gradient(to right, #e6f7ff, rgb(255, 255, 255));*/
+}
+.labelEntete {
+    -fx-font-family: "Goudy Old Style";
+    -fx-font-size: 16;
+    -fx-text-fill: rgba(6, 56, 86, 0.91);
+}
+#footer{
+    -fx-border-color:  #9ca6c5 transparent transparent transparent;
+}
+#Faneva Label{
+    -fx-font-family: "Goudy Old Style";
+    -fx-font-size: 18;
+    -fx-text-fill: rgba(65, 3, 13, 0.91);
+}
+
+#bgimage{
+    -fx-opacity: 0.5;
+}
+#anneeScolaire{
+    -fx-font-family: "Castellar";
+    -fx-font-size: 35;
+}
+#boutonImport{
+    -fx-background-color: linear-gradient(to right, rgb(220, 245, 208), rgb(255, 255, 255));
+    -fx-pref-width: 70;
+}
+#boutonImport:hover{
+    -fx-background-color: white;
+    -fx-text-fill: rgba(9, 102, 155);
+    -fx-underline: true;
+    -fx-font-size: 13;
+
+}
+#boutonExport:hover{
+    -fx-background-color: white;
+    -fx-text-fill: rgba(9, 102, 155);
+    -fx-underline: true;
+    -fx-font-size: 13;
+
+}
+#boutonExport{
+    -fx-background-color: linear-gradient(to right, rgba(227, 82, 11, 0.3), rgb(255, 255, 255));
+    -fx-pref-width: 70;
+}
+.menuRapid{
+    -fx-font-family: "Book Antiqua";
+    -fx-font-size: 14;
+    -fx-text-fill: rgb(124, 46, 4);
+
+
+
+}
+
+.menuRapid:hover{
+    -fx-text-fill: rgb(220, 245, 208);
+    -fx-underline: true;
+}
+
+#nomUtilisateur:hover{
+    -fx-text-fill: rgb(220, 245, 208);
+    -fx-underline: true;
+}

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="light.gestion_ecole.Controller.AccueilController"
+            prefHeight="400.0" prefWidth="600.0" fx:id="accueilview">
+    <top>
+        <HBox spacing="20">
+            <BorderPane.margin>
+                <Insets left="25" top="10"/>
+            </BorderPane.margin>
+            <Button text="Importer" id="boutonImport">
+                <tooltip>
+                    <Tooltip text="Importer un fichier de mise à jour pour synchroniser la base de données locale."/>
+                </tooltip>
+            </Button>
+            <Button text="Exporter" id="boutonExport">
+                <tooltip>
+                    <Tooltip text="Exporter les modifications locales vers un fichier pour mise à jour sur une autre machine."/>
+                </tooltip>
+            </Button>
+        </HBox>
+    </top>
+    <center>
+        <StackPane alignment="CENTER">
+            <ImageView fitWidth="500" fitHeight="450" preserveRatio="true" id="bgimage">
+                <image>
+                    <Image url="@../Photo/téléchargement.jpeg"/>
+                </image>
+            </ImageView>
+            <VBox alignment="TOP_CENTER" spacing="80">
+                <StackPane.margin>
+                    <Insets top="100"/>
+                </StackPane.margin>
+                <Label text="ANNEE SCOLAIRE 2025-2026" id="anneeScolaire"/>
+                <HBox spacing="30" alignment="CENTER">
+                    <Label text="Ajouter un éléve" styleClass="menuRapid"/>
+                    <Label text="Attribuer un note" styleClass="menuRapid"/>
+                    <Label text="Pointage" styleClass="menuRapid"/>
+                    <Label text="Emploi du temps" styleClass="menuRapid"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </center>
+
+
+</BorderPane>
