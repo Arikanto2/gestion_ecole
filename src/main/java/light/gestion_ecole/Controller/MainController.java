@@ -16,11 +16,12 @@ public class MainController {
     @FXML HBox menuAccueil;
     @FXML HBox menuStat;
     @FXML HBox menuEleve;
+    @FXML HBox menuProf;
 
     private List<HBox> tousLesMenus;
     @FXML
     public void initialize() {
-        tousLesMenus = List.of(menuAccueil,menuStat,menuEleve);
+        tousLesMenus = List.of(menuAccueil,menuStat,menuEleve,menuProf);
 
         try {
             FXMLLoader vue = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Accueil-View.fxml"));
@@ -53,10 +54,20 @@ public class MainController {
         });
         menuEleve.setOnMouseClicked(e -> {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Statistique-View.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Eleve-View.fxml"));
                 Node node = loader.load();
                 afficheView(node);
                 styliserMenu(menuEleve);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        menuProf.setOnMouseClicked(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Professeur-View.fxml"));
+                Node node = loader.load();
+                afficheView(node);
+                styliserMenu(menuProf);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

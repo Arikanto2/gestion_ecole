@@ -2,7 +2,7 @@ package light.gestion_ecole.DAO;
 
 
 import light.gestion_ecole.Model.Eleve;
-import light.gestion_ecole.Utils.Database;
+import light.gestion_ecole.DAO.Database;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
