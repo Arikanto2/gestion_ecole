@@ -94,7 +94,7 @@
 }
 /* Style Tolotra*/
 .table-view {
-    -fx-background-color: #ffffff;
+    -fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff);
     -fx-border-color: #dcdde1;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
@@ -156,5 +156,38 @@
 #detailsPane .label:filled {
     -fx-font-weight: bold;
     -fx-text-fill: #2980b9;
+}
+#btnAjouter {
+    -fx-font-size: 14px;
+    -fx-background-color: linear-gradient(to right,#0088cc,#1f6391);
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 50px;
+}
+#btnAjouter:hover{
+    -fx-background-color: linear-gradient(to right,#80d4ff,#2980b9);
+    -fx-text-fill: #00111a;
+    -fx-border-radius: 50px;
+}
+#btnModifier{
+    -fx-background-color: linear-gradient(to right,#0088cc,#2980b9);
+    -fx-font-size: 14px;
+    -fx-border-radius: 50px;
+    -fx-text-fill: #ffffff;
+}
+#btnModifier:hover{
+    -fx-border-radius: 50px;
+    -fx-background-color: linear-gradient(to left,#80d4ff,#2980b9);
+    -fx-text-fill: #00111a;
+}
+#btnNewEleve{
+    -fx-background-color: linear-gradient(to left, #2980b9, #0088cc);
+    -fx-border-radius: 120px;
+    -fx-text-fill: White;
+    -fx-font-size: 12px;
+}
+#btnNewEleve:hover{
+    -fx-background-color: linear-gradient(to left, #0088cc,#80d4ff);
+    -fx-text-fill: black;
+    -fx-border-radius: 120px;
 }
 /*Style Princy*/
