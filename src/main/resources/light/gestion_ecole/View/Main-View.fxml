@@ -82,7 +82,7 @@
                         </HBox.margin>
                     </Label>
                 </HBox>
-                <HBox alignment="TOP_LEFT" spacing="5">
+                <HBox alignment="TOP_LEFT" spacing="5" fx:id="menuClasse">
                     <ImageView fitWidth="25" fitHeight="25" preserveRatio="true">
                         <image>
                             <Image url="@../Photo/icons8-school-96.png"/>
@@ -108,7 +108,7 @@
                 </HBox>
                 <HBox alignment="CENTER">
                     <VBox.margin>
-                        <Insets top="45"/>
+                        <Insets top="180"/>
                     </VBox.margin>
                     <ImageView fitWidth="25" fitHeight="25" preserveRatio="true">
                         <image>
@@ -159,8 +159,9 @@
 
                     <Region HBox.hgrow="ALWAYS"/>
                     <VBox alignment="CENTER" id="Faneva">
-                        <Label text='"I can do all things in Him who strengthens me"'/>
-                        <Label text="Philippians 4:13"/>
+                        <Label text='"Mba ho tahaka ny zava-maniry maroroka ny zanakay lahy, ary ho tahaka ny  vatofehizoro '/>
+                        <Label text='voasoratra tsara toy ny fomban’ny  lapan’Andriana ny  zanakay vavy "'/>
+                        <Label text="Salamo 144:12"/>
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
                     <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
