@@ -1,8 +1,15 @@
 package light.gestion_ecole.Model;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import light.gestion_ecole.DAO.EleveDAO;
 
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 
 public class Eleve {
     private SimpleBooleanProperty selected;
@@ -19,13 +26,14 @@ public class Eleve {
     private String anneescolaire;
     private Boolean ispassant;
     private Boolean examennational;
+    private String handicap;
 
-    public Eleve(/*String idEleve,*/ String matricule,int idattitude, int idclass, int idparent,
+    public Eleve(String idEleve, String matricule,int idclass, int idparent,
                  String nom, String prenom, String adresse, Date datenaiss, String sex,
-                 String annee_scolaire, Boolean ispassant, Boolean examennational) {
-        //this.ideleve = idEleve;
+                 String annee_scolaire, Boolean ispassant, Boolean examennational,String handicap) {
+        this.ideleve = idEleve;
         this.nummat = matricule;
-        this.idattitude = idattitude;
+        //this.idattitude = idattitude;
         this.idclass = idclass;
         this.idparent = idparent;
         this.nomeleve = nom;
@@ -36,6 +44,7 @@ public class Eleve {
         this.anneescolaire = annee_scolaire;
         this.ispassant = ispassant;
         this.examennational = examennational;
+        this.handicap = handicap;
     }
 
     public String getIdeleve() {
@@ -86,15 +95,40 @@ public class Eleve {
     public void setAdresseeleve(String adresseeleve) {
         this.adresseeleve = adresseeleve;
     }
-    public Date getDatenaissance() {
+    public String getDatenaissance() {
+        SimpleDateFormat sdf = new SimpleDateFormat("d MMMM yyyy", Locale.FRENCH);
+        return sdf.format(datenaissance);
+    }
+    public Date getDatenaissance2() {
         return datenaissance;
     }
     public void setDatenaissance(Date datenaissance) {
         this.datenaissance = datenaissance;
     }
+    public ImageView getGenreeleveIcon() {
+        String path;
+        if(genreeleve.trim().equalsIgnoreCase("Garçon")) {
+            path = "/light/gestion_ecole/Photo/male2.png";
+        }else{
+            path = "/light/gestion_ecole/Photo/female2.png";
+        }
+        var is = getClass().getResourceAsStream(path);
+
+        if(is == null) {
+            System.err.println("Image genre eleve introuvable");
+            return new ImageView();
+        }
+        Image image = new Image(is);
+        ImageView genreeleve = new ImageView(image);
+        genreeleve.setFitHeight(30);
+        genreeleve.setFitWidth(25);
+        genreeleve.setPreserveRatio(true);
+        return genreeleve;
+    }
     public String getGenreeleve() {
         return genreeleve;
     }
+
     public void setGenreeleve(String genreeleve) {
         this.genreeleve = genreeleve;
     }
@@ -104,16 +138,33 @@ public class Eleve {
     public void setAnneescolaire(String anneescolaire) {
         this.anneescolaire = anneescolaire;
     }
-    public Boolean getIspassant() {
-        return ispassant;
+    public String getIspassant() {
+        if (ispassant)
+            return "Passant";
+        else
+            return "Redoublant";
     }
     public void setIspassant(Boolean ispassant) {
         this.ispassant = ispassant;
     }
-    public Boolean getExamennational() {
-        return examennational;
+    public String getExamennational() {
+        if (examennational)
+            return "reussi";
+        else
+            return "Pas encore";
     }
     public void setExamennational(Boolean examennational) {
         this.examennational = examennational;
+    }
+    public String getClasse() throws SQLException {
+        String classe = EleveDAO.getDistinctClasse(idclass);
+        return String.valueOf(classe);
+    }
+    public String getHandicap(){
+        if(handicap==null){
+            return "Non handicap";
+        } else {
+            return handicap;
+        }
     }
 }

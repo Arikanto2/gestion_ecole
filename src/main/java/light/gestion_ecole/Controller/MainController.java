@@ -2,6 +2,7 @@ package light.gestion_ecole.Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -22,8 +23,11 @@ public class MainController {
     private List<HBox> tousLesMenus;
     @FXML
     public void initialize() {
-        tousLesMenus = List.of(menuAccueil,menuStat,menuEleve,menuProf,menuClasse);
 
+        tousLesMenus = List.of(menuAccueil,menuStat,menuEleve,menuProf,menuClasse);
+        tousLesMenus.forEach(menu -> {
+            menu.setCursor(Cursor.HAND);
+        });
         try {
             FXMLLoader vue = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Accueil-View.fxml"));
             Node vueNode = vue.load();
