@@ -10,6 +10,8 @@ module light.gestion_ecole {
     requires java.sql;
     requires java.desktop;
 
+    requires com.dustinredmond.fxalert;
+
     opens light.gestion_ecole to javafx.fxml;
     opens light.gestion_ecole.Controller to javafx.fxml;
     opens light.gestion_ecole.Model to javafx.base;

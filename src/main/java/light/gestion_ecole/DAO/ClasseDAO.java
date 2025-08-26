@@ -71,7 +71,7 @@ public class ClasseDAO {
     public ObservableList<String> getdesignationclasse() throws SQLException {
         ObservableList<String> classes = FXCollections.observableArrayList();
         String sql = "SELECT designation FROM classe " +
-                "where \"Titulaire\" is null";
+                "where \"Titulaire\" is null or \"Titulaire\" = '' ";
         try (Connection conn = Database.connect()){
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
