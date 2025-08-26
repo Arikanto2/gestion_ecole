@@ -36,3 +36,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/src/main/java/light/gestion_ecole/DAO/Database.java

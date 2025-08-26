@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          hgap="15" vgap="15"
+          style="-fx-background-color: #ffffff;
+                 -fx-border-color: #dddddd;
+                 -fx-border-radius: 10;
+                 -fx-background-radius: 10;">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="ID Professeur :" GridPane.rowIndex="0" GridPane.columnIndex="0"
+           style="-fx-font-size: 14px; -fx-text-fill: #444; -fx-font-weight: bold;"/>
+    <TextField fx:id="txtIdProf" GridPane.rowIndex="0" GridPane.columnIndex="1"
+               style="-fx-pref-width: 220px; -fx-padding: 6 10;
+               -fx-background-radius: 6; -fx-border-radius: 6;
+               -fx-border-color: #cccccc; -fx-background-color: #ffffff;"/>
+
+    <Label text="Nom Professeur :" GridPane.rowIndex="1" GridPane.columnIndex="0"
+           style="-fx-font-size: 14px; -fx-text-fill: #444; -fx-font-weight: bold;"/>
+    <TextField fx:id="txtNomProf" GridPane.rowIndex="1" GridPane.columnIndex="1"
+               style="-fx-pref-width: 220px; -fx-padding: 6 10;
+               -fx-background-radius: 6; -fx-border-radius: 6;
+               -fx-border-color: #cccccc; -fx-background-color: #ffffff;"/>
+
+    <Label text="Contact :" GridPane.rowIndex="2" GridPane.columnIndex="0"
+           style="-fx-font-size: 14px; -fx-text-fill: #444; -fx-font-weight: bold;"/>
+    <TextField fx:id="txtContactProf" GridPane.rowIndex="2" GridPane.columnIndex="1"
+               style="-fx-pref-width: 220px; -fx-padding: 6 10;
+               -fx-background-radius: 6; -fx-border-radius: 6;
+               -fx-border-color: #cccccc; -fx-background-color: #ffffff;"/>
+
+    <Label text="Adresse :" GridPane.rowIndex="3" GridPane.columnIndex="0"
+           style="-fx-font-size: 14px; -fx-text-fill: #444; -fx-font-weight: bold;"/>
+    <TextField fx:id="txtAdresseProf" GridPane.rowIndex="3" GridPane.columnIndex="1"
+               style="-fx-pref-width: 220px; -fx-padding: 6 10;
+               -fx-background-radius: 6; -fx-border-radius: 6;
+               -fx-border-color: #cccccc; -fx-background-color: #ffffff;"/>
+
+    <Label text="Email :" GridPane.rowIndex="4" GridPane.columnIndex="0"
+           style="-fx-font-size: 14px; -fx-text-fill: #444; -fx-font-weight: bold;"/>
+    <TextField fx:id="txtEmailProf" GridPane.rowIndex="4" GridPane.columnIndex="1"
+               style="-fx-pref-width: 220px; -fx-padding: 6 10;
+               -fx-background-radius: 6; -fx-border-radius: 6;
+               -fx-border-color: #cccccc; -fx-background-color: #ffffff;"/>
+
+    <Label text="Titulaire :" GridPane.rowIndex="5" GridPane.columnIndex="0"
+           style="-fx-font-size: 14px; -fx-text-fill: #444; -fx-font-weight: bold;"/>
+    <ComboBox fx:id="comboTitulaire" GridPane.rowIndex="5" GridPane.columnIndex="1"
+              style="-fx-pref-width: 220px; -fx-padding: 6 10;
+              -fx-background-radius: 6; -fx-border-radius: 6;
+              -fx-border-color: #cccccc; -fx-background-color: #ffffff;"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="6" GridPane.columnIndex="1">
+        <Button fx:id="btnEnregistrerProf" text="Enregistrer"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 16;"/>
+        <Button fx:id="btnAnnulerProf" text="Annuler"
+                style="-fx-background-color: #f44336; -fx-text-fill: white;
+                -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 16;"/>
+    </HBox>
+</GridPane>
