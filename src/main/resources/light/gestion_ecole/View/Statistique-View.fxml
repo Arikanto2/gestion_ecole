@@ -1,15 +1,203 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="light.gestion_ecole.Controller.StatistiqueController"
             prefHeight="400.0" prefWidth="600.0">
+    <top>
+        <VBox alignment="CENTER" spacing="10">
+            <BorderPane.margin>
+                <Insets top="20" left="155"/>
+            </BorderPane.margin>
+            <HBox spacing="5" alignment="CENTER">
+                <Label text="Statistique Globale de l'Ecole: " styleClass="titre" fx:id="titreStat"/>
+                <Label text="" styleClass="titre" fx:id="titreAnnee"/>
+            </HBox>
+            <ComboBox fx:id="statMnu" prefWidth="150">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="ECOLE"/>
+                        <String fx:value="CLASSE"/>
+                        <String fx:value="ELEVE"/>
+                        <String fx:value="PROFESSEUR"/>
+
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </VBox>
+    </top>
+    <left>
+        <VBox alignment="CENTER" spacing="15" >
+            <padding>
+                <Insets top="10" right="10" bottom="10"/>
+            </padding>
+            <BorderPane.margin>
+                <Insets left="25"/>
+            </BorderPane.margin>
+            <HBox alignment="CENTER_LEFT" styleClass="menuSt" spacing="15" fx:id="effecEL">
+                <padding>
+                    <Insets top="5" right="5"  left="5" bottom="5"/>
+                </padding>
+
+                <StackPane>
+                    <Circle radius="25" stroke="#314480" fill="white" strokeWidth="1"/>
+                    <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
+                        <Image url="@../Photo/icons8-student-96.png" />
+                    </ImageView>
+                </StackPane>
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="" fx:id="nbEleve" styleClass="valuelegende"/>
+                    <Label text="(Effectif des élèves)" styleClass="petitlegende"/>
+                </HBox>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" styleClass="menuSt" spacing="5" fx:id="moyG">
+                <padding>
+                    <Insets top="5" right="5"  left="5" bottom="5"/>
+                </padding>
+                <StackPane>
+                    <Circle radius="25" stroke="#314480" fill="white" strokeWidth="1"/>
+                    <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
+                        <Image url="@../Photo/icons8-percentage-96.png" />
+                    </ImageView>
+                </StackPane>
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="" fx:id="MG" styleClass="valuelegende"/>
+                    <Label text="(Moyenne Générale)" styleClass="petitlegende"/>
+                </HBox>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" styleClass="menuSt" spacing="5" fx:id="TXREU">
+                <padding>
+                    <Insets top="5" right="5"  left="5" bottom="5"/>
+                </padding>
+                <StackPane>
+                    <Circle radius="25" stroke="#314480" fill="white" strokeWidth="1"/>
+                    <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
+                        <Image url="@../Photo/icons8-rank-96.png" />
+                    </ImageView>
+                </StackPane>
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="" fx:id="TX" styleClass="valuelegende"/>
+                    <Label text="(Taux de reussite)" styleClass="petitlegende" fx:id="TX1"/>
+                </HBox>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" styleClass="menuSt" spacing="5" fx:id="AssI">
+                <padding>
+                    <Insets top="5" right="5"  left="5" bottom="5"/>
+                </padding>
+                <StackPane>
+                    <Circle radius="25" stroke="#314480" fill="white" strokeWidth="1"/>
+                    <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
+                        <Image url="@../Photo/icons8-confusion-96.png" />
+                    </ImageView>
+                </StackPane>
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="" fx:id="CM" styleClass="valuelegende"/>
+                    <Label text="(Assiduité&#10;des élèves)" styleClass="petitlegende" />
+                </HBox>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" styleClass="menuSt" spacing="5" fx:id="EXA">
+                <padding>
+                    <Insets top="5" right="5"  left="5" bottom="5"/>
+                </padding>
+                <StackPane>
+                    <Circle radius="25" stroke="#314480" fill="white" strokeWidth="1"/>
+                    <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
+                        <Image url="@../Photo/icons8-test-80.png" />
+                    </ImageView>
+                </StackPane>
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="" fx:id="EXAM" styleClass="valuelegende"/>
+                    <Label text="(Réussite aux &#10; examens nationaux)" styleClass="petitlegende" fx:id="EXAM1"/>
+                </HBox>
+            </HBox>
+        </VBox>
+    </left>
+    <center>
+        <BorderPane id="ChartView">
+            <BorderPane.margin>
+                <Insets top="20" bottom="15" left="10" />
+            </BorderPane.margin>
+            <top>
+                <HBox alignment="CENTER">
+                    <BorderPane.margin>
+                        <Insets top="15"/>
+                    </BorderPane.margin>
+                    <Label text="GRAPH" styleClass="courbe"/>
+
+                </HBox>
+            </top>
+            <center>
+                <HBox alignment="CENTER" spacing="10">
+                    <HBox fx:id="PaneChart"  prefWidth="400" prefHeight="400"/>
+                    <VBox spacing="5" alignment="TOP_RIGHT" fx:id="legendEffec">
+                        <HBox.margin>
+                            <Insets top="110"/>
+                        </HBox.margin>
+                        <VBox spacing="5">
+                            <Label text="Handicape (ESH)" styleClass="handicap"/>
+                            <VBox spacing="5">
+                                <VBox.margin>
+                                    <Insets left="20"/>
+                                </VBox.margin>
+                                <HBox spacing="5">
+                                    <Label text="Audition:" styleClass="fz"/>
+                                    <Label text="" styleClass="fz" fx:id="audition"/>
+                                </HBox>
+                                <HBox spacing="5">
+                                    <Label text="Vision:" styleClass="fz"/>
+                                    <Label text="" styleClass="fz" fx:id="vision"/>
+                                </HBox>
+                                <HBox spacing="5">
+                                    <Label text="Intelectuel:" styleClass="fz"/>
+                                    <Label text="" styleClass="fz" fx:id="intel"/>
+                                </HBox>
+                                <HBox spacing="5">
+                                    <Label text="Psychomoteur:" styleClass="fz"/>
+                                    <Label text="" styleClass="fz" fx:id="psycho"/>
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                        <HBox spacing="5">
+                            <Label text="Renvoyé:" styleClass="handicap"/>
+                            <Label text="" fx:id="renv" styleClass="fz"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
 
 
-</AnchorPane>
+            </center>
+        </BorderPane>
+    </center>
+    <right>
+
+        <VBox spacing="10">
+            <BorderPane.margin>
+                <Insets top="20" right="10" />
+            </BorderPane.margin>
+            <padding>
+                <Insets left="10" />
+            </padding>
+
+            <VBox>
+                <Label text="Années scolaire"/>
+                <ComboBox styleClass="combo" fx:id="anneeScolStat"/>
+            </VBox>
+
+        </VBox>
+    </right>
+
+
+</BorderPane>
