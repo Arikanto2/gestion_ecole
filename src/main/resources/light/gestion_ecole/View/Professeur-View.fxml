@@ -10,6 +10,6 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="light.gestion_ecole.Controller.ProfController"
             prefHeight="400.0" prefWidth="600.0">
-    <Label text="Hello Word"/>
+    <Label text="Hello Word" styleClass="text1"/>
 
 </AnchorPane>
