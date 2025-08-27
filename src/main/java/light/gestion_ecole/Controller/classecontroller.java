@@ -124,7 +124,10 @@ public class classecontroller {
             ComboBox<String> comboprof = (ComboBox<String>) root.lookup("#comboprof");
 
             ProfDAO profDAO = new ProfDAO();
-            comboprof.setItems(profDAO.getprenom());
+            ObservableList<String> profs = profDAO.getprenom();
+            profs.add(0, "");
+            comboprof.setPromptText("Sélectionner un prof...");
+            comboprof.setItems(profs);
 
             Button btnEnregistrer = (Button) root.lookup("#btnEnregistrer");
             Button btnAnnuler = (Button) root.lookup("#btnAnnuler");

@@ -109,8 +109,12 @@ public class ProfController {
            TextField Adresse = (TextField) root.lookup("#txtAdresseProf");
            TextField Email = (TextField) root.lookup("#txtEmailProf");
            ComboBox<String> comboTitulaire = (ComboBox<String>) root.lookup("#comboTitulaire");
+
            ClasseDAO classeDAO = new ClasseDAO();
-           comboTitulaire.setItems(classeDAO.getdesignationclasse());
+           ObservableList<String> classes = classeDAO.getdesignationclasse();
+           classes.add(0, "");
+           comboTitulaire.setPromptText("Sélectionner une classe...");
+           comboTitulaire.setItems(classes);
 
            Button btnEnregistrer = (Button) root.lookup("#btnEnregistrerProf");
            Button btnAnnuler = (Button) root.lookup("#btnAnnulerProf");
@@ -143,17 +147,17 @@ public class ProfController {
                     String contact = Contact.getText();
                     String adresse = Adresse.getText();
                     String email = Email.getText();
+                    String titulaire = comboTitulaire.getValue();
 
                     if (nom == null || contact == null || adresse == null || email == null ) {
                         new Alert(Alert.AlertType.WARNING, "Veuillez remplir tous les champs !").showAndWait();
                         return;
                     }
 
-
                     if (professeurmodifier == null){
                         int idprofs = 0;
                         Professeur newprof = new Professeur(idprofs,nom,contact,adresse,email);
-                        profDAO.ajoutProf(newprof);
+                        profDAO.ajoutProf(newprof,titulaire);
                     }else{
                         String idprof = txtID.getText();
                         int idprofs = Integer.parseInt(idprof);
@@ -162,7 +166,7 @@ public class ProfController {
                         professeurmodifier.setContact(contact);
                         professeurmodifier.setAdresse(adresse);
                         professeurmodifier.setEmail(email);
-                        profDAO.modifieProf(professeurmodifier);
+                        profDAO.modifieProf(professeurmodifier, titulaire);
                     }
                     loadprofs();
                     stage.close();
