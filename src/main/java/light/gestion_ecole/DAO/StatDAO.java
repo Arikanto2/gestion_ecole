@@ -341,6 +341,46 @@ public class StatDAO {
         }
         return moyenne;
     }
+    public static List<List<String>> getEXAMNATPardes(String anneescolaire) {
+        List<List<String>> ex = new ArrayList<>();
+        String sql = "SELECT COUNT(*) as nb, eleve.examennational as exam, classe.designation as classe " +
+                "FROM eleve " +
+                "JOIN classe ON eleve.idclass = classe.idclass " +
+                "WHERE eleve.anneescolaire = ? AND eleve.examennational IS NOT NULL " +
+                "GROUP BY eleve.examennational, classe.designation";
+
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, anneescolaire);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    List<String> ligne = new ArrayList<>();
+                    String classe = rs.getString("classe").trim();
+                    ligne.add(classe);
+
+                    boolean exam = rs.getBoolean("exam");
+                    int nb = rs.getInt("nb");
+
+                    if (exam) {
+                        ligne.add("A-" + nb);
+                    } else {
+                        ligne.add("T-" + nb);
+                    }
+
+                    ex.add(ligne);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        for(List<String> ligne : ex){
+            System.out.println(ligne);
+        }
+        return ex;
+    }
 
 
 }
