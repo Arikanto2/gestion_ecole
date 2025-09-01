@@ -2,15 +2,27 @@ package light.gestion_ecole.Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.chart.*;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.Text;
 import light.gestion_ecole.DAO.StatDAO;
 import java.sql.SQLException;
 import java.util.List;
+
+import static javafx.geometry.Pos.CENTER;
 
 
 public class StatistiqueController {
@@ -67,6 +79,13 @@ public class StatistiqueController {
                     }else{
                         afficherMGparTRimestre();
                     }
+                }else if (statQUI.equals("TXREU")){
+                    if (anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")){
+                        PaneChart.getChildren().clear();
+                        PaneChart.getChildren().add(afficheChartG("Taux"));
+                    }else{
+                        afficheTXAnne();
+                    }
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -95,9 +114,14 @@ public class StatistiqueController {
             styliserMenuStat(moyG);
         });
         TXREU.setOnMouseClicked(event -> {
+            statQUI = "TXREU";
             PaneChart.getChildren().clear();
             try {
-                PaneChart.getChildren().add(afficheChartG("Taux"));
+                if (anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")){
+                    PaneChart.getChildren().add(afficheChartG("Taux"));
+                }else{
+                    afficheTXAnne();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -393,6 +417,86 @@ public class StatistiqueController {
         legendEffec.setManaged(false);
         legendEffec.setVisible(false);
     }
+    public void afficheTXAnne() {
+        String tx = StatDAO.getTauxReussite(anneeScolStat.getSelectionModel().getSelectedItem().toString());
+        PaneChart.getChildren().clear();
+
+        if (!tx.equals("En cours")) {
+            String[] split = tx.split("-");
+            String[] pc = split[0].split("%");
+            String[] pc2 = split[1].split("/");
+            double pourcentage = Double.parseDouble(pc[0].replace(",", "."));
+            int nbpassant = Integer.parseInt(pc2[0]);
+            int nbeleve = Integer.parseInt(pc2[1]);
+
+            double radius = 100;
+
+            Circle circle = new Circle(radius);
+            circle.setFill(Color.TRANSPARENT);
+            circle.setStroke(Color.web("#D9D9D9"));
+            circle.setStrokeWidth(5);
+            Arc arc = new Arc();
+            arc.setRadiusX(radius);
+            arc.setRadiusY(radius);
+            arc.setStartAngle(90); // départ en haut
+            arc.setLength(-(pourcentage * 360) / 100.0);
+            arc.setType(ArcType.OPEN);
+            String col;
+            if (pourcentage < 50) {
+                col = "#E33131"; // rouge
+            } else if (pourcentage < 60) {
+                col = "#F39C12"; // orange clair
+            } else if (pourcentage < 70) {
+                col = "#F1C40F"; // jaune
+            } else if (pourcentage < 80) {
+                col = "#2ECC71"; // vert clair
+            } else if (pourcentage < 90) {
+                col = "#27AE60"; // vert moyen
+            } else {
+                col = "#4CAF50"; // vert foncé
+            }
+            arc.setStroke(Color.web(col));
+            arc.setStrokeWidth(15);
+            arc.setStrokeLineCap(StrokeLineCap.ROUND);
+            arc.setFill(Color.TRANSPARENT);
+            Text txt = new Text(split[0]);
+            Text txtNBElve = new Text("Effectif des élèves:  " + nbeleve);
+            txtNBElve.setFill(Color.web("#213572"));
+            Text txtnpassant = new Text("Passants:  " + nbpassant);
+            txtnpassant.setFill(Color.web("#213572"));
+            Text txtnbredoublant = new Text("Redoublants:  " + (nbeleve - nbpassant));
+            txtnbredoublant.setFill(Color.web("#213572"));
+            VBox h = new VBox(txtNBElve, txtnpassant, txtnbredoublant);
+            h.setAlignment(Pos.CENTER_LEFT);
+            h.setStyle("-fx-font-family: \"Book Antiqua\";\n" +
+                    "    -fx-font-size: 14;\n");
+            txt.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #213572;");
+            Pane p = new Pane();
+            p.getChildren().addAll(circle,arc,txt);
+            txt.setLayoutX(-35);
+            txt.setLayoutY(12);
+
+
+
+            PaneChart.getChildren().addAll(p,h);
+            PaneChart.setMargin(p,new Insets(180,150,0,200));
+
+        } else {
+            Text encours = new Text("En cours...");
+            encours.setFill(Color.web("#213572"));
+            encours.setStyle("-fx-font-family: \"Book Antiqua\";\n" +
+                    "    -fx-font-size: 30;\n" +
+                    "    -fx-text-fill: rgba(6, 56, 86, 0.91);");
+
+            PaneChart.getChildren().add(encours);
+
+        }
+
+        legendEffec.setManaged(false);
+        legendEffec.setVisible(false);
+    }
+
+
 
 
 }
