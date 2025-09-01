@@ -133,4 +133,29 @@ public class EleveDAO {
         }
         return 0;
     }
+
+
+    // pour pdf eleve
+
+    public List<Eleve> getalleleveinclasse(String designation) throws SQLException {
+        List<Eleve> ele_pdf = new ArrayList<>();
+        String sql = "SELECT Row_number() Over (Order by e.nomeleve ASC ) AS numero, e.nomeleve, e.prenomeleve FROM classe c " +
+                "join eleve e on c.idclass = e.idclass " +
+                "where c.designation = ? " +
+                "Order by e.nomeleve Asc";
+        try (Connection conn = Database.connect();
+        PreparedStatement ps = conn.prepareStatement(sql); ){
+            ps.setString(1,designation);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ele_pdf.add(new Eleve(
+                   rs.getInt("numero"),
+                   rs.getString("nomeleve"),
+                   rs.getString("prenomeleve")
+                ));
+            }
+        }
+        return ele_pdf;
+    }
 }

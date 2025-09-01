@@ -58,8 +58,10 @@ public class ProfDAO {
 
     }
 
-    public void modifieProf(Professeur p, String titulaire) throws  SQLException{
+    public void modifieProf(Professeur p, String titulaire, String oldtitulaire) throws  SQLException{
         String sql = "UPDATE professeur SET nomprof = ?, contactprof = ?,  adresseprof = ?, emailprof = ? WHERE idprof = ?";
+        String sql2 = "UPDATE classe SET \"Titulaire\" = ? WHERE designation = ?";
+        String sql3 = "UPDATE classe SET \"Titulaire\" = '' WHERE designation = ?";
         try(Connection conn = Database.connect();
         PreparedStatement stmt = conn.prepareStatement(sql)){
           stmt.setString(1, p.getNom());
@@ -68,6 +70,17 @@ public class ProfDAO {
           stmt.setString(4, p.getEmail());
           stmt.setInt(5, p.getIdprof());
           stmt.executeUpdate();
+
+          if (titulaire != oldtitulaire ) {
+              try (PreparedStatement upstmt = conn.prepareStatement(sql2);
+                   PreparedStatement upstmt2 = conn.prepareStatement(sql3)) {
+                  upstmt.setString(1, p.getNom());
+                  upstmt.setString(2, titulaire);
+                  upstmt2.setString(1, oldtitulaire);
+                  upstmt.executeUpdate();
+                  upstmt2.executeUpdate();
+              }
+          }
         }
     }
 
@@ -83,7 +96,9 @@ public class ProfDAO {
     //pour profs dans classe (combobox)
     public ObservableList<String> getprenom() throws SQLException {
         ObservableList<String> prenoms = FXCollections.observableArrayList();
-        String sql = "SELECT nomprof FROM professeur ";
+        String sql = "SELECT p.nomprof FROM professeur p "+
+                "LEFT JOIN classe c on p.nomprof = c.\"Titulaire\" " +
+                "WHERE c.\"Titulaire\" is null";
         try (Connection conn = Database.connect()){
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);

@@ -11,9 +11,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.geometry.Pos;
+import javafx.util.Duration;
 import light.gestion_ecole.DAO.ClasseDAO;
 import light.gestion_ecole.DAO.ProfDAO;
 import light.gestion_ecole.Model.Classe;
+import org.controlsfx.control.Notifications;
 
 import java.sql.SQLException;
 
@@ -37,7 +40,6 @@ public class classecontroller {
     @FXML
     private Button btnSupprimer;
 
-
     private ClasseDAO classeDAO = new ClasseDAO();
 
     @FXML
@@ -55,26 +57,52 @@ public class classecontroller {
         btnModifier.setOnAction(e -> {
             Classe selected = tableView.getSelectionModel().getSelectedItem();
             if (selected != null) ouvrirFormulaire(selected);
-            else new Alert(Alert.AlertType.WARNING, "Sélectionnez une classe à modifier !").showAndWait();
+            else showWarning("Sélectionnez une classe à modifier !");
         });
 
         btnSupprimer.setOnAction(e -> {
             Classe selected = tableView.getSelectionModel().getSelectedItem();
             if (selected != null) {
-                Alert conf = new Alert(Alert.AlertType.CONFIRMATION, "Supprimer cette classe ?", ButtonType.YES, ButtonType.NO);
-                conf.showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.YES) {
+                // Création d'un Dialog de confirmation
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("Confirmation");
+                dialog.setHeaderText("Supprimer cette classe ?");
+                dialog.initOwner(btnSupprimer.getScene().getWindow());
+
+                // Boutons Oui / Non
+                ButtonType yesButton = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
+                ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(yesButton, noButton);
+
+                // Centrer le dialog
+                dialog.getDialogPane().setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
+
+                dialog.showAndWait().ifPresent(response -> {
+                    if (response == yesButton) {
                         try {
                             classeDAO.supprimerClasse(selected.getIdClasse());
                             loadclasse();
+                            showSuccess("Classe supprimée avec succès !");
                         } catch (SQLException ex) {
                             ex.printStackTrace();
+                            showError("Erreur lors de la suppression : " + ex.getMessage());
                         }
                     }
                 });
             } else {
-                new Alert(Alert.AlertType.WARNING, "Sélectionnez une classe à supprimer !").showAndWait();
+                showWarning("Sélectionnez une classe à supprimer !");
             }
+    });
+
+        tableView.setRowFactory(tv -> {
+            TableRow<Classe> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    Classe selected = row.getItem();
+                    ouvrirlisteEleves(selected);
+                }
+            });
+            return row;
         });
     }
 
@@ -83,8 +111,7 @@ public class classecontroller {
 
         FilteredList<Classe> filteredClasse = new FilteredList<>(liste, e -> true);
 
-        //ecoute de searchfield
-
+        // écoute du searchField
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredClasse.setPredicate(classe -> {
                 if (newValue == null || newValue.isEmpty()) {
@@ -105,13 +132,11 @@ public class classecontroller {
             });
         });
 
-
         SortedList<Classe> sortedClasse = new SortedList<>(filteredClasse);
         sortedClasse.comparatorProperty().bind(tableView.comparatorProperty());
 
         tableView.setItems(sortedClasse);
     }
-
 
     private void ouvrirFormulaire(Classe classeAModifier) {
         try {
@@ -132,23 +157,19 @@ public class classecontroller {
             Button btnEnregistrer = (Button) root.lookup("#btnEnregistrer");
             Button btnAnnuler = (Button) root.lookup("#btnAnnuler");
 
-            comboDesignation.getItems().addAll("11eme", "10eme", "CE",
+            comboDesignation.getItems().addAll("12eme","11eme", "10eme", "CE",
                     "CM1", "CM2", "6eme",
                     "5eme", "4eme", "3eme",
-                    "Seconde", "Première", "Terminale");
+                    "Seconde", "Première", "TA", "TC", "TD");
 
             if (classeAModifier == null){
                 txtID.setDisable(true);
             }
             if (classeAModifier != null) {
                 txtID.setText(String.valueOf(classeAModifier.getIdClasse()));
-
                 comboDesignation.setValue(classeAModifier.getDesignation());
-
                 txtPrix.setText(String.valueOf(classeAModifier.getPrixEcolage()));
-
                 comboprof.setValue(classeAModifier.getTitulaire());
-
                 txtID.setEditable(false);
             }
 
@@ -166,39 +187,91 @@ public class classecontroller {
                     String prof = comboprof.getValue();
 
                     if (designation == null || prixStr.isEmpty()) {
-                        new Alert(Alert.AlertType.WARNING, "Veuillez remplir tous les champs !").showAndWait();
+                        showWarning("Veuillez remplir tous les champs !");
                         return;
                     }
-
 
                     double prix = Double.parseDouble(prixStr);
 
                     if (classeAModifier == null) {
-                        int idclass = 0;
-                        Classe nouvelleClasse = new Classe(idclass,designation, prof,prix);
+                        Classe nouvelleClasse = new Classe(0, designation, prof, prix);
                         classeDAO.ajouterClasse(nouvelleClasse);
+                        showSuccess("Classe ajoutée avec succès !");
                     } else {
-                        String idclasse = txtID.getText();
-                        int idclass = Integer.parseInt(idclasse);
+                        int idclass = Integer.parseInt(txtID.getText());
                         classeAModifier.setIdClasse(idclass);
                         classeAModifier.setDesignation(designation);
                         classeAModifier.setPrixEcolage(prix);
                         classeAModifier.setProf(prof);
                         classeDAO.modifierClasse(classeAModifier);
+                        showSuccess("Classe modifiée avec succès !");
                     }
 
                     loadclasse();
                     stage.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    new Alert(Alert.AlertType.ERROR, "Erreur : " + ex.getMessage()).showAndWait();
+                    showError("Erreur : " + ex.getMessage());
                 }
             });
 
             stage.showAndWait();
 
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
+            showError("Erreur lors de l'ouverture du formulaire : " + ex.getMessage());
         }
+    }
+
+    private void ouvrirlisteEleves(Classe c_pdp) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Eleves_Pdf.fxml"));
+            Parent root = loader.load();
+
+            pdfClasse_Elves pdf = loader.getController();
+            pdf.setClasse(c_pdp);
+
+            Stage stage = new Stage();
+            stage.setTitle("Eleves de " + c_pdp.getDesignation());
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/light/gestion_ecole/Style/pdf.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.showAndWait();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showError("Erreur lors de l'ouverture de la liste des élèves : " + ex.getMessage());
+        }
+    }
+
+    private void showSuccess(String message) {
+        Notifications.create()
+                .title("Succès")
+                .text(message)
+                .position(Pos.CENTER)
+                .hideAfter(Duration.seconds(1.5))
+                .owner(tableView.getScene().getWindow())
+                .showInformation();
+    }
+
+    private void showWarning(String message) {
+        Notifications.create()
+                .title("Attention")
+                .text(message)
+                .position(Pos.CENTER)
+                .hideAfter(Duration.seconds(1.5))
+                .owner(tableView.getScene().getWindow())
+                .showWarning();
+    }
+
+    private void showError(String message) {
+        Notifications.create()
+                .title("Erreur")
+                .text(message)
+                .position(Pos.CENTER)
+                .hideAfter(Duration.seconds(1.5))
+                .owner(tableView.getScene().getWindow())
+                .showError();
     }
 }
