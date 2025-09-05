@@ -12,6 +12,7 @@ module light.gestion_ecole {
 
     requires kernel;
     requires layout;
+    requires io;
 
     requires org.controlsfx.controls;
 

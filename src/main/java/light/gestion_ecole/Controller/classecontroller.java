@@ -273,7 +273,7 @@ public class classecontroller {
                 .title("Succès")
                 .text(message)
                 .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(1.5))
+                .hideAfter(Duration.seconds(2.5))
                 .owner(tableView.getScene().getWindow())
                 .showInformation();
     }
@@ -283,7 +283,7 @@ public class classecontroller {
                 .title("Attention")
                 .text(message)
                 .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(1.5))
+                .hideAfter(Duration.seconds(2.5))
                 .owner(tableView.getScene().getWindow())
                 .showWarning();
     }
@@ -293,7 +293,7 @@ public class classecontroller {
                 .title("Erreur")
                 .text(message)
                 .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(1.5))
+                .hideAfter(Duration.seconds(2.5))
                 .owner(tableView.getScene().getWindow())
                 .showError();
     }
