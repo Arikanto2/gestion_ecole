@@ -29,7 +29,7 @@
                         <Insets bottom="50"/>
                     </VBox.margin>
                     <Circle radius="35" stroke="#314480" fill="white" strokeWidth="1"/>
-                    <Label text="F" id="useLettre"/>
+                    <Label text="" id="useLettre" fx:id="premierLet"/>
                 </StackPane>
 
 
@@ -106,11 +106,11 @@
                         </HBox.margin>
                     </Label>
                 </HBox>
-                <HBox alignment="CENTER">
+                <HBox alignment="CENTER" fx:id="poweroff">
                     <VBox.margin>
                         <Insets top="180"/>
                     </VBox.margin>
-                    <ImageView fitWidth="25" fitHeight="25" preserveRatio="true">
+                    <ImageView fitWidth="25" fitHeight="25" preserveRatio="true" >
                         <image>
                             <Image url="@../Photo/icons8-power-off-80.png"/>
                         </image>
@@ -126,7 +126,7 @@
                 <Insets top="15" right="15" bottom="15" left="5"/>
             </BorderPane.margin>
             <top>
-                <HBox spacing="20" alignment="CENTER_LEFT" id="entete">
+                <HBox spacing="20" alignment="CENTER_LEFT" styleClass="entete">
                     <BorderPane.margin>
                         <Insets right="25" left="25"/>
                     </BorderPane.margin>
@@ -135,7 +135,7 @@
                     </padding>
                     <Label text="LYCEE LOTERANA RAKOTO ANDRIANARIJAONA" styleClass="labelEntete"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Label text="\@Nom de l'utilisateur" styleClass="labelEntete" id="nomUtilisateur"/>
+                    <Label text="" styleClass="labelEntete" id="nomUtilisateur" fx:id="nomUtilisateur"/>
 
                 </HBox>
 
@@ -144,7 +144,7 @@
                 <StackPane fx:id="contentArea"/>
             </center>
             <bottom>
-                <HBox spacing="20" alignment="CENTER_LEFT" id="footer">
+                <HBox spacing="20" alignment="CENTER_LEFT" styleClass="footer">
                     <BorderPane.margin>
                         <Insets right="25" left="25"/>
                     </BorderPane.margin>

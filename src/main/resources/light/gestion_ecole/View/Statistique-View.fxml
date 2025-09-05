@@ -26,17 +26,6 @@
                 <Label text="Statistique Globale de l'Ecole: " styleClass="titre" fx:id="titreStat"/>
                 <Label text="" styleClass="titre" fx:id="titreAnnee"/>
             </HBox>
-            <ComboBox fx:id="statMnu" prefWidth="150">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="ECOLE"/>
-                        <String fx:value="CLASSE"/>
-                        <String fx:value="ELEVE"/>
-                        <String fx:value="PROFESSEUR"/>
-
-                    </FXCollections>
-                </items>
-            </ComboBox>
         </VBox>
     </top>
     <left>
@@ -104,8 +93,7 @@
                     </ImageView>
                 </StackPane>
                 <HBox spacing="5" alignment="CENTER">
-                    <Label text="" fx:id="CM" styleClass="valuelegende"/>
-                    <Label text="(Assiduité&#10;des élèves)" styleClass="petitlegende" />
+                    <Label text="   (Assiduité des élèves)" styleClass="petitlegende" />
                 </HBox>
             </HBox>
             <HBox alignment="CENTER_LEFT" styleClass="menuSt" spacing="5" fx:id="EXA">
@@ -135,7 +123,7 @@
                     <BorderPane.margin>
                         <Insets top="15"/>
                     </BorderPane.margin>
-                    <Label text="GRAPH" styleClass="courbe"/>
+                    <Label text="Graph représentant  l'effectif des élèves" styleClass="courbe" fx:id="tit"/>
 
                 </HBox>
             </top>
@@ -147,7 +135,7 @@
                             <Insets top="110"/>
                         </HBox.margin>
                         <VBox spacing="5">
-                            <Label text="Handicape (ESH)" styleClass="handicap"/>
+                            <Label text="Handicapé (ESH)" styleClass="handicap"/>
                             <VBox spacing="5">
                                 <VBox.margin>
                                     <Insets left="20"/>
@@ -195,7 +183,6 @@
                 <Label text="Années scolaire"/>
                 <ComboBox styleClass="combo" fx:id="anneeScolStat"/>
             </VBox>
-
         </VBox>
     </right>
 

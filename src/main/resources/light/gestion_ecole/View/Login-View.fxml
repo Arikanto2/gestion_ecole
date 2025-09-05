@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.PasswordField?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="light.gestion_ecole.Controller.LoginController"
+            prefHeight="400.0" prefWidth="600.0" stylesheets="@../Style/Style.css" id="log" fx:id="log">
+    <top>
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <ImageView fitWidth="20" fitHeight="20" preserveRatio="true">
+                <image>
+                    <Image url="@../Photo/500px-Lutherrose.svg.png"/>
+                </image>
+            </ImageView>
+            <Label text="LYCEE LOTERANA RAKOTO ANDRIANARIJAONA" style="-fx-font-size: 10; -fx-font-family: 'Agency FB';"/>
+        </HBox>
+    </top>
+    <center>
+        <VBox alignment="CENTER" spacing="20" id="boxlogin" >
+            <BorderPane.margin>
+                <Insets  top="90" left="165" right="165" bottom="100"/>
+            </BorderPane.margin>
+            <padding>
+                <Insets  top="20" left="30" right="30" bottom="30"/>
+            </padding>
+            <Label text="Connectez vous!" id="connectVous">
+                <VBox.margin>
+                    <Insets   bottom="15"/>
+                </VBox.margin>
+            </Label>
+            <VBox>
+                <Label text="Adresse mail:" styleClass="fz"/>
+                <TextField promptText="exemple@gmail.com" focusTraversable="false" style="-fx-font-size:12px; -fx-font-family:'Arial';" fx:id="mail" />
+            </VBox>
+            <VBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Mot de passe:" styleClass="fz"/>
+                <StackPane  alignment="CENTER_LEFT">
+                    <StackPane>
+                        <PasswordField fx:id="passwordField" promptText="***********" focusTraversable="false"
+                                       style="-fx-font-size:13px; -fx-font-family:'Arial';" prefWidth="180" />
+                        <TextField fx:id="textField" promptText="***********" focusTraversable="false"
+                                   style="-fx-font-size:13px; -fx-font-family:'Arial';" prefWidth="180" visible="false" managed="false"/>
+                    </StackPane>
+                    <ImageView fx:id="toggleBtn" fitWidth="15" fitHeight="15" preserveRatio="true">
+                        <StackPane.margin>
+                            <Insets left="210"/>
+                        </StackPane.margin>
+                        <image>
+                            <Image url="@../Photo/icons8-closed-eye-96.png"/>
+                        </image>
+                    </ImageView>
+                </StackPane>
+            </VBox>
+
+
+            <Button text="Valider" fx:id="valider" id="btnAjouter"/>
+        </VBox>
+    </center>
+</BorderPane>
