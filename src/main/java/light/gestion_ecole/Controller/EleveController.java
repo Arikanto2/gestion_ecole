@@ -177,18 +177,9 @@ public class EleveController {
     @FXML private Label lblPrenomEcolage;
     @FXML private ComboBox comboClasseEcolage;
     @FXML private DatePicker txtDateEcolage;
-    @FXML private CheckBox cbJanvier;
-    @FXML private CheckBox cbFevrier;
-    @FXML private CheckBox cbMars;
-    @FXML private CheckBox cbAvril;
-    @FXML private CheckBox cbMai;
-    @FXML private CheckBox cbJuin;
-    @FXML private CheckBox cbJuillet;
-    @FXML private CheckBox cbAout;
-    @FXML private CheckBox cbSeptembre;
-    @FXML private CheckBox cbOctobre;
-    @FXML private CheckBox cbNovembre;
-    @FXML private CheckBox cbDecembre;
+    @FXML private TableView<EcolageparmoiT> attribuerEcolages;
+    @FXML private TableColumn<EcolageparmoiT, String> moiColumn;
+    @FXML private TableColumn<EcolageparmoiT, Boolean> columnPayer;
     @FXML private Label lblPrixEcolage;
     @FXML private Label lblTotalEcolage;
 
@@ -429,6 +420,21 @@ public class EleveController {
         nationalGroupModif = new ToggleGroup();
         nationalOuiModif.setToggleGroup(nationalGroupModif);
         nationalNonModif.setToggleGroup(nationalGroupModif);
+
+        moiColumn.setCellValueFactory(cellData ->new SimpleStringProperty(cellData.getValue().getMoiseco()));
+        columnPayer.setCellValueFactory(cellData -> {
+            SimpleBooleanProperty property = new SimpleBooleanProperty(cellData.getValue().isStatut());
+            property.addListener((obs, oldVal, newVal) -> cellData.getValue().setStatut(newVal));
+            return property;
+        });
+        columnPayer.setCellFactory(CheckBoxTableCell.forTableColumn(columnPayer));
+        ObservableList<EcolageparmoiT> data = FXCollections.observableArrayList();
+        String[] mois = {"Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
+                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Decembre"};
+        for (String m : mois){
+            data.add(new EcolageparmoiT(m, false));
+        }
+        attribuerEcolages.setItems(data);
 
         eleves.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn(nomEleve);

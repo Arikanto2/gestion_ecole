@@ -18,6 +18,10 @@ public class EcolageparmoiT {
         this.ecolagemoi = ecolagemoi;
         this.moiseco = moiseco;
     }
+    public EcolageparmoiT(String moiseco, boolean statut) {
+        this.moiseco = moiseco;
+        this.statut = statut;
+    }
     public String getIdeleve() {
         return ideleve;
     }
@@ -44,6 +48,9 @@ public class EcolageparmoiT {
         else{
             return "Non Payé";
         }
+    }
+    public boolean isStatut() {
+        return statut;
     }
     public void setStatut(boolean statut) {
         this.statut = statut;
