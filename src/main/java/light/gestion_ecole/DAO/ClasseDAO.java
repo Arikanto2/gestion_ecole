@@ -10,28 +10,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClasseDAO {
-    public List<Classe> getAllClasses() throws SQLException {
+    public static List<Classe> getAllClasses() throws SQLException {
+        List<String> anneescolaire = StatDAO.getAnnescolaire();
         List<Classe> classes = new ArrayList<>();
         String sql = "SELECT c.idclass, c.designation, COUNT(e.idclass) As nbr_eleves, c.\"Titulaire\", c.prixecolage " +
                 "FROM classe c " +
-                "LEFT JOIN eleve e ON c.idclass = e.idclass " +
+                "LEFT JOIN eleve e ON c.idclass = e.idclass WHERE e.avertissement IS DISTINCT FROM 'renvoyé' AND e.anneescolaire = ? " +
                 "GROUP BY c.designation, c.idclass " +
                 "ORDER BY c.designation";
-        try (Connection conn = Database.connect()) {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                classes.add(new Classe(
-                        rs.getInt("idclass"),
-                        rs.getString("designation"),
-                        rs.getInt("nbr_eleves"),
-                        rs.getString("Titulaire"),
-                        rs.getDouble("prixecolage")
-                ));
+        try (Connection conn = Database.connect();
+        PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setString(1, anneescolaire.get(0));
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    classes.add(new Classe(
+                            rs.getInt("idclass"),
+                            rs.getString("designation"),
+                            rs.getInt("nbr_eleves"),
+                            rs.getString("Titulaire"),
+                            rs.getDouble("prixecolage")
+                    ));
+                }
             }
+
+
         }catch (SQLException e){
             e.printStackTrace();
         }
+
         return classes;
     }
 

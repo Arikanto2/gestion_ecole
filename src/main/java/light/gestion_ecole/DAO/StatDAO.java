@@ -1,5 +1,7 @@
 package light.gestion_ecole.DAO;
 
+import light.gestion_ecole.Model.Eleve;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StatDAO {
-
     public static List<String> getAnnescolaire() {
         String sql = "SELECT DISTINCT anneescolaire FROM eleve ORDER BY anneescolaire DESC;";
         List<String> list = new ArrayList<>();
@@ -25,7 +26,6 @@ public class StatDAO {
         }
         return list;
     }
-
     public static int getNBEleve(String anneescolaire) {
         String sql = "SELECT COUNT(*) AS nb FROM eleve WHERE anneescolaire = ? AND avertissement IS DISTINCT FROM 'renvoyé'";
         int nb = 0;
@@ -73,9 +73,6 @@ public class StatDAO {
         }
         return nb;
     }
-
-
-
     public static double getMG(String anneescolaire) throws SQLException {
         String sql = "SELECT SUM(enseigner.note) AS notEG, SUM(enseigner.coefficient) AS COEFF " +
                 "FROM enseigner " +
@@ -95,7 +92,6 @@ public class StatDAO {
         }
         return (coeff == 0) ? 0 : Math.round((notEG / coeff) * 100.0) / 100.0;
     }
-
     public static String getTauxReussite(String anneescolaire) {
         LocalDate today = LocalDate.now();
         String[] annees = anneescolaire.split("-");
@@ -128,19 +124,18 @@ public class StatDAO {
             return String.format("%.2f%%-%d/%d", tauxreussite, nbpassant, nbeleve);
         }
     }
-
-    public static int getParticipation(String anneescolaire) {
-        String sql = "SELECT a.participation, COUNT(*) AS total " +
-                "FROM attitude a " +
-                "JOIN eleve e ON e.ideleve = a.ideleve " +
-                "WHERE e.ideleve LIKE ? AND e.avertissement IS DISTINCT FROM 'renvoyé' " +
-                "GROUP BY a.participation;";
+    public static int[] getParticipation(Eleve eleve) {
+        String sql = "SELECT attitude.participation as participation, COUNT(*) AS total " +
+                "FROM attitude JOIN eleve ON eleve.ideleve = attitude.ideleve "+
+                "WHERE eleve.ideleve = ? AND eleve.avertissement IS DISTINCT FROM 'renvoyé'  " +
+                "GROUP BY participation;";
         int nbExcellente = 0;
         int nbMoyenne = 0;
+        int nbJamais = 0;
 
         try (Connection conn = Database.connect();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, "%-" + anneescolaire);
+            stmt.setString(1, eleve.getIdeleve());
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     String participation = rs.getString("participation");
@@ -150,101 +145,271 @@ public class StatDAO {
                         nbExcellente = total;
                     } else if ("Moyenne".equalsIgnoreCase(participation)) {
                         nbMoyenne = total;
+                    }else if ("Jamais".equalsIgnoreCase(participation)) {
+                        nbJamais = total;
                     }
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return nbExcellente * 2 + nbMoyenne;
+        int[] note = new int[3];
+        note[0] = nbExcellente;
+        note[1] = nbMoyenne;
+        note[2] = nbJamais;
+        return note;
     }
-
-    public static int getComportement(String anneescolaire) {
-        String sql = "SELECT a.comportement, COUNT(*) AS total " +
-                "FROM attitude a " +
-                "JOIN eleve e ON e.ideleve = a.ideleve " +
-                "WHERE e.ideleve LIKE ? AND e.avertissement IS DISTINCT FROM 'renvoyé' " +
-                "GROUP BY a.comportement;";
+    public static int[] getParticipationGlobal(String mat) {
+        String sql = "SELECT attitude.participation as participation, COUNT(*) AS total " +
+                "FROM attitude JOIN eleve ON eleve.nummat = attitude.nummat "+
+                "WHERE eleve.anneescolaire = ? AND eleve.avertissement IS DISTINCT FROM 'renvoyé' " +
+                "GROUP BY participation;";
         int nbExcellente = 0;
-        int nbCorrect = 0;
+        int nbMoyenne = 0;
+        int nbJamais = 0;
 
         try (Connection conn = Database.connect();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, "%-" + anneescolaire);
+            stmt.setString(1, mat);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String participation = rs.getString("participation");
+                    int total = rs.getInt("total");
+
+                    if ("Excellente".equalsIgnoreCase(participation)) {
+                        nbExcellente = total;
+                    } else if ("Moyenne".equalsIgnoreCase(participation)) {
+                        nbMoyenne = total;
+                    }else if ("Jamais".equalsIgnoreCase(participation)) {
+                        nbJamais = total;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        int[] note = new int[3];
+        note[0] = nbExcellente;
+        note[1] = nbMoyenne;
+        note[2] = nbJamais;
+        return note;
+    }
+    public static int[] getParticipationGlobalClasse(int idclasse) {
+        List<String> annee = getAnnescolaire();
+        String sql = "SELECT attitude.participation as participation, COUNT(*) AS total " +
+                "FROM attitude JOIN eleve ON eleve.nummat = attitude.nummat "+
+                "WHERE eleve.anneescolaire = ? AND eleve.avertissement IS DISTINCT FROM 'renvoyé' AND eleve.idclass = ? " +
+                "GROUP BY participation;";
+        int nbExcellente = 0;
+        int nbMoyenne = 0;
+        int nbJamais = 0;
+
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, annee.get(0));
+            stmt.setInt(2, idclasse);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String participation = rs.getString("participation");
+                    int total = rs.getInt("total");
+
+                    if ("Excellente".equalsIgnoreCase(participation)) {
+                        nbExcellente = total;
+                    } else if ("Moyenne".equalsIgnoreCase(participation)) {
+                        nbMoyenne = total;
+                    }else if ("Jamais".equalsIgnoreCase(participation)) {
+                        nbJamais = total;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        int[] note = new int[3];
+        note[0] = nbExcellente;
+        note[1] = nbMoyenne;
+        note[2] = nbJamais;
+        return note;
+    }
+    public static int[] getComportement(Eleve eleve) {
+        String sql = "SELECT attitude.comportement, COUNT(*) AS total " +
+                "FROM attitude JOIN eleve ON eleve.ideleve = attitude.ideleve " +
+                "WHERE eleve.ideleve = ? AND eleve.avertissement IS DISTINCT FROM 'renvoyé' " +
+                "GROUP BY comportement;";
+        int nbExcellente = 0;
+        int nbCorrect = 0;
+        int nbMauvais = 0;
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, eleve.getIdeleve());
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     String comportement = rs.getString("comportement");
                     int total = rs.getInt("total");
 
-                    if ("Excellente".equalsIgnoreCase(comportement)) {
+                    if ("Excellent".equalsIgnoreCase(comportement)) {
                         nbExcellente = total;
                     } else if ("Correct".equalsIgnoreCase(comportement)) {
                         nbCorrect = total;
+                    } else if ("Mauvais".equalsIgnoreCase(comportement)) {
+                        nbMauvais = total;
                     }
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return nbExcellente * 2 + nbCorrect;
+        int[] note = new int[3];
+        note[0] = nbExcellente;
+        note[1] = nbCorrect;
+        note[2] = nbMauvais;
+        return note;
     }
-
-    public static int getRetards(String anneescolaire) {
-        String sql = "SELECT a.retard, COUNT(*) AS total " +
-                "FROM attitude a " +
-                "JOIN eleve e ON e.ideleve = a.ideleve " +
-                "WHERE e.ideleve LIKE ? AND e.avertissement IS DISTINCT FROM 'renvoyé' " +
-                "GROUP BY a.retard;";
-        int nbZero = 0;
-        int nbUnTrois = 0;
-
+    public static int[] getComportementGlobal(String mat) {
+        String sql = "SELECT attitude.comportement, COUNT(*) AS total " +
+                "FROM attitude JOIN eleve ON eleve.nummat = attitude.nummat " +
+                "WHERE eleve.anneescolaire = ? AND eleve.avertissement IS DISTINCT FROM 'renvoyé' " +
+                "GROUP BY comportement;";
+        int nbExcellente = 0;
+        int nbCorrect = 0;
+        int nbMauvais = 0;
         try (Connection conn = Database.connect();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, "%-" + anneescolaire);
+            stmt.setString(1, mat);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    int retard = rs.getInt("retard");
+                    String comportement = rs.getString("comportement");
                     int total = rs.getInt("total");
 
-                    if (retard == 0) {
-                        nbZero += total;
-                    } else if (retard >= 1 && retard <= 3) {
-                        nbUnTrois += total;
+                    if ("Excellent".equalsIgnoreCase(comportement)) {
+                        nbExcellente = total;
+                    } else if ("Correct".equalsIgnoreCase(comportement)) {
+                        nbCorrect = total;
+                    } else if ("Mauvais".equalsIgnoreCase(comportement)) {
+                        nbMauvais = total;
                     }
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return nbZero * 3 + nbUnTrois;
+        int[] note = new int[3];
+        note[0] = nbExcellente;
+        note[1] = nbCorrect;
+        note[2] = nbMauvais;
+        return note;
     }
+    public static int[] getComportementGlobalClasse(int idclasse) {
+        List<String> anne = getAnnescolaire();
+        String sql = "SELECT attitude.comportement, COUNT(*) AS total " +
+                "FROM attitude JOIN eleve ON eleve.nummat = attitude.nummat " +
+                "WHERE eleve.anneescolaire = ? AND eleve.avertissement IS DISTINCT FROM 'renvoyé' AND eleve.idclass = ? " +
+                "GROUP BY comportement;";
+        int nbExcellente = 0;
+        int nbCorrect = 0;
+        int nbMauvais = 0;
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, anne.get(0));
+            stmt.setInt(2, idclasse);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String comportement = rs.getString("comportement");
+                    int total = rs.getInt("total");
 
-    public static int getScoreAbsence(String anneescolaire) {
-        String sql = "SELECT e.ideleve, " +
-                "CASE " +
-                "    WHEN COUNT(p.ideleve) = 0 THEN 3 " +
-                "    WHEN COUNT(p.ideleve) BETWEEN 1 AND 3 THEN 1 " +
-                "    ELSE 0 " +
-                "END AS score " +
-                "FROM eleve e " +
-                "LEFT JOIN pointage p ON p.ideleve = e.ideleve " +
-                "WHERE e.ideleve LIKE ? AND e.avertissement IS DISTINCT FROM 'renvoyé' " +
-                "GROUP BY e.ideleve;";
+                    if ("Excellent".equalsIgnoreCase(comportement)) {
+                        nbExcellente = total;
+                    } else if ("Correct".equalsIgnoreCase(comportement)) {
+                        nbCorrect = total;
+                    } else if ("Mauvais".equalsIgnoreCase(comportement)) {
+                        nbMauvais = total;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        int[] note = new int[3];
+        note[0] = nbExcellente;
+        note[1] = nbCorrect;
+        note[2] = nbMauvais;
+        return note;
+    }
+    public static int getRetards(String mat) {
+        String sql = "SELECT SUM(a.retard) AS total " +
+                "FROM attitude a " +
+                "JOIN eleve e ON e.ideleve = a.ideleve " +
+                "WHERE e.ideleve = ? AND e.avertissement IS DISTINCT FROM 'renvoyé' ";
 
-        int totalScore = 0;
+        int note = 0;
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, mat);
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                note = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return note;
+
+    }
+    public static int getRetardsGlobal(String anneescolaire) {
+        String sql = "SELECT SUM(a.retard) AS total " +
+                "FROM attitude a " +
+                "JOIN eleve e ON e.nummat = a.nummat " +
+                "WHERE e.anneescolaire = ? AND e.avertissement IS DISTINCT FROM 'renvoyé' ";
+
+        int note = 0;
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, anneescolaire);
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                note = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return note;
+
+    }
+    public static int getRetardsParClasse(int idClasse) {
+        List<String> anne = getAnnescolaire();
+        String sql = "SELECT SUM(a.retard) AS total " +
+                "FROM attitude a " +
+                "JOIN eleve e ON e.nummat = a.nummat " +
+                "WHERE e.anneescolaire = ? AND e.avertissement IS DISTINCT FROM 'renvoyé' AND e.idclass = ?";
+
+        int note = 0;
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, anne.get(0));
+            stmt.setInt(2, idClasse);
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                note = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return note;
+
+    }
+    public static int getScoreAbsence(String mat) {
+        String sql = "SELECT COUNT(*) AS total FROM pointage JOIN eleve ON eleve.ideleve = pointage.ideleve WHERE eleve.ideleve = ? AND eleve.avertissement IS DISTINCT FROM 'renvoyé'";
+
+        int  note = 0;
 
         try (Connection conn = Database.connect();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, "%-" + anneescolaire);
+            stmt.setString(1, mat);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    int score = rs.getInt("score");
-                    totalScore += score;
+                if(rs.next()){
+                    note = rs.getInt("total");
+
                 }
             }
 
@@ -252,19 +417,122 @@ public class StatDAO {
             throw new RuntimeException(e);
         }
 
-        return totalScore;
+        return note;
     }
+    public static int getScoreAbsenceGlobal(String mat) {
+        String sql = "SELECT COUNT(*) AS total FROM pointage JOIN eleve ON eleve.nummat = pointage.nummat WHERE eleve.anneescolaire = ? AND eleve.avertissement IS DISTINCT FROM 'renvoyé' ";
 
-    public static double getScoreAssiduiteMoyen(String anneescolaire) {
-        int totalScore = getScoreAbsence(anneescolaire)
-                + getRetards(anneescolaire)
-                + getComportement(anneescolaire)
-                + getParticipation(anneescolaire);
+        int  note = 0;
 
-        int nEleve = getNBEleve(anneescolaire);
-        if (nEleve == 0) return 0;
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, mat);
 
-        return Math.round(((double) totalScore / nEleve)*100.0)/100.0;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if(rs.next()){
+                    note = rs.getInt("total");
+
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return note;
+    }
+    public static int getScoreAbsenceParClasse(int idclasse) {
+        List<String> anne = getAnnescolaire();
+        String sql = "SELECT COUNT(*) AS total FROM pointage JOIN eleve ON eleve.nummat = pointage.nummat WHERE eleve.anneescolaire = ? AND eleve.avertissement IS DISTINCT FROM 'renvoyé' AND eleve.idclass = ?";
+
+        int  note = 0;
+
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, anne.get(0));
+            stmt.setInt(2, idclasse);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if(rs.next()){
+                    note = rs.getInt("total");
+
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return note;
+    }
+    public static int[] getNBrenvoyéHandic(int idClasse) throws SQLException {
+        List<String> anneescolaire = getAnnescolaire();
+        int[] nb = new int[2];
+
+        String sql = "SELECT " +
+                "COUNT(CASE WHEN avertissement = 'renvoyé' THEN 1 END) AS nb_renvoyes, " +
+                "COUNT(CASE WHEN (handicap IS NOT NULL AND handicap <> '' AND handicap <> 'NULL') " +
+                "              AND (avertissement IS NULL OR avertissement <> 'renvoyé') " +
+                "         THEN 1 END) AS nb_handicap " +
+                "FROM eleve " +
+                "WHERE anneescolaire = ? AND idclass = ?";
+
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, anneescolaire.get(0));
+            stmt.setInt(2, idClasse);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    nb[0] = rs.getInt("nb_renvoyes");
+                    nb[1] = rs.getInt("nb_handicap");
+                }
+            }
+        }
+
+        return nb;
+    }
+    public static double getMGclasse(int idClasse) throws SQLException {
+        List<String> anneescolaire = getAnnescolaire();
+        String sql = "SELECT SUM(enseigner.note) AS notEG, SUM(enseigner.coefficient) AS COEFF " +
+                "FROM enseigner " +
+                "JOIN eleve e ON e.ideleve = enseigner.ideleve " +
+                "WHERE e.ideleve LIKE ? AND e.avertissement IS DISTINCT FROM 'renvoyé' AND e.idclass = ?";
+        double notEG = 0;
+        double coeff = 0;
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%-" + anneescolaire.get(0));
+            stmt.setInt(2, idClasse);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    notEG = rs.getDouble("notEG");
+                    coeff = rs.getDouble("COEFF");
+                }
+            }
+        }
+        return (coeff == 0) ? 0 : Math.round((notEG / coeff) * 100.0) / 100.0;
+    }
+    public static double getMGElve(Eleve eleve) throws SQLException {
+        List<String> anneescolaire = getAnnescolaire();
+        String sql = "SELECT SUM(enseigner.note) AS notEG, SUM(enseigner.coefficient) AS COEFF " +
+                "FROM enseigner " +
+                "JOIN eleve e ON e.ideleve = enseigner.ideleve " +
+                "WHERE e.anneescolaire = ? AND e.avertissement IS DISTINCT FROM 'renvoyé' AND e.ideleve = ?";
+        double notEG = 0;
+        double coeff = 0;
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, eleve.getAnneescolaire());
+            stmt.setString(2, eleve.getIdeleve());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    notEG = rs.getDouble("notEG");
+                    coeff = rs.getDouble("COEFF");
+                }
+            }
+        }
+        return (coeff == 0) ? 0 : Math.round((notEG / coeff) * 100.0) / 100.0;
     }
     public static String getExamenNat(String anneescolaire) {
         LocalDate today = LocalDate.now();
@@ -376,11 +644,87 @@ public class StatDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        for(List<String> ligne : ex){
-            System.out.println(ligne);
-        }
+
         return ex;
     }
+    public static int getNBmauvais(int idclasse){
+        List<String> annee = getAnnescolaire();
+        int nb = 0;
+        String sql = "SELECT COUNT(*) as nb FROM attitude JOIN eleve ON eleve.ideleve = attitude.ideleve WHERE eleve.idclass = ? AND eleve.anneescolaire = ? AND attitude.comportement = 'Mauvais'";
+        try(Connection conn = Database.connect();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idclasse);
+            stmt.setString(2, annee.get(0));
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                nb = rs.getInt("nb");
 
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return nb;
+    }
+    public static double[] getMGParTrimestreTri(int idclasse) {
+        List<String> annee = getAnnescolaire();
+        double[] moyenne = new double[6];
+        String sql = "SELECT SUM(enseigner.note) as NOTE ,SUM(enseigner.coefficient) as COE, typeevaluation FROM enseigner JOIN eleve ON enseigner.ideleve = eleve.ideleve WHERE eleve.ideleve LIKE ?  AND eleve.idclass = ? GROUP BY typeevaluation ";
+        try(Connection conn = Database.connect();
+            PreparedStatement stmt = conn.prepareStatement(sql);){
+            stmt.setString(1, "%-" + annee.get(0));
+            stmt.setInt(2, idclasse);
+            try(ResultSet rs = stmt.executeQuery()){
+                while(rs.next()){
+                    if(rs.getString("typeevaluation").equals("Interro1")){
+                        moyenne[0] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }else if(rs.getString("typeevaluation").equals("Interro2")){
+                        moyenne[2] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }else if(rs.getString("typeevaluation").equals("Interro3")){
+                        moyenne[4] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }else if(rs.getString("typeevaluation").equals("Examen1")){
+                        moyenne[1] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }else if(rs.getString("typeevaluation").equals("Examen2")){
+                        moyenne[3] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }else if(rs.getString("typeevaluation").equals("Examen3")){
+                        moyenne[5] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }
+                }
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return moyenne;
+    }
+    public static double[] getMGParTrimestreTriEl(Eleve eleve) {
 
+        double[] moyenne = new double[6];
+        String sql = "SELECT SUM(enseigner.note) as NOTE ,SUM(enseigner.coefficient) as COE, typeevaluation FROM enseigner JOIN eleve ON enseigner.ideleve = eleve.ideleve WHERE eleve.ideleve LIKE ?  AND eleve.ideleve = ? GROUP BY typeevaluation ";
+        try(Connection conn = Database.connect();
+            PreparedStatement stmt = conn.prepareStatement(sql);){
+            stmt.setString(1, "%-" + eleve.getAnneescolaire());
+            stmt.setString(2, eleve.getIdeleve());
+            try(ResultSet rs = stmt.executeQuery()){
+                while(rs.next()){
+                    if(rs.getString("typeevaluation").equals("Interro1")){
+                        moyenne[0] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }else if(rs.getString("typeevaluation").equals("Interro2")){
+                        moyenne[2] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }else if(rs.getString("typeevaluation").equals("Interro3")){
+                        moyenne[4] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }else if(rs.getString("typeevaluation").equals("Examen1")){
+                        moyenne[1] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }else if(rs.getString("typeevaluation").equals("Examen2")){
+                        moyenne[3] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }else if(rs.getString("typeevaluation").equals("Examen3")){
+                        moyenne[5] = rs.getDouble("NOTE")/rs.getInt("COE");
+                    }
+                }
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return moyenne;
+    }
 }

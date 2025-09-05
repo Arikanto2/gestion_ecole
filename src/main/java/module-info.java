@@ -15,6 +15,8 @@ module light.gestion_ecole {
 
     requires org.controlsfx.controls;
 
+
+
     opens light.gestion_ecole to javafx.fxml;
     opens light.gestion_ecole.Controller to javafx.fxml;
     opens light.gestion_ecole.Model to javafx.base;

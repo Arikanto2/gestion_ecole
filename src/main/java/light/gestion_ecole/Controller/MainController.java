@@ -4,10 +4,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import light.gestion_ecole.Main;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,11 +26,59 @@ public class MainController {
     @FXML HBox menuEleve;
     @FXML HBox menuProf;
     @FXML HBox menuClasse;
+
+    @FXML Label nomUtilisateur;
+    @FXML Label premierLet;
+    @FXML HBox poweroff;
     @FXML HBox menuParent;
+
 
     private List<HBox> tousLesMenus;
     @FXML
     public void initialize() {
+        poweroff.setOnMouseClicked(event -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Déconnexion");
+            alert.setHeaderText(null);
+            alert.setContentText("Voulez-vous vraiment vous déconnecter ?");
+            ImageView imageView = new ImageView(
+                    getClass().getResource("/light/gestion_ecole/Photo/icons8-power-off-80.png").toExternalForm()
+            );
+            imageView.setFitHeight(48);
+            imageView.setFitWidth(48);
+            alert.setGraphic(imageView);
+
+            ButtonType buttonOui = new ButtonType("Oui");
+            ButtonType buttonNon = new ButtonType("Non");
+
+            alert.getButtonTypes().setAll(buttonOui, buttonNon);
+
+            alert.showAndWait().ifPresent(reponse -> {
+                if (reponse == buttonOui) {
+                    Stage satgeMain = (Stage) poweroff.getScene().getWindow();
+                    satgeMain.close();
+                    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/light/gestion_ecole/View/Login-View.fxml"));
+                    Scene scene = null;
+                    try {
+                        scene = new Scene(fxmlLoader.load(), 320, 240);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Stage stage = new Stage();
+                    stage.setTitle("Connexion");
+                    stage.setScene(scene);
+                    stage.setMinWidth(650);
+                    stage.setMinHeight(550);
+                    stage.setResizable(false);
+                    stage.setMaximized(false);
+                    stage.show();
+                }
+            });
+
+
+        });
+        nomUtilisateur.setText("@"+ LoginController.nom);
+        premierLet.setText(String.valueOf(LoginController.nom.charAt(0)));
 
         tousLesMenus = List.of(menuAccueil,menuStat,menuEleve,menuProf,menuClasse,menuParent);
         tousLesMenus.forEach(menu -> {

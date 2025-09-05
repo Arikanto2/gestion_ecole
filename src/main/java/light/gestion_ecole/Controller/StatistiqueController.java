@@ -10,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -20,21 +19,18 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import light.gestion_ecole.DAO.StatDAO;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 
-import static javafx.geometry.Pos.CENTER;
 
 
 public class StatistiqueController {
     @FXML ComboBox anneeScolStat;
     @FXML Label titreStat;
     @FXML Label titreAnnee;
-    @FXML ComboBox statMnu;
     @FXML Label nbEleve;
     @FXML Label MG;
     @FXML Label TX;
     @FXML Label TX1;
-    @FXML Label CM;
     @FXML Label EXAM;
     @FXML Label EXAM1;
     @FXML VBox legendEffec;
@@ -49,6 +45,7 @@ public class StatistiqueController {
     @FXML HBox TXREU;
     @FXML HBox AssI;
     @FXML HBox EXA;
+    @FXML Label tit;
     private String statQUI;
 
     private List<String> listeAnneScol = StatDAO.getAnnescolaire();
@@ -66,38 +63,55 @@ public class StatistiqueController {
         affocheEffecEl();
         styliserMenuStat(effecEL);
         afficherStat();
-        statMnu.getSelectionModel().select(0);
         anneeScolStat.setOnAction(event -> {
+            if(anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")){
+                TX1.setText("(Taux de reussite)");
+                EXAM1.setText("(Examen Nationaux)");
+            }
             try {
                 afficherStat();
-                if (statQUI.equals("effecEL")){
-                    affocheEffecEl();
-                }else if (statQUI.equals("moyG")){
-                    if (anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")){
-                        PaneChart.getChildren().clear();
-                        PaneChart.getChildren().add(afficheChartG("moyG"));
-                    }else{
-                        afficherMGparTRimestre();
+                switch (statQUI) {
+                    case "effecEL" -> affocheEffecEl();
+                    case "moyG" -> {
+                        if (anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")) {
+                            PaneChart.getChildren().clear();
+                            PaneChart.getChildren().add(afficheChartG("moyG"));
+                        } else {
+                            afficherMGparTRimestre();
+                        }
                     }
-                }else if (statQUI.equals("TXREU")){
-                    if (anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")){
-                        PaneChart.getChildren().clear();
-                        PaneChart.getChildren().add(afficheChartG("Taux"));
-                    }else{
-                        afficheTXAnne();
+                    case "TXREU" -> {
+                        if (anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")) {
+                            PaneChart.getChildren().clear();
+                            PaneChart.getChildren().add(afficheChartG("Taux"));
+                        } else {
+                            afficheTXAnne();
+                        }
+                    }
+                    case "EXA" -> {
+                        if (anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")) {
+                            PaneChart.getChildren().clear();
+                            PaneChart.getChildren().add(afficheChartG("EXA"));
+                        } else {
+                            PaneChart.getChildren().clear();
+                            afficheEXAMAnne();
+                        }
+                    }
+                    case "AssI" ->{
+                        if (!anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")) {
+                           afficheAssui();
+                        }
                     }
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
-        statMnu.setOnAction(e -> {
-            afficherTitrStat();
-        });
         effecEL.setOnMouseClicked(event -> {
             statQUI = "effecEL";
             affocheEffecEl();
             styliserMenuStat(effecEL);
+            tit.setText("Graph représentant  l'effectif des élèves");
         });
         moyG.setOnMouseClicked(event -> {
             statQUI = "moyG";
@@ -112,6 +126,7 @@ public class StatistiqueController {
                 throw new RuntimeException(e);
             }
             styliserMenuStat(moyG);
+            tit.setText("Graph représentant la moyenne générale de l'école");
         });
         TXREU.setOnMouseClicked(event -> {
             statQUI = "TXREU";
@@ -125,24 +140,32 @@ public class StatistiqueController {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+            tit.setText("Graph représentant le taux de passage");
             styliserMenuStat(TXREU);
         });
         AssI.setOnMouseClicked(event -> {
+            statQUI = "AssI";
             PaneChart.getChildren().clear();
-            try {
-                PaneChart.getChildren().add(afficheChartG("Assi"));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+            if(!anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")){
+                afficheAssui();
+            }else{
+
             }
             styliserMenuStat(AssI);
         });
         EXA.setOnMouseClicked(event -> {
             PaneChart.getChildren().clear();
+            statQUI = "EXA";
             try {
-                PaneChart.getChildren().add(afficheChartG("EXA"));
+                if (anneeScolStat.getSelectionModel().getSelectedItem().equals("Tous")){
+                    PaneChart.getChildren().add(afficheChartG("EXA"));
+                }else{
+                    afficheEXAMAnne();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+            tit.setText("Graph représentant le taux de réussite au examen nationaux");
             styliserMenuStat(EXA);
         });
 
@@ -154,13 +177,11 @@ public class StatistiqueController {
         double[] listMG = new double[listeAnneScol.size()];
         String[] listTX = new String[listeAnneScol.size()];
         String[] listEX = new String[listeAnneScol.size()];
-        double[] listAss =  new double[listeAnneScol.size()];
         int i = 0;
         List<String> listeAnneScolReverse = listeAnneScol.reversed();
         for(String anne :  listeAnneScolReverse){
             listNBEleve[i] = StatDAO.getNBEleve(anne);
             listMG[i] = StatDAO.getMG(anne);
-            listAss[i] = StatDAO.getScoreAssiduiteMoyen(anne);
             if(StatDAO.getTauxReussite(anne).equals("En cours")){
                 listTX[i] = "vide";
             }else{
@@ -192,13 +213,11 @@ public class StatistiqueController {
             Effectif.setName("Effectif des élèves");
             MG.setName("Moyenne Générale");
             Taux.setName("Taux de Passage");
-            Ass.setName("Note d' assiduité");
             Examens.setName("Taux de réussite aux examens Nationaux");
         /*Données*/
             for (String anne : listeAnneScolReverse){
                 Effectif.getData().add(new XYChart.Data<>(anne, listNBEleve[i]));
                 MG.getData().add(new XYChart.Data<>(anne, listMG[i]));
-                Ass.getData().add(new XYChart.Data<>(anne,listAss[i]));
                 if (!listTX[i].equals("vide")){
                     double valueTX = Double.parseDouble(listTX[i].replace(",","."));
                     Taux.getData().add(new XYChart.Data<>(anne, valueTX));
@@ -213,17 +232,12 @@ public class StatistiqueController {
 
         /*Ajout des Séries*/
 
-            if (st.equals("NBEleve")){
-                lineChart.getData().add(Effectif);
-            } else if (st.equals("moyG")) {
-                lineChart.getData().add(MG);
-            }else if(st.equals("Taux")){
-                lineChart.getData().add(Taux);
-            }else if (st.equals("Assi")){
-                lineChart.getData().add(Ass);
-            }else if(st.equals("EXA")){
-                lineChart.getData().add(Examens);
-            }
+        switch (st) {
+            case "NBEleve" -> lineChart.getData().add(Effectif);
+            case "moyG" -> lineChart.getData().add(MG);
+            case "Taux" -> lineChart.getData().add(Taux);
+            case "EXA" -> lineChart.getData().add(Examens);
+        }
 
 
         // Couleur personnalisée + tooltip
@@ -235,9 +249,7 @@ public class StatistiqueController {
                 series.getNode().lookup(".chart-series-line").setStyle("-fx-stroke: #8bc2e5;");
             } else if (series.getName().contains("Taux de Passage")) {
                 series.getNode().lookup(".chart-series-line").setStyle("-fx-stroke: #aad9aa;");
-            } else if (series.getName().contains("assiduité")) {
-                series.getNode().lookup(".chart-series-line").setStyle("-fx-stroke: #f3d176;");
-            } else if (series.getName().contains("examens")) {
+            }  else if (series.getName().contains("examens")) {
                 series.getNode().lookup(".chart-series-line").setStyle("-fx-stroke: #e8b4e8;");
             }
 
@@ -309,14 +321,12 @@ public class StatistiqueController {
             nbEleve.setText("");
             MG.setText("");
             TX.setText("");
-            CM.setText("");
             EXAM.setText("");
         }else{
             titreAnnee.setText(titreAnnescolaire);
             nbEleve.setText(String.valueOf(StatDAO.getNBEleve(titreAnnescolaire)));
             try {
                 MG.setText(String.valueOf(StatDAO.getMG(titreAnnescolaire)) + "/20");
-                CM.setText(String.valueOf(StatDAO.getScoreAssiduiteMoyen(titreAnnescolaire)) + "/10");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -337,19 +347,6 @@ public class StatistiqueController {
                 EXAM1.setText("(Examens  nationaux )");
             }
 
-        }
-    }
-    public void afficherTitrStat(){
-        int index1 = statMnu.getSelectionModel().getSelectedIndex();
-        String menuSelectedStat = statMnu.getItems().get(index1).toString();
-        if (menuSelectedStat.equals("ECOLE")) {
-            titreStat.setText("Statistiques Globale de l'Ecole: ");
-        } else if (menuSelectedStat.equals("ELEVE")) {
-            titreStat.setText("Statistiques de chaque Elève: ");
-        } else if (menuSelectedStat.equals("PROFESSEUR")) {
-            titreStat.setText("Statistiques des professeurs: ");
-        } else if (menuSelectedStat.equals("CLASSE")) {
-            titreStat.setText("Statistiques de Chaque Classe: ");
         }
     }
     private void styliserMenuStat(HBox menuActif) {
@@ -495,6 +492,176 @@ public class StatistiqueController {
         legendEffec.setManaged(false);
         legendEffec.setVisible(false);
     }
+
+    public void afficheEXAMAnne() {
+        String ex = StatDAO.getExamenNat(anneeScolStat.getSelectionModel().getSelectedItem().toString());
+        if (!ex.equals("En cours")) {
+            List<List<String>> lis = StatDAO.getEXAMNATPardes(
+                    anneeScolStat.getSelectionModel().getSelectedItem().toString());
+
+            Map<String, Integer> dicafaka = new HashMap<>();
+            Map<String, Integer> dictsafaka = new HashMap<>();
+
+            for (List<String> l : lis) {
+                String classe = l.get(0);
+                String[] at = l.get(1).split("-");
+                if (at[0].equals("A")) {
+                    dicafaka.put(classe, Integer.parseInt(at[1]));
+                } else {
+                    dictsafaka.put(classe, Integer.parseInt(at[1]));
+                }
+            }
+            for (Map.Entry<String, Integer> entry : dicafaka.entrySet()) {
+                if (!dictsafaka.containsKey(entry.getKey())) {
+                    dictsafaka.put(entry.getKey(), 0);
+                }
+            }
+            for (Map.Entry<String, Integer> entry : dictsafaka.entrySet()) {
+                if (!dicafaka.containsKey(entry.getKey())) {
+                    dicafaka.put(entry.getKey(), 0);
+                }
+            }
+
+            CategoryAxis xAxis = new CategoryAxis();
+            xAxis.setLabel("Examen Nationnal");
+            NumberAxis yAxis = new NumberAxis();
+            yAxis.setLabel("Taux de réussite");
+
+            BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+            List<XYChart.Series<String, Number>> series = new ArrayList<>();
+            for(Map.Entry<String, Integer> entry : dicafaka.entrySet()) {
+                Double pourcentage;
+                pourcentage = (double) ((entry.getValue()/(entry.getValue() + dictsafaka.get(entry.getKey())))*100);
+                XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+                series1.setName(entry.getKey());
+                String exa;
+                if (entry.getKey().equals("CM2")) {
+                    exa = "CEPE";
+                }else if (entry.getKey().equals("3eme")) {
+                    exa = "BEPC";
+                }else{
+                    exa = "BACC (" + entry.getKey() + ")";
+                }
+                series1.getData().add(new XYChart.Data<>(exa, pourcentage));
+                series.add(series1);
+            }
+            for(XYChart.Series<String, Number> series2 : series) {
+                barChart.getData().addAll(series2);
+            }
+            for(int i = 0 ; i < series.size() ; i++) {
+                for (XYChart.Data<String, Number> data : series.get(i).getData()) {
+                    Tooltip tooltip = new Tooltip(data.getXValue() + "  :  " + data.getYValue()+ "%");
+                    tooltip.setStyle(
+                            "-fx-background-color: #333333; " +
+                                    "-fx-text-fill: rgba(65, 3, 13, 0.91); " +
+                                    "-fx-font-size: 14px; " +
+                                    "-fx-padding: 10px; " +
+                                    "-fx-background-radius: 5px;" +
+                                    "-fx-background-color: white;"
+                    );
+                    Tooltip.install(data.getNode(), tooltip);
+
+                }
+            }
+            VBox root = new VBox();
+            root.setAlignment(Pos.CENTER_LEFT);
+            for (Map.Entry<String, Integer> entry : dicafaka.entrySet()) {
+                int nbafaka = entry.getValue();
+                int nb = nbafaka + dictsafaka.get(entry.getKey());
+                String exa;
+                if (entry.getKey().equals("CM2")) {
+                    exa = "CEPE";
+                }else if (entry.getKey().equals("3eme")) {
+                    exa = "BEPC";
+                }else{
+                    exa = "BACC (" + entry.getKey() + ")";
+                }
+                Text txt = new Text(exa + ": " + nbafaka + "/" + nb);
+                txt.setFill(Color.web("#213572"));
+                root.getChildren().add(txt);
+            }
+            HBox h = new HBox(barChart,root);
+            PaneChart.getChildren().addAll(h);
+        }else {
+            Text encours = new Text("En cours...");
+            encours.setFill(Color.web("#213572"));
+            encours.setStyle("-fx-font-family: \"Book Antiqua\";\n" +
+                    "    -fx-font-size: 30;\n" +
+                    "    -fx-text-fill: rgba(6, 56, 86, 0.91);");
+
+            PaneChart.getChildren().add(encours);
+        }
+        legendEffec.setManaged(false);
+        legendEffec.setVisible(false);
+
+    }
+    public void afficheAssui(){
+        double nbElve = StatDAO.getNBEleve(anneeScolStat.getSelectionModel().getSelectedItem().toString());
+        int nbAbsence = StatDAO.getScoreAbsenceGlobal(anneeScolStat.getSelectionModel().getSelectedItem().toString());
+        int nbExcellenteComp = 0;
+        int nbExcellentPa = 0;
+        int nbCorrect = 0;
+        int nbMoyenne = 0;
+        int nbJamais = 0;
+        int nbMauvais = 0;
+        int nbretard = StatDAO.getRetardsGlobal(anneeScolStat.getSelectionModel().getSelectedItem().toString());
+        int[] comportement = StatDAO.getComportementGlobal(anneeScolStat.getSelectionModel().getSelectedItem().toString());
+        int[] participation =  StatDAO.getParticipationGlobal(anneeScolStat.getSelectionModel().getSelectedItem().toString());
+        nbExcellenteComp = comportement[0];
+        nbCorrect = comportement[1];
+        nbMauvais = comportement[2];
+        nbExcellentPa = participation[0];
+        nbMoyenne =  participation[1];
+        nbJamais = participation[2];
+
+
+        tit.setText("Assiduité des élèves");
+
+        Label TitreASS = new Label("En moyenne, un élève :");
+        TitreASS.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: rgba(6,56,86,0.91); -fx-font-family: Goudy Old Style;");
+
+        Label retard = new Label("• a " + (nbretard/nbElve) + " retards en moyenne ("+ nbretard+"/"+(int)nbElve + ")");
+        retard.setStyle("-fx-font-size: 14px; -fx-text-fill: rgba(6,56,86,0.91);");
+
+        Label abss = new Label("• a " + (nbAbsence/nbElve) + " absences en moyenne ("+ nbAbsence+"/"+(int)nbElve + ")");
+        abss.setStyle("-fx-font-size: 14px; -fx-text-fill: rgba(6,56,86,0.91);");
+
+        Label ExcellentPar = new Label("• participe activement environ " + (nbExcellentPa/nbElve) + " fois");
+        ExcellentPar.setStyle("-fx-font-size: 14px; -fx-text-fill: rgba(6,56,86,0.91);");
+
+        Label MoyennePar = new Label("• participe moyennement environ " + (nbMoyenne/nbElve) + " fois");
+        MoyennePar.setStyle("-fx-font-size: 14px; -fx-text-fill: rgba(6,56,86,0.91);");
+
+        Label JamaisPar = new Label("• ne participe jamais dans environ " + (nbJamais/nbElve) + " cas");
+        JamaisPar.setStyle("-fx-font-size: 14px; -fx-text-fill: rgba(6,56,86,0.91);");
+
+        Label ExcellenComp = new Label("• a un comportement excellent dans " + (nbExcellenteComp/nbElve) + " cas");
+        ExcellenComp.setStyle("-fx-font-size: 14px; -fx-text-fill: rgba(6,56,86,0.91);");
+
+        Label Correcte = new Label("• a un comportement correct dans " + (nbCorrect/nbElve) + " cas");
+        Correcte.setStyle("-fx-font-size: 14px; -fx-text-fill: rgba(6,56,86,0.91);");
+
+        Label Mauvais =  new Label("• a un mauvais comportement dans " + (nbMauvais/nbElve) + " cas");
+        Mauvais.setStyle("-fx-font-size: 14px; -fx-text-fill: rgba(6,56,86,0.91);");
+
+        VBox root = new VBox(10, retard, abss, ExcellentPar, MoyennePar, JamaisPar, ExcellenComp, Correcte, Mauvais);
+        root.setAlignment(Pos.CENTER_LEFT);
+
+        VBox root1 = new VBox(15, TitreASS, root);
+        root1.setAlignment(Pos.CENTER_LEFT);
+        root1.setStyle("-fx-padding: 14px; -fx-background-color: #edf4f5; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
+
+        PaneChart.getChildren().clear();
+        PaneChart.getChildren().add(root1);
+        PaneChart.setMargin(root1, new Insets(20, 0, 20, 0));
+
+        legendEffec.setManaged(false);
+        legendEffec.setVisible(false);
+
+
+    }
+
+
 
 
 
