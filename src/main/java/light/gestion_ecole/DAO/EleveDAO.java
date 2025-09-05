@@ -234,7 +234,6 @@ public class EleveDAO {
         }
         return ideleve;
     }
-
     // pour pdf eleve
 
     public List<Eleve> getalleleveinclasse(String designation) throws SQLException {

@@ -5,11 +5,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.geometry.Pos;
 import light.gestion_ecole.DAO.EleveDAO;
+import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.Classe;
 import light.gestion_ecole.Model.Eleve;
 
@@ -22,6 +25,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -35,6 +39,7 @@ public class pdfClasse_Elves {
     @FXML private TableColumn<Eleve, String> prenom;
     @FXML private Button btnpdf;
     @FXML private Button fermer;
+    @FXML private Button afficherStatClasse;
 
     private Classe classeselected;
     private EleveDAO eleveDAO = new EleveDAO();
@@ -54,9 +59,31 @@ public class pdfClasse_Elves {
         numero.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getNumero()).asObject());
         nom.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getNom()));
         prenom.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPrenom()));
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        numero.prefWidthProperty().bind(tableView.widthProperty().multiply(0.33));
+        nom.prefWidthProperty().bind(tableView.widthProperty().multiply(0.33));
+        prenom.prefWidthProperty().bind(tableView.widthProperty().multiply(0.33));
 
         fermer.setOnAction(e -> ((Stage) fermer.getScene().getWindow()).close());
         btnpdf.setOnAction(e->exporterPDF());
+        afficherStatClasse.setOnMouseClicked(e->{
+            StatistiqueParClasseController.classe = classeselected;
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/light/gestion_ecole/View/StatistiqueParClasse-View.fxml"));
+            Scene scene = null;
+            try {
+                scene = new Scene(fxmlLoader.load(), 320, 240);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            Stage stage = new Stage();
+            stage.setTitle("Statistique (" + classeselected.getDesignation() +")");
+            stage.setScene(scene);
+            stage.setMinWidth(750);
+            stage.setMinHeight(460);
+            stage.setResizable(false);
+            stage.setMaximized(false);
+            stage.show();
+        });
 
     }
 
@@ -65,7 +92,7 @@ public class pdfClasse_Elves {
 
         ObservableList<Eleve> data = FXCollections.observableList(eleves);
         tableView.setItems(data);
-        lbleleves.setText(data.size() + " eleves");
+        lbleleves.setText(data.size() + " éleves");
     }
 
     @FXML
