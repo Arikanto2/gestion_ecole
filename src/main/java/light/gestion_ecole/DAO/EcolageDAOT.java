@@ -12,7 +12,7 @@ import java.util.List;
 public class EcolageDAOT {
     public List<EcolageparmoiT> getEcolages(String id){
         List<EcolageparmoiT> ecolages = new ArrayList<EcolageparmoiT>();
-        String sql = "SELECT p.ideleve, p.nummat, p.idecolage, p.statut, e.ecolagemoi FROM PAYER p " +
+        String sql = "SELECT p.ideleve, p.nummat, p.idecolage, p.statut, p.ecolagemoi,e.moiseco FROM PAYER p " +
                 "JOIN ECOLAGEPARMOI e ON p.idecolage = e.idecolage WHERE ideleve = ?";
         try(Connection conn = Database.connect();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -20,7 +20,7 @@ public class EcolageDAOT {
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
                 ecolages.add(new EcolageparmoiT(rs.getString("ideleve"),rs.getString("nummat"),
-                        rs.getInt("idecolage"),rs.getBoolean("statut"),rs.getDate("ecolagemoi")));
+                        rs.getInt("idecolage"),rs.getBoolean("statut"),rs.getDate("ecolagemoi"),rs.getString("moiseco")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

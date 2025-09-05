@@ -150,12 +150,12 @@
 }
 
 .table-view .column-header-background {
-    -fx-background-color: linear-gradient(to bottom, #2980b9, #1f6391);
+    /*-fx-background-color: linear-gradient(to bottom, #2980b9, #1f6391);*/
     -fx-background-radius: 8px 8px 0 0;
 }
 
 .table-view .column-header, .table-view .table-column {
-    -fx-alignment: CENTER;
+    -fx-alignment: BASELINE-LEFT;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-text-fill: white;
@@ -163,7 +163,7 @@
 }
 
 .table-view .cell {
-    -fx-alignment: CENTER_LEFT;
+    -fx-alignment: BASELINE_LEFT;
     -fx-font-size: 13px;
     -fx-padding: 6px;
     -fx-text-fill: #2c3e50;
@@ -196,32 +196,32 @@
     -fx-background-radius: 8;
 }
 
-#detailsPane .label {
+.detailsPane .label {
     -fx-font-size: 13px;
 }
 
-#detailsPane .label:filled {
+.detailsPane .label:filled {
     -fx-font-weight: bold;
     -fx-text-fill: #2980b9;
 }
-#btnAjouter {
+#btnAjouterT {
     -fx-font-size: 14px;
     -fx-background-color: linear-gradient(to right,#0088cc,#1f6391);
     -fx-text-fill: #ffffff;
     -fx-border-radius: 50px;
 }
-#btnAjouter:hover{
+#btnAjouterT:hover{
     -fx-background-color: linear-gradient(to right,#80d4ff,#2980b9);
     -fx-text-fill: #00111a;
     -fx-border-radius: 50px;
 }
-#btnModifier{
+#btnModifierT{
     -fx-background-color: linear-gradient(to right,#0088cc,#2980b9);
     -fx-font-size: 14px;
     -fx-border-radius: 50px;
     -fx-text-fill: #ffffff;
 }
-#btnModifier:hover{
+#btnModifierT:hover{
     -fx-border-radius: 50px;
     -fx-background-color: linear-gradient(to left,#80d4ff,#2980b9);
     -fx-text-fill: #00111a;
@@ -237,12 +237,67 @@
     -fx-text-fill: black;
     -fx-border-radius: 120px;
 }
+#btnSupprimerT{
+    -fx-background-color: linear-gradient(to right,#ff9999,#ff3333);
+    -fx-font-size: 14px;
+    -fx-border-radius: 50px;
+    -fx-text-fill: #ffffff;
+}
+#btnSupprimerT:hover{
+    -fx-border-radius: 50px;
+    -fx-background-color: linear-gradient(to left,#ff3333,#ffcccc);
+    -fx-text-fill: #00111a;
+}
+#btnAnnulerT{
+    -fx-background-color: linear-gradient(to left, #ff9999, #ff6666);
+    -fx-border-radius: 120px;
+    -fx-text-fill: White;
+    -fx-font-size: 12px;
+}
+#btnAnnulerT:hover{
+    -fx-border-radius: 50px;
+    -fx-background-color: linear-gradient(to left,#ff9999,#ffcccc);
+    -fx-text-fill: #00111a;
+}
+#btnEnregistrerT{
+    -fx-background-color: linear-gradient(to left, #2980b9, #0088cc);
+    -fx-border-radius: 120px;
+    -fx-text-fill: White;
+    -fx-font-size: 12px;
+}
+.btnEnregistrerT{
+    -fx-background-color: linear-gradient(to left, #2980b9, #0088cc);
+    -fx-border-radius: 120px;
+    -fx-text-fill: White;
+    -fx-font-size: 12px;
+}
+.btnEnregistrerT:hover{
+    -fx-background-color: linear-gradient(to left, #0088cc,#80d4ff);
+    -fx-text-fill: black;
+    -fx-border-radius: 120px;
+}
+.btnAnnulerT{
+    -fx-background-color: linear-gradient(to left, #ff9999, #ff6666);
+    -fx-border-radius: 120px;
+    -fx-text-fill: White;
+    -fx-font-size: 12px;
+}
+#btnEnregistrerT:hover{
+    -fx-background-color: linear-gradient(to left, #0088cc,#80d4ff);
+    -fx-text-fill: black;
+    -fx-border-radius: 120px;
+}
+.btnAnnulerT:hover{
+    -fx-border-radius: 50px;
+    -fx-background-color: linear-gradient(to left,#ff9999,#ffcccc);
+    -fx-text-fill: #00111a;
+}
 /*Style Princy*/
 
 
 /*////////////////////////////////////////////    Style Princy    /////////////////////////////////*/
 
-.table-view {
+/*.table-view {
     -fx-background-color: #f9f9f9;
     -fx-border-color: black;
     -fx-border-radius: 10;
@@ -302,4 +357,4 @@
     -fx-background-color: #2a5d9f;
     -fx-scale-x: 0.95;
     -fx-scale-y: 0.95;
-}
+}*/

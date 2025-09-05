@@ -16,8 +16,9 @@ module light.gestion_ecole {
 
     exports light.gestion_ecole;
     exports light.gestion_ecole.Controller;
-    opens light.gestion_ecole.Controller to javafx.fxml;
+    //opens light.gestion_ecole.Controller to javafx.fxml;
 
-    opens light.gestion_ecole.Model to javafx.base;
-    exports light.gestion_ecole.Model;\
+    //
+    // opens light.gestion_ecole.Model to javafx.base;
+    exports light.gestion_ecole.Model;
 }
