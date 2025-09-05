@@ -64,8 +64,9 @@
     -fx-font-size: 35;
 }
 #boutonImport{
-    -fx-background-color: linear-gradient(to right, rgb(220, 245, 208), rgb(255, 255, 255));
-    -fx-pref-width: 70;
+    -fx-background-color: linear-gradient(to right, rgba(140, 218, 98, 0.75), rgb(255, 255, 255));
+    -fx-pref-width: 100;
+    -fx-text-fill: white;
 }
 #boutonImport:hover{
     -fx-background-color: white;
@@ -74,6 +75,7 @@
     -fx-font-size: 13;
 
 }
+
 #boutonExport:hover{
     -fx-background-color: white;
     -fx-text-fill: rgba(9, 102, 155);
@@ -82,8 +84,9 @@
 
 }
 #boutonExport{
-    -fx-background-color: linear-gradient(to right, rgba(227, 82, 11, 0.3), rgb(255, 255, 255));
-    -fx-pref-width: 70;
+    -fx-background-color: linear-gradient(to right, rgb(213, 89, 30), rgb(255, 255, 255));
+    -fx-pref-width: 100;
+    -fx-text-fill: white;
 }
 .menuRapid{
     -fx-font-family: "Book Antiqua";

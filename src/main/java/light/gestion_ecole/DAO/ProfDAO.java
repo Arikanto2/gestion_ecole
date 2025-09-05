@@ -13,7 +13,7 @@ public class ProfDAO {
         List<Professeur> profs = new ArrayList<>();
         String sql = "SELECT p.idprof, p.nomprof,c.Designation, p.contactprof, p.adresseprof, p.emailprof " +
                 "From Professeur p " +
-                "LEFT JOIN classe c on substring(p.nomprof FROM position(' ' in nomprof)+1 ) = c.\"Titulaire\" " ;
+                "LEFT JOIN classe c on p.nomprof = c.\"Titulaire\" " ;
 
         try (Connection conn = Database.connect()){
             Statement stmt = conn.createStatement();
@@ -35,8 +35,9 @@ public class ProfDAO {
         return profs;
     }
 
-    public void ajoutProf(Professeur p) throws SQLException{
+    public void ajoutProf(Professeur p, String titulaire) throws SQLException{
         String sql = "INSERT INTO professeur (nomprof, contactprof, adresseprof, emailprof) VALUES (?,?,?,?)";
+        String upsql = "UPDATE classe SET \"Titulaire\" = ? WHERE designation = ? ";
         try(Connection conn = Database.connect();
             PreparedStatement stmt = conn.prepareStatement(sql)){
             stmt.setString(1, p.getNom());
@@ -44,11 +45,23 @@ public class ProfDAO {
             stmt.setString(3, p.getAdresse());
             stmt.setString(4, p.getEmail());
             stmt.executeUpdate();
+
+
+            if (titulaire != null ) {
+                try (PreparedStatement upstmt = conn.prepareStatement(upsql)) {
+                    upstmt.setString(1, p.getNom());
+                    upstmt.setString(2, titulaire);
+                    upstmt.executeUpdate();
+                }
+            }
         }
+
     }
 
-    public void modifieProf(Professeur p) throws  SQLException{
+    public void modifieProf(Professeur p, String titulaire, String oldtitulaire) throws  SQLException{
         String sql = "UPDATE professeur SET nomprof = ?, contactprof = ?,  adresseprof = ?, emailprof = ? WHERE idprof = ?";
+        String sql2 = "UPDATE classe SET \"Titulaire\" = ? WHERE designation = ?";
+        String sql3 = "UPDATE classe SET \"Titulaire\" = '' WHERE designation = ?";
         try(Connection conn = Database.connect();
         PreparedStatement stmt = conn.prepareStatement(sql)){
           stmt.setString(1, p.getNom());
@@ -57,6 +70,17 @@ public class ProfDAO {
           stmt.setString(4, p.getEmail());
           stmt.setInt(5, p.getIdprof());
           stmt.executeUpdate();
+
+          if (titulaire != oldtitulaire ) {
+              try (PreparedStatement upstmt = conn.prepareStatement(sql2);
+                   PreparedStatement upstmt2 = conn.prepareStatement(sql3)) {
+                  upstmt.setString(1, p.getNom());
+                  upstmt.setString(2, titulaire);
+                  upstmt2.setString(1, oldtitulaire);
+                  upstmt.executeUpdate();
+                  upstmt2.executeUpdate();
+              }
+          }
         }
     }
 
@@ -72,12 +96,14 @@ public class ProfDAO {
     //pour profs dans classe (combobox)
     public ObservableList<String> getprenom() throws SQLException {
         ObservableList<String> prenoms = FXCollections.observableArrayList();
-        String sql = "SELECT substring(nomprof FROM position(' ' in nomprof)+1 ) AS prenom from professeur ";
+        String sql = "SELECT p.nomprof FROM professeur p "+
+                "LEFT JOIN classe c on p.nomprof = c.\"Titulaire\" " +
+                "WHERE c.\"Titulaire\" is null";
         try (Connection conn = Database.connect()){
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                prenoms.add(rs.getString("prenom"));
+                prenoms.add(rs.getString("nomprof"));
             }
         }
         return prenoms;

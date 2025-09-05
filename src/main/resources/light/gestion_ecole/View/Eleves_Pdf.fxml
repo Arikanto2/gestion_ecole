@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="light.gestion_ecole.Controller.pdfClasse_Elves"
+
+      spacing="10"
+      prefHeight="400.0" prefWidth="600.0">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Classe de:"/>
+        <Label  fx:id="lblClasse" text="-" style="-fx-font-weight: bold;"/>
+    </HBox>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Titulaire :"/>
+        <Label  fx:id="lblprof" text="-" style="-fx-font-weight: bold;"/>
+    </HBox>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Label text="Nombre d'eleve :"/>
+        <Label  fx:id="lbleleves"  text="0" style="-fx-font-weight: bold;"/>
+    </HBox>
+    <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="numero" text="Numero" />
+            <TableColumn fx:id="nom" text="Nom" />
+            <TableColumn fx:id="prenom" text="prenoms" />
+        </columns>
+    </TableView>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="btnpdf" text="Telecharger to pdf"/>
+        <Button fx:id="fermer" text="Fermer"/>
+    </HBox>
+</VBox>
