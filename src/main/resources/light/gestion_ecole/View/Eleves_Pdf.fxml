@@ -25,7 +25,7 @@
         <Label  fx:id="lblprof" text="-" style="-fx-font-weight: bold;"/>
     </HBox>
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Label text="Nombre d'eleve :"/>
+        <Label text="Effectifs :"/>
         <Label  fx:id="lbleleves"  text="0" style="-fx-font-weight: bold;"/>
     </HBox>
     <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
@@ -35,7 +35,8 @@
             <TableColumn fx:id="prenom" text="prenoms" />
         </columns>
     </TableView>
-    <HBox spacing="10" alignment="CENTER_RIGHT">
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="afficherStatClasse" text="Statistiques"/>
         <Button fx:id="btnpdf" text="Telecharger to pdf"/>
         <Button fx:id="fermer" text="Fermer"/>
     </HBox>

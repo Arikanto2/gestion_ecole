@@ -15,6 +15,7 @@ import javafx.geometry.Pos;
 import javafx.util.Duration;
 import light.gestion_ecole.DAO.ClasseDAO;
 import light.gestion_ecole.DAO.ProfDAO;
+import light.gestion_ecole.DAO.StatDAO;
 import light.gestion_ecole.Model.Classe;
 import org.controlsfx.control.Notifications;
 
@@ -39,18 +40,33 @@ public class classecontroller {
     private Button btnModifier;
     @FXML
     private Button btnSupprimer;
+    @FXML ComboBox anneeScolaire;
 
     private ClasseDAO classeDAO = new ClasseDAO();
 
     @FXML
     public void initialize() throws SQLException {
+        anneeScolaire.getItems().addAll(StatDAO.getAnnescolaire());
+        anneeScolaire.getSelectionModel().select(0);
+        loadclasse();
+        anneeScolaire.setOnAction(event -> {
+
+        });
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         Designation.setCellValueFactory(cell -> cell.getValue().designationProperty());
         nbr_eleves.setCellValueFactory(cell -> cell.getValue().nbrElevesProperty().asObject());
         Ecolage.setCellValueFactory(new PropertyValueFactory<>("prixEcolage"));
         Titulaire.setCellValueFactory(cell -> cell.getValue().titulaireProperty());
 
-        loadclasse();
+        anneeScolaire.setOnAction(event -> {
+            try {
+                loadclasse();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                showError("Erreur lors du chargement des classes : " + e.getMessage());
+            }
+        });
+
 
         btnAjouter.setOnAction(e -> ouvrirFormulaire(null));
 
@@ -107,28 +123,28 @@ public class classecontroller {
     }
 
     private void loadclasse() throws SQLException {
-        ObservableList<Classe> liste = FXCollections.observableArrayList(classeDAO.getAllClasses());
+        String annee = (String) anneeScolaire.getSelectionModel().getSelectedItem();
+        if (annee == null) return;
+
+        ObservableList<Classe> liste = FXCollections.observableArrayList(
+                classeDAO.getAllClasses(annee)
+        );
 
         FilteredList<Classe> filteredClasse = new FilteredList<>(liste, e -> true);
 
-        // écoute du searchField
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredClasse.setPredicate(classe -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
+                if (newValue == null || newValue.isEmpty()) return true;
                 String lowerCaseFilter = newValue.toLowerCase();
 
-                if (classe.getDesignation() != null && classe.getDesignation().toLowerCase().contains(lowerCaseFilter)) {
+                if (classe.getDesignation() != null && classe.getDesignation().toLowerCase().contains(lowerCaseFilter))
                     return true;
-                } else if (classe.getTitulaire() != null && classe.getTitulaire().toLowerCase().contains(lowerCaseFilter)) {
+                else if (classe.getTitulaire() != null && classe.getTitulaire().toLowerCase().contains(lowerCaseFilter))
                     return true;
-                } else if (String.valueOf(classe.getNbrEleves()).contains(lowerCaseFilter)) {
+                else if (String.valueOf(classe.getNbrEleves()).contains(lowerCaseFilter))
                     return true;
-                } else if (classe.getPrixEcolage() != null && String.valueOf(classe.getPrixEcolage()).contains(lowerCaseFilter)) {
-                    return true;
-                }
-                return false;
+                else return classe.getPrixEcolage() != null &&
+                            String.valueOf(classe.getPrixEcolage()).contains(lowerCaseFilter);
             });
         });
 
@@ -137,6 +153,7 @@ public class classecontroller {
 
         tableView.setItems(sortedClasse);
     }
+
 
     private void ouvrirFormulaire(Classe classeAModifier) {
         try {
@@ -228,17 +245,23 @@ public class classecontroller {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Eleves_Pdf.fxml"));
             Parent root = loader.load();
 
+
             pdfClasse_Elves pdf = loader.getController();
             pdf.setClasse(c_pdp);
 
-            Stage stage = new Stage();
-            stage.setTitle("Eleves de " + c_pdp.getDesignation());
+            Stage stage1 = new Stage();
+            stage1.setTitle("Eleves de " + c_pdp.getDesignation());
 
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/light/gestion_ecole/Style/pdf.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.showAndWait();
+            stage1.setScene(scene);
+            stage1.setResizable(false);
+            stage1.setMaximized(false);
+            stage1.setMaxWidth(395);
+            stage1.setMaxHeight(500);
+
+            stage1.showAndWait();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             showError("Erreur lors de l'ouverture de la liste des élèves : " + ex.getMessage());

@@ -26,7 +26,9 @@ public class StatistiqueParClasseController {
     @FXML Label Mauvais;
     @FXML StackPane MGClasse;
     @FXML StackPane Assi;
+    static Classe classe;
     @FXML  public void initialize() throws SQLException {
+        afficheStatClasse(classe);
     }
     public  void afficheStatClasse(Classe classe) throws SQLException {
         int[] nb = StatDAO.getNBrenvoyéHandic(classe.getIdClasse());
@@ -59,11 +61,11 @@ public class StatistiqueParClasseController {
         LineChart<String ,Number> graph = new LineChart<>(xAxis,yAxis);
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Moyenne Générale par période");
-        if (moyenne[0] != 0) series.getData().add(new XYChart.Data<>("Interro1", moyenne[0]));
+        if (moyenne[0] != 0) series.getData().add(new XYChart.Data<>("Interro 1", moyenne[0]));
         if (moyenne[1] != 0) series.getData().add(new XYChart.Data<>("Examen I", moyenne[1]));
-        if (moyenne[2] != 0) series.getData().add(new XYChart.Data<>("Interro2", moyenne[2]));
+        if (moyenne[2] != 0) series.getData().add(new XYChart.Data<>("Interro 2", moyenne[2]));
         if (moyenne[3] != 0) series.getData().add(new XYChart.Data<>("Examen II", moyenne[3]));
-        if (moyenne[4] != 0) series.getData().add(new XYChart.Data<>("Interro3", moyenne[4]));
+        if (moyenne[4] != 0) series.getData().add(new XYChart.Data<>("Interro 3", moyenne[4]));
         if (moyenne[5] != 0) series.getData().add(new XYChart.Data<>("Examen III", moyenne[5]));
         for (XYChart.Data<String, Number> data : series.getData()) {
             data.nodeProperty().addListener((obs, oldNode, newNode) -> {

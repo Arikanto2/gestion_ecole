@@ -60,7 +60,7 @@
             </VBox>
 
 
-            <Button text="Valider" fx:id="valider" id="btnAjouter"/>
+            <Button text="Valider" fx:id="valider" id="btnAjouterT"/>
         </VBox>
     </center>
 </BorderPane>

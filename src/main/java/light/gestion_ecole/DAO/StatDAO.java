@@ -589,17 +589,17 @@ public class StatDAO {
             stmt.setString(1, "%-" + anneescolaire);
             try(ResultSet rs = stmt.executeQuery()){
                 while(rs.next()){
-                    if(rs.getString("typeevaluation").equals("Interro1")){
+                    if(rs.getString("typeevaluation").equals("Interro 1")){
                         moyenne[0] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Interro2")){
+                    }else if(rs.getString("typeevaluation").equals("Interro 2")){
                         moyenne[2] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Interro3")){
+                    }else if(rs.getString("typeevaluation").equals("Interro 3")){
                         moyenne[4] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Examen1")){
+                    }else if(rs.getString("typeevaluation").equals("Examen I")){
                         moyenne[1] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Examen2")){
+                    }else if(rs.getString("typeevaluation").equals("Examen II")){
                         moyenne[3] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Examen3")){
+                    }else if(rs.getString("typeevaluation").equals("Examen III")){
                         moyenne[5] = rs.getDouble("NOTE")/rs.getInt("COE");
                     }
                 }
@@ -677,17 +677,17 @@ public class StatDAO {
             stmt.setInt(2, idclasse);
             try(ResultSet rs = stmt.executeQuery()){
                 while(rs.next()){
-                    if(rs.getString("typeevaluation").equals("Interro1")){
+                    if(rs.getString("typeevaluation").equals("Interro 1")){
                         moyenne[0] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Interro2")){
+                    }else if(rs.getString("typeevaluation").equals("Interro 2")){
                         moyenne[2] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Interro3")){
+                    }else if(rs.getString("typeevaluation").equals("Interro 3")){
                         moyenne[4] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Examen1")){
+                    }else if(rs.getString("typeevaluation").equals("Examen I")){
                         moyenne[1] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Examen2")){
+                    }else if(rs.getString("typeevaluation").equals("Examen II")){
                         moyenne[3] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Examen3")){
+                    }else if(rs.getString("typeevaluation").equals("Examen III")){
                         moyenne[5] = rs.getDouble("NOTE")/rs.getInt("COE");
                     }
                 }
@@ -707,17 +707,17 @@ public class StatDAO {
             stmt.setString(2, eleve.getIdeleve());
             try(ResultSet rs = stmt.executeQuery()){
                 while(rs.next()){
-                    if(rs.getString("typeevaluation").equals("Interro1")){
+                    if(rs.getString("typeevaluation").equals("Interro 1")){
                         moyenne[0] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Interro2")){
+                    }else if(rs.getString("typeevaluation").equals("Interro 2")){
                         moyenne[2] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Interro3")){
+                    }else if(rs.getString("typeevaluation").equals("Interro 3")){
                         moyenne[4] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Examen1")){
+                    }else if(rs.getString("typeevaluation").equals("Examen I")){
                         moyenne[1] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Examen2")){
+                    }else if(rs.getString("typeevaluation").equals("Examen II")){
                         moyenne[3] = rs.getDouble("NOTE")/rs.getInt("COE");
-                    }else if(rs.getString("typeevaluation").equals("Examen3")){
+                    }else if(rs.getString("typeevaluation").equals("Examen III")){
                         moyenne[5] = rs.getDouble("NOTE")/rs.getInt("COE");
                     }
                 }

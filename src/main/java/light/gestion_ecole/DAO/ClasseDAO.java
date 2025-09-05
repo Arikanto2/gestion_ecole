@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClasseDAO {
-    public static List<Classe> getAllClasses() throws SQLException {
-        List<String> anneescolaire = StatDAO.getAnnescolaire();
+    public static List<Classe> getAllClasses(String anne) throws SQLException {
+
         List<Classe> classes = new ArrayList<>();
         String sql = "SELECT c.idclass, c.designation, COUNT(e.idclass) As nbr_eleves, c.\"Titulaire\", c.prixecolage " +
                 "FROM classe c " +
@@ -20,7 +20,7 @@ public class ClasseDAO {
                 "ORDER BY c.designation";
         try (Connection conn = Database.connect();
         PreparedStatement stmt = conn.prepareStatement(sql);) {
-            stmt.setString(1, anneescolaire.get(0));
+            stmt.setString(1, anne);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     classes.add(new Classe(

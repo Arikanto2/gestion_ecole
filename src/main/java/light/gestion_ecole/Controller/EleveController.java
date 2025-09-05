@@ -32,7 +32,6 @@ import java.util.*;
 
 public class EleveController {
     @FXML private TableView<Eleve> eleves;
-    @FXML private TableColumn<Eleve, Boolean> selectColumn;
     @FXML private TableColumn<Eleve, String> idEleve;
     @FXML private TableColumn<Eleve, String> nomEleve;
     @FXML private TableColumn<Eleve, String> prenomEleve;
@@ -431,15 +430,15 @@ public class EleveController {
         nationalNonModif.setToggleGroup(nationalGroupModif);
 
         eleves.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        autoResizeColumn(nomEleve);
-        autoResizeColumn(prenomEleve);
-        autoResizeColumn(adresseEleve);
-        autoResizeColumn(datenaiss);
-        autoResizeColumn(selectColumn);
+        autoResizeColumn2(nomEleve);
+        autoResizeColumn2(prenomEleve);
+        autoResizeColumn2(adresseEleve);
+        autoResizeColumn2(datenaiss);
+
 
         attitudes.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        autoResizeColumn(participationColumn);
-        autoResizeColumn(comportementColumn);
+        autoResizeColumn2(participationColumn);
+        autoResizeColumn2(comportementColumn);
 
         notes.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(matiereColumn);

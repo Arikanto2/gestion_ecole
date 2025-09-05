@@ -219,12 +219,12 @@ public class EleveDAO {
         return eleves;
     }
 
-    public String getIdEleve(String nummat, String annee){
+    public String getIdEleve(String nummat, String annee) {
         String ideleve = "";
         String sql = "SELECT ideleve FROM ELEVE WHERE nummat = ? AND anneescolaire = ?";
-        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql);){
-            stmt.setString(1,nummat);
-            stmt.setString(2,annee);
+        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setString(1, nummat);
+            stmt.setString(2, annee);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 ideleve = rs.getString("ideleve");
@@ -233,7 +233,7 @@ public class EleveDAO {
             throw new RuntimeException(e);
         }
         return ideleve;
-
+    }
     // pour pdf eleve
 
     public List<Eleve> getalleleveinclasse(String designation) throws SQLException {

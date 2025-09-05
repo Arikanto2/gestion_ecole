@@ -169,6 +169,10 @@
     -fx-text-fill: rgba(6, 56, 86, 0.91);
     -fx-font-size: 14;
 }
+#AnneeClasse{
+    -fx-pref-height: 20;
+
+}
 
 /* Style Tolotra*/
 .table-view {
@@ -240,6 +244,7 @@
     -fx-background-color: linear-gradient(to right,#0088cc,#1f6391);
     -fx-text-fill: #ffffff;
     -fx-border-radius: 50px;
+    -fx-pref-width: 100;
 }
 #btnAjouterT:hover{
     -fx-background-color: linear-gradient(to right,#80d4ff,#2980b9);
@@ -251,6 +256,7 @@
     -fx-font-size: 14px;
     -fx-border-radius: 50px;
     -fx-text-fill: #ffffff;
+    -fx-pref-width:100;
 }
 #btnModifierT:hover{
     -fx-border-radius: 50px;
@@ -273,6 +279,7 @@
     -fx-font-size: 14px;
     -fx-border-radius: 50px;
     -fx-text-fill: #ffffff;
+    -fx-pref-width: 100;
 }
 #btnSupprimerT:hover{
     -fx-border-radius: 50px;
