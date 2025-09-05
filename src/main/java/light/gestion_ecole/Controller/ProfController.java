@@ -15,6 +15,7 @@ import light.gestion_ecole.DAO.ClasseDAO;
 import light.gestion_ecole.DAO.ProfDAO;
 import light.gestion_ecole.Model.Professeur;
 
+import java.io.Console;
 import java.sql.SQLException;
 
 
@@ -130,9 +131,10 @@ public class ProfController {
                Adresse.setText(String.valueOf(professeurmodifier.getAdresse()));
                Email.setText(String.valueOf(professeurmodifier.getEmail()));
                comboTitulaire.setValue(professeurmodifier.getTitulaire());
-
                txtID.setEditable(false);
            }
+
+           String oldTitulaire = comboTitulaire.getValue();
 
            Stage stage = new Stage();
            stage.setTitle(professeurmodifier == null ? "Ajouter un professeur" : "Modifier un professeur" );
@@ -166,7 +168,7 @@ public class ProfController {
                         professeurmodifier.setContact(contact);
                         professeurmodifier.setAdresse(adresse);
                         professeurmodifier.setEmail(email);
-                        profDAO.modifieProf(professeurmodifier, titulaire);
+                        profDAO.modifieProf(professeurmodifier, titulaire, oldTitulaire);
                     }
                     loadprofs();
                     stage.close();
@@ -178,7 +180,6 @@ public class ProfController {
            });
 
            stage.showAndWait();
-
 
        }catch (Exception ex) {
            ex.printStackTrace();

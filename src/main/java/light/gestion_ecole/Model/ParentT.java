@@ -67,12 +67,18 @@ public class ParentT {
         this.professionmere = professionmere;
     }
     public String getTuteur() {
+        if (tuteur == null) {
+            return "****Pas de tuteur****";
+        }
         return tuteur;
     }
     public void setTuteur(String tuteur) {
         this.tuteur = tuteur;
     }
     public String getProfessiontuteur() {
+        if (tuteur == null) {
+            return "****Pas de tuteur****";
+        }
         return professiontuteur;
     }
     public void setProfessiontuteur(String professiontuteur) {

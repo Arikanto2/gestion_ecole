@@ -7,12 +7,12 @@ public class NoteT {
     private String numnat;
     private int idprof;
     private String matiere;
-    private int note;
+    private Double note;
     private double coefficient;
-    private String commentaire;
+    private String commentaire = "";
     private String typeevaluation;
 
-    public NoteT(String ideleve, String num, int idprof, String matiere, int note, double coefficient, String commentaire, String typeevaluation) {
+    public NoteT(String ideleve, String num, int idprof, String matiere, Double note, double coefficient, String commentaire, String typeevaluation) {
         this.ideleve = ideleve;
         this.numnat = num;
         this.idprof = idprof;
@@ -21,6 +21,11 @@ public class NoteT {
         this.coefficient = coefficient;
         this.commentaire = commentaire;
         this.typeevaluation = typeevaluation;
+    }
+
+    public NoteT(Eleve e) {
+        this.ideleve = e.getIdeleve();
+        this.numnat = e.getNummat();
     }
 
     public String getIdeleve() {
@@ -47,10 +52,10 @@ public class NoteT {
     public void setMatiere(String matiere) {
         this.matiere = matiere;
     }
-    public int getNote() {
+    public Double getNote() {
         return note;
     }
-    public void setNote(int note) {
+    public void setNote(Double note) {
         this.note = note;
     }
     public double getCoefficient() {

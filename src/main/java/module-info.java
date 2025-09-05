@@ -10,7 +10,10 @@ module light.gestion_ecole {
     requires java.sql;
     requires java.desktop;
 
-    requires com.dustinredmond.fxalert;
+    requires kernel;
+    requires layout;
+
+    requires org.controlsfx.controls;
 
 
 

@@ -53,4 +53,45 @@ public class ParentDAOT {
         }
         return res;
     }
+    public List<ParentT> getAllParents() throws SQLException {
+        List<ParentT>parent = new ArrayList<>();
+        String sql = "select * from PARENT";
+        try (Connection conn = Database.connect();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql)){
+            while (rs.next()) {
+                parent.add(new ParentT(rs.getInt("idparent"),rs.getString("nompere"),
+                        rs.getString("professionpere"),rs.getString("nommere"),rs.getString("professionmere"),
+                        rs.getString("tuteur"),rs.getString("professiontuteur"),rs.getString("contact"),rs.getString("emailparent") ));
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage());
+        }
+        return parent;
+    }
+    public void deleteParents(int id) throws SQLException {
+        String query = "delete from PARENT where idparent = ?";
+        try (Connection conn = Database.connect();
+        PreparedStatement pstmt = conn.prepareStatement(query)){
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        }
+    }
+    public void updateParents(ParentT parentT) throws SQLException {
+        String sql = "update PARENT SET nompere = ?, professionpere = ?, nommere =?, professionmere =?," +
+                "tuteur =?, professiontuteur =?, contact =?, emailparent = ? WHERE idparent = ?";
+        try (Connection conn = Database.connect();
+        PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, parentT.getNompere());
+            pstmt.setString(2, parentT.getProfessionpere());
+            pstmt.setString(3, parentT.getNommere());
+            pstmt.setString(4, parentT.getProfessionmere());
+            pstmt.setString(5, parentT.getTuteur());
+            pstmt.setString(6, parentT.getProfessiontuteur());
+            pstmt.setString(7, parentT.getContact());
+            pstmt.setString(8, parentT.getEmailparent());
+            pstmt.setInt(9, parentT.getIdparent());
+            pstmt.executeUpdate();
+        }
+    }
 }

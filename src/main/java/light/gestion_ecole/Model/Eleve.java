@@ -7,6 +7,7 @@ import light.gestion_ecole.DAO.EleveDAO;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -46,6 +47,47 @@ public class Eleve {
         this.examennational = examennational;
         this.handicap = handicap;
     }
+    public Eleve(String nummat,String nomeleve){
+        this.nummat = nummat;
+        this.nomeleve = nomeleve;
+    }
+
+    /////////////// constructeur pour pdf pour chaque classe //////////////
+    private int numero;
+    private String nom;
+    private String prenom;
+
+    public Eleve(int numero, String nom, String prenom){
+        this.numero = numero;
+        this.nom = nom;
+        this.prenom = prenom;
+    }
+
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+        //////////////////////// fin ////////////////
 
     public String getIdeleve() {
         return ideleve;
@@ -144,6 +186,9 @@ public class Eleve {
         else
             return "Redoublant";
     }
+    public Boolean getIspassant2() {
+            return ispassant;
+    }
     public void setIspassant(Boolean ispassant) {
         this.ispassant = ispassant;
     }
@@ -152,6 +197,9 @@ public class Eleve {
             return "reussi";
         else
             return "Pas encore";
+    }
+    public Boolean getNational(){
+        return examennational;
     }
     public void setExamennational(Boolean examennational) {
         this.examennational = examennational;
@@ -167,4 +215,6 @@ public class Eleve {
             return handicap;
         }
     }
+
+
 }

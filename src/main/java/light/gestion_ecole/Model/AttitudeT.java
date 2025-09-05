@@ -42,6 +42,9 @@ public class AttitudeT {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(dateattitude);
     }
+    public Date getDateattitudeAsDate() {
+        return dateattitude;
+    }
     public void setDateattitude(Date dateattitude) {
         this.dateattitude = dateattitude;
     }
