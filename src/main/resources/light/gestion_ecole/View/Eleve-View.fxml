@@ -391,38 +391,38 @@
                   style="-fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff); -fx-padding:5;"
                   AnchorPane.topAnchor="50" AnchorPane.leftAnchor="100" AnchorPane.rightAnchor="100">
                 <Label text="Ecolage par moi" styleClass="labelEntete" style="-fx-font-size: 18px"/>
+                <ScrollPane fitToWidth="true">
+                    <TitledPane text="Ajout Ecolage" expanded="true">
+                        <VBox spacing="15" alignment="CENTER">
+                            <GridPane hgap="10" vgap="10" styleClass="detailsPane">
+                                <Label text="numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                <Label fx:id="lblNumEcolage" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                <Label text="Nom:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <Label fx:id="lblNomEcolage" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                <Label text="Prenoms:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                                <Label fx:id="lblPrenomEcolage" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+                                <Label text="Classe de:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                <ComboBox fx:id="comboClasseEcolage" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Classe" prefWidth="120"/>
+                                <Label text="Date:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                                <DatePicker fx:id="txtDateEcolage" GridPane.rowIndex="2" GridPane.columnIndex="3" promptText="Date" prefWidth="100"/>
+                            </GridPane>
+                            <TableView fx:id="attribuerEcolages" styleClass="table-view">
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                </columnResizePolicy>
+                                <columns>
+                                    <TableColumn fx:id="moiColumn" text="Moi de"/>
+                                    <TableColumn fx:id="columnPayer" text="Payer"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </TitledPane>
+                </ScrollPane>
                 <GridPane hgap="10" vgap="10" styleClass="detailsPane">
-                    <columnConstraints>
-                        <ColumnConstraints halignment="CENTER"/>
-                        <ColumnConstraints halignment="CENTER"/>
-                        <ColumnConstraints halignment="CENTER"/>
-                    </columnConstraints>
-                    <Label text="numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <Label fx:id="lblNumEcolage" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                    <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
-                    <Label fx:id="lblNomEcolage" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
-                    <Label fx:id="lblPrenomEcolage" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
-                    <Label text="Classe de:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <ComboBox fx:id="comboClasseEcolage" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Classe"/>
-                    <Label text="Date:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                    <DatePicker fx:id="txtDateEcolage" GridPane.rowIndex="1" GridPane.columnIndex="3" promptText="Date" prefWidth="80"/>
-                    <Label text="Ecolage moi de:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <CheckBox fx:id="cbJanvier" text="JANVIER" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <CheckBox fx:id="cbFevrier" text="FEVRIER" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                    <CheckBox fx:id="cbMars" text="MARS" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                    <CheckBox fx:id="cbAvril" text="AVRIL" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-                    <CheckBox fx:id="cbMai" text="MAI" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
-                    <CheckBox fx:id="cbJuin" text="JUIN" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
-                    <CheckBox fx:id="cbJuillet" text="JUILLET" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
-                    <CheckBox fx:id="cbAout" text="AOUT" GridPane.rowIndex="4" GridPane.columnIndex="3"/>
-                    <CheckBox fx:id="cbSeptembre" text="SEPTEMBRE" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                    <CheckBox fx:id="cbOctobre" text="OCTOBRE" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-                    <CheckBox fx:id="cbNovembre" text="NOVEMBRE" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
-                    <CheckBox fx:id="cbDecembre" text="DECEMBRE" GridPane.rowIndex="5" GridPane.columnIndex="3"/>
-                    <Label text="Prix Ecolage:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-                    <Label fx:id="lblPrixEcolage" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-                    <Label text="Total Ecolage:" GridPane.rowIndex="6" GridPane.columnIndex="2"/>
-                    <Label fx:id="lblTotalEcolage" GridPane.rowIndex="6" GridPane.columnIndex="3"/>
+                    <Label text="Prix Ecolage:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <Label fx:id="lblPrixEcolage" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <Label text="Total à payer:" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+                    <Label fx:id="lblTotalEcolage" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
                 </GridPane>
                 <HBox alignment="BASELINE_CENTER" spacing="15">
                     <Button text="Enregistrer" styleClass="btnEnregistrerT"/>
