@@ -7,6 +7,7 @@ import light.gestion_ecole.DAO.EleveDAO;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -45,6 +46,10 @@ public class Eleve {
         this.ispassant = ispassant;
         this.examennational = examennational;
         this.handicap = handicap;
+    }
+    public Eleve(String nummat,String nomeleve){
+        this.nummat = nummat;
+        this.nomeleve = nomeleve;
     }
 
     /////////////// constructeur pour pdf pour chaque classe //////////////
@@ -181,6 +186,9 @@ public class Eleve {
         else
             return "Redoublant";
     }
+    public Boolean getIspassant2() {
+            return ispassant;
+    }
     public void setIspassant(Boolean ispassant) {
         this.ispassant = ispassant;
     }
@@ -189,6 +197,9 @@ public class Eleve {
             return "reussi";
         else
             return "Pas encore";
+    }
+    public Boolean getNational(){
+        return examennational;
     }
     public void setExamennational(Boolean examennational) {
         this.examennational = examennational;

@@ -82,4 +82,17 @@ public class ClasseDAO {
         return classes;
     }
 
+    public int getPrixEcolage(int id) throws SQLException {
+        int prix = 0;
+        String sql = "SELECT prixecolage FROM CLASSE WHERE idclass = ?";
+        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                prix = rs.getInt("prixecolage");
+            }
+        }
+        return prix;
+    }
+
 }

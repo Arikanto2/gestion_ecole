@@ -108,4 +108,30 @@ public class ProfDAO {
         }
         return prenoms;
     }
+    public List<String> getNomProf() throws SQLException {
+        List<String> noms = new ArrayList<>();
+        String sql = "SELECT nomprof FROM PROFESSEUR";
+        try (Connection conn = Database.connect()){
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                noms.add(rs.getString("nomprof"));
+            }
+        }
+        return noms;
+    }
+    public int getIdprof(String nom) {
+        String sql = "SELECT idprof FROM PROFESSEUR WHERE nomprof = ?";
+        try (Connection conn = Database.connect();
+        PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, nom);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idprof");
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

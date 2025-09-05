@@ -9,12 +9,27 @@ public class EcolageparmoiT {
     private int idecolage;
     private boolean statut;
     private Date ecolagemoi;
-    public EcolageparmoiT(String ideleve, String nummat, int idecolage, boolean statut, Date ecolagemoi) {
+    private String moiseco;
+    public EcolageparmoiT(String ideleve, String nummat, int idecolage, boolean statut, Date ecolagemoi, String moiseco) {
         this.ideleve = ideleve;
         this.nummat = nummat;
         this.idecolage = idecolage;
         this.statut = statut;
         this.ecolagemoi = ecolagemoi;
+        this.moiseco = moiseco;
+    }
+    public String getIdeleve() {
+        return ideleve;
+    }
+
+    public void setIdeleve(String ideleve) {
+        this.ideleve = ideleve;
+    }
+    public String getNummat() {
+        return nummat;
+    }
+    public void setNummat(String nummat) {
+        this.nummat = nummat;
     }
     public int getIdecolage() {
         return idecolage;
@@ -39,5 +54,11 @@ public class EcolageparmoiT {
     }
     public void setEcolagemoi(Date ecolagemoi) {
         this.ecolagemoi = ecolagemoi;
+    }
+    public String getMoiseco() {
+        return moiseco;
+    }
+    public void setMoiseco(String moiseco) {
+        this.moiseco = moiseco;
     }
 }

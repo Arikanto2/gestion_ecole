@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="light.gestion_ecole.Controller.ParentController"
+      prefHeight="400.0" prefWidth="600.0">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Pane>
+            <HBox.margin>
+                <Insets top="40" right="0" bottom="40" left="0"/>
+            </HBox.margin>
+        </Pane>
+        <Label text="Recherche :" styleClass="labelEntete"/>
+        <TextField fx:id="rechercheParent" promptText="Tapez ici..."/>
+    </HBox>
+    <StackPane>
+        <TableView fx:id="tableParent" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="nomPere" text="Nom du Père"/>
+            <TableColumn fx:id="professionPere" text="Profession Père"/>
+            <TableColumn fx:id="nomMere" text="Nom du Mère"/>
+            <TableColumn fx:id="professionMere" text="Profession Mère"/>
+            <TableColumn fx:id="tuteur" text="Nom du tuteur"/>
+            <TableColumn fx:id="professionTuteur" text="Profession Tuteur"/>
+            <TableColumn fx:id="contact" text="Contact"/>
+            <TableColumn fx:id="emailParent" text="Email"/>
+        </columns>
+    </TableView>
+        <AnchorPane fx:id="formOverlayParent" visible="false" opacity="0"
+                style="-fx-background-color: rgba(0,0,0,0.5);">
+
+        <VBox alignment="CENTER" spacing="5"
+              prefWidth="600" prefHeight="300"
+              style="-fx-background-color: white; -fx-padding:5;"
+              AnchorPane.topAnchor="50" AnchorPane.leftAnchor="100" AnchorPane.rightAnchor="100">
+
+            <Label text="Modification du Parent" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+            <ScrollPane fitToWidth="true">
+                <VBox spacing="15">
+
+                    <TitledPane text="Informations Générales Parents" expanded="true">
+                        <GridPane hgap="10" vgap="10">
+                            <Label text="Nom Pere:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                            <TextField fx:id="txtNomPere" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                            <Label text="Profession:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                            <TextField fx:id="txtProfessionPere" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                            <Label text="Nom Mère:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                            <TextField fx:id="txtNomMere" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+                            <Label text="Profession:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                            <TextField fx:id="txtProfessionMere" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+                            <Label text="Tuteur:" GridPane.rowIndex="0" GridPane.columnIndex="5"/>
+                            <TextField fx:id="txtTuteur" GridPane.rowIndex="0" GridPane.columnIndex="6"/>
+
+                            <Label text="Profession:" GridPane.rowIndex="1" GridPane.columnIndex="5"/>
+                            <TextField fx:id="txtProfessionTuteur" GridPane.rowIndex="1" GridPane.columnIndex="6"/>
+
+                            <Label text="Contact:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                            <TextField fx:id="txtContact" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                            <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                            <TextField fx:id="txtEmail" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+                        </GridPane>
+                    </TitledPane>
+                </VBox>
+            </ScrollPane>
+
+            <!-- Boutons -->
+            <HBox spacing="10" alignment="BASELINE_CENTER">
+                <Button text="Enregistrer" fx:id="btnEnregistrerT" onAction="#handleSubmit"/>
+                <Button text="Annuler" fx:id="btnAnnulerT" onAction="#handleCancel"/>
+            </HBox>
+
+        </VBox>
+    </AnchorPane>
+        <AnchorPane fx:id="formOverlay" visible="false" opacity="0"
+                    style="-fx-background-color: rgba(0,0,0,0.5);">
+
+            <VBox alignment="CENTER" spacing="5"
+                  prefWidth="600" prefHeight="291"
+                  style="-fx-background-color: white; -fx-padding:5;"
+                  AnchorPane.topAnchor="50" AnchorPane.leftAnchor="100" AnchorPane.rightAnchor="100">
+
+                <Label text="Créer un élève" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+                <ScrollPane fitToWidth="true">
+                    <VBox spacing="15">
+
+                        <TitledPane text="Informations Générales" expanded="true">
+                            <GridPane hgap="10" vgap="10">
+                                <Label text="Classe:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                <ComboBox fx:id="comboClasse2" promptText="Choisir une classe" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                <Label text="Année Scolaire:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                                <TextField fx:id="txtAnneeScolaire" promptText="2024-2025" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+                                <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="5"/>
+                                <TextField fx:id="txtNom" promptText="RAKOTO" GridPane.rowIndex="0" GridPane.columnIndex="6"/>
+
+                                <Label text="Prénom:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <TextField fx:id="txtPrenom" promptText="Randria" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                <Label text="Date Naissance:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                                <DatePicker fx:id="txtdateNaissance" GridPane.rowIndex="1" promptText="01-01-2000" GridPane.columnIndex="3"/>
+
+                                <Label text="Sexe:" GridPane.rowIndex="1" GridPane.columnIndex="5"/>
+                                <ComboBox fx:id="comboSexe" promptText="Choisir" GridPane.rowIndex="1" GridPane.columnIndex="6">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="Fille"/>
+                                            <String fx:value="Garçon"/>
+                                        </FXCollections>
+                                    </items>
+                                </ComboBox>
+
+                                <Label text="Adresse:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                <TextField fx:id="txtAdresse" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Adresse"/>
+                                <Label text="Passant:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                                <HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="3">
+                                    <RadioButton fx:id="passantOui" text="Oui" toggleGroup="$passantGroup"/>
+                                    <RadioButton fx:id="passantNon" text="Non" toggleGroup="$passantGroup"/>
+                                </HBox>
+                                <Label text="Examen National:" GridPane.rowIndex="2" GridPane.columnIndex="5"/>
+                                <HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="6">
+                                    <RadioButton fx:id="nationalOui" text="Oui" toggleGroup="$nationalGroup"/>
+                                    <RadioButton fx:id="nationalNon" text="Non" toggleGroup="$nationalGroup"/>
+                                </HBox>
+                                <Label text="Handicap:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                <ComboBox GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="comboHandicap" promptText="Choisir">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="Audition"/>
+                                            <String fx:value="Vision"/>
+                                            <String fx:value="Intelectuel"/>
+                                            <String fx:value="Psychomoteur"/>
+                                        </FXCollections>
+                                    </items>
+                                </ComboBox>
+                            </GridPane>
+                        </TitledPane>
+
+                        <!-- Section Parents -->
+                        <TitledPane text="Informations Parents" expanded="false">
+                            <GridPane hgap="10" vgap="10">
+                                <Label text="Nom Père:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                <TextField fx:id="txtNomPere2" promptText="Nom du père" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                <Label text="Profession Père:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <TextField fx:id="txtProfessionPere2" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Profession Père"/>
+
+                                <Label text="Nom Mère:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                                <TextField fx:id="txtNomMere2" GridPane.rowIndex="0" GridPane.columnIndex="3" promptText="Nom Mère"/>
+
+                                <Label text="Profession Mère:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                                <TextField fx:id="txtProfessionMere2" GridPane.rowIndex="1" GridPane.columnIndex="3" promptText="Profession Mère"/>
+
+                                <Label text="Tuteur:" GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+                                <TextField fx:id="txtTuteur2" GridPane.rowIndex="0" GridPane.columnIndex="6" promptText="Nom du Tuteur"/>
+                                <Label text="Profession Tuteur:" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+                                <TextField fx:id="txtTuteurProfession2" GridPane.rowIndex="1" GridPane.columnIndex="6" promptText="Profession Tuteur"/>
+                                <Label text="Contact:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                <TextField fx:id="txtContact2" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Contact Parents"/>
+                                <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                                <TextField fx:id="txtEmail2" GridPane.rowIndex="2" GridPane.columnIndex="3" promptText="email@gmail.com"/>
+                            </GridPane>
+                        </TitledPane>
+                    </VBox>
+                </ScrollPane>
+
+                <!-- Boutons -->
+                <HBox spacing="10" alignment="BASELINE_CENTER">
+                    <Button text="Enregistrer" onAction="#handleSave" styleClass="btnEnregistrerT" fx:id="enregistrerBtn"/>
+                    <Button text="Annuler" onAction="#handleCancel" styleClass="btnAnnulerT" fx:id="annulerBtn"/>
+                </HBox>
+
+            </VBox>
+        </AnchorPane>
+    </StackPane>
+
+    <HBox spacing="10" alignment="BASELINE_CENTER">
+        <Pane>
+            <HBox.margin>
+                <Insets top="40"/>
+            </HBox.margin>
+        </Pane>
+        <Button fx:id="btnAjouterT" text="Ajout Eleve" onAction="#OnAddEleve"/>
+        <Button fx:id="btnModifierT" text="Modifier" onAction="#OnUpdate"/>
+        <Button fx:id="btnSupprimerT" text="Supprimer" onAction="#OnDelete"/>
+    </HBox>
+
+</VBox>
