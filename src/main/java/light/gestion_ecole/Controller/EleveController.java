@@ -34,21 +34,19 @@ public class EleveController {
     @FXML private TableView<Eleve> eleves;
     @FXML private TableColumn<Eleve, String> idEleve;
     @FXML private TableColumn<Eleve, String> nomEleve;
-    @FXML private TableColumn<Eleve, String> prenomEleve;
-    @FXML private TableColumn<Eleve, String> adresseEleve;
     @FXML private TableColumn<Eleve, String> datenaiss;
     @FXML private TableColumn<Eleve, ImageView> genreEleve;
     //info General
     @FXML private Label lblNum;
     @FXML private Label lblNom;
-    @FXML private Label lblPrenom;
+    //@FXML private Label lblPrenom;
     @FXML private Label lblAdresse;
     @FXML private Label lblDateNaiss;
     @FXML private Label lblSexe;
     @FXML private Label lblClasse;
     @FXML private Label lblAnneScolaire;
-    @FXML private Label lblIspassant;
-    @FXML private Label lblExamenNational;
+    //@FXML private Label lblIspassant;
+    //@FXML private Label lblExamenNational;
     @FXML private Label lblHandicap;
     //tuteur
     @FXML private Label lblNomPere;
@@ -182,8 +180,19 @@ public class EleveController {
     @FXML private Label lblPrixEcolage;
     @FXML private Label lblTotalEcolage;
 
+    @FXML private AnchorPane formOverlayListEcolage;
+    @FXML private TextField txtSearchListe;
+    @FXML private ComboBox comboClasseListe;
+    @FXML private ComboBox comboAnneeListe;
+    @FXML private ComboBox comboMoisListe;
+    @FXML private TableView<Eleve> listages;
+    @FXML private TableColumn<Eleve, String> idListe;
+    @FXML private TableColumn<Eleve, String> nomListe;
+    @FXML private TableColumn<Eleve, String> ecoListe;
+
     private List<Button> buttonList;
 
+    private ObservableList<Eleve> allElevesNonPayer;
     private ObservableList<Eleve> allEleves;
     private EleveDAO eleveDAO = new EleveDAO();
     private ParentDAOT parentDAOT = new ParentDAOT();
@@ -193,11 +202,14 @@ public class EleveController {
     private ProfDAO profDAO = new ProfDAO();
     private ClasseDAO classeDAO = new ClasseDAO();
     private AttitudeT attitudeT;
+    private EcolageparmoiT ecolageparmoiT;
     private Eleve selectedEleve;
     private  int som = 0;
     private final Map<String, NoteT> notesBuffer = new HashMap<>();
     private String MatiereNote;
     private double coeff;
+    private List<String> moisPayes;
+    private  int prix = 0;
 
 
     @FXML
@@ -206,8 +218,6 @@ public class EleveController {
 
         idEleve.setCellValueFactory(new PropertyValueFactory<>("nummat"));
         nomEleve.setCellValueFactory(new PropertyValueFactory<>("nomeleve"));
-        prenomEleve.setCellValueFactory(new  PropertyValueFactory<>("prenomeleve"));
-        adresseEleve.setCellValueFactory(new PropertyValueFactory<>("adresseeleve"));
         datenaiss.setCellValueFactory(new PropertyValueFactory<>("datenaissance"));
         genreEleve.setCellValueFactory(data ->
                 new SimpleObjectProperty<>(data.getValue().getGenreeleveIcon()));
@@ -225,6 +235,9 @@ public class EleveController {
         moiEcolageColumn.setCellValueFactory(new PropertyValueFactory<>("moiseco"));
         dateEcolageColumn.setCellValueFactory(new PropertyValueFactory<>("ecolagemoi"));
         statutPayerColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
+        idListe.setCellValueFactory(new PropertyValueFactory<>("nummat"));
+        nomListe.setCellValueFactory(new PropertyValueFactory<>("nomeleve"));
+        ecoListe.setCellValueFactory(new PropertyValueFactory<>("listMoi"));
 
         columnMat.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNummat()));
         columnNom.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNomeleve()));
@@ -322,6 +335,34 @@ public class EleveController {
             }
         });
         attribuerNotes.setEditable(true);
+        moiColumn.setCellValueFactory(cellData ->new SimpleStringProperty(cellData.getValue().getMoiseco()));
+        columnPayer.setCellValueFactory(cellData -> {
+            SimpleBooleanProperty property = new SimpleBooleanProperty(cellData.getValue().isStatut());
+            property.addListener((obs, oldVal, newVal) ->{
+                cellData.getValue().setStatut(newVal);
+                calculerTotal();
+            });
+            return property;
+        });
+        columnPayer.setCellFactory(col -> {
+            CheckBoxTableCell<EcolageparmoiT, Boolean> cell = new CheckBoxTableCell<>(){
+                @Override
+                public void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (!empty) {
+                        EcolageparmoiT rowData = getTableView().getItems().get(getIndex());
+                        if (rowData.isDisabled()) {
+                            setDisable(true);
+                        } else {
+                            setDisable(false);
+                        }
+                    }
+                }
+            };
+            return cell;
+        });
+        //columnPayer.setCellFactory(CheckBoxTableCell.forTableColumn(columnPayer));
+        attribuerEcolages.setEditable(true);
         eleves.getColumns().forEach(col -> {
             col.setReorderable(false);
             col.setResizable(false);
@@ -342,20 +383,22 @@ public class EleveController {
             col.setReorderable(false);
             col.setResizable(false);
         });
+        listages.getColumns().forEach(col -> {
+            col.setReorderable(false);
+            col.setResizable(false);
+        });
         eleves.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 selectedEleve = newSelection;
                 try {
                     lblNum.setText(newSelection.getNummat());
                     lblNom.setText(newSelection.getNomeleve());
-                    lblPrenom.setText(newSelection.getPrenomeleve());
                     lblAdresse.setText(newSelection.getAdresseeleve());
                     lblDateNaiss.setText(newSelection.getDatenaissance());
                     lblSexe.setText(newSelection.getGenreeleve());
                     lblClasse.setText(newSelection.getClasse());
                     lblAnneScolaire.setText(newSelection.getAnneescolaire());
-                    lblIspassant.setText(newSelection.getIspassant());
-                    lblExamenNational.setText(newSelection.getExamennational());
+                    //lblExamenNational.setText(newSelection.getExamennational());
                     lblHandicap.setText(newSelection.getHandicap());
 
                     loadParent(newSelection.getIdparent());
@@ -363,6 +406,7 @@ public class EleveController {
                     loadNote(newSelection.getIdeleve(),(String) comboNote.getValue());
                     loadEcolage(newSelection.getIdeleve());
                     loadResultat();
+                    loadEcolagesForEleve(newSelection.getIdeleve());
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -376,11 +420,16 @@ public class EleveController {
         loadComboData();
         loadEleves();
         loadAttribuerNotes();
+        loadEcolageNonPayer();
 
         txtSearch.textProperty().addListener((obs, oldVal, newVal) -> filterTable());
         comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
         comboClasse.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
         comboNote.valueProperty().addListener((obs, oldVal, newVal) -> filterNote());
+        comboClasseListe.valueProperty().addListener((obs, oldVal, newVal) -> filterTableListe());
+        comboAnneeListe.valueProperty().addListener((obs, oldVal, newVal) -> filterTableListe());
+        comboMoisListe.valueProperty().addListener((obs, oldVal, newVal) -> filterTableListe());
+        txtSearchListe.textProperty().addListener((obs, oldVal, newVal) -> filterTableListe());
         comboClasseNote.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (comboNote.getValue() != null && comboAnneeNote.getValue() != null) {
                 try {
@@ -420,25 +469,8 @@ public class EleveController {
         nationalOuiModif.setToggleGroup(nationalGroupModif);
         nationalNonModif.setToggleGroup(nationalGroupModif);
 
-        moiColumn.setCellValueFactory(cellData ->new SimpleStringProperty(cellData.getValue().getMoiseco()));
-        columnPayer.setCellValueFactory(cellData -> {
-            SimpleBooleanProperty property = new SimpleBooleanProperty(cellData.getValue().isStatut());
-            property.addListener((obs, oldVal, newVal) -> cellData.getValue().setStatut(newVal));
-            return property;
-        });
-        columnPayer.setCellFactory(CheckBoxTableCell.forTableColumn(columnPayer));
-        ObservableList<EcolageparmoiT> data = FXCollections.observableArrayList();
-        String[] mois = {"Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
-                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Decembre"};
-        for (String m : mois){
-            data.add(new EcolageparmoiT(m, false));
-        }
-        attribuerEcolages.setItems(data);
-
         eleves.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(nomEleve);
-        autoResizeColumn2(prenomEleve);
-        autoResizeColumn2(adresseEleve);
         autoResizeColumn2(datenaiss);
 
 
@@ -458,7 +490,12 @@ public class EleveController {
         ecolages.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(moiEcolageColumn);
         autoResizeColumn2(dateEcolageColumn);
-        autoResizeColumn2(statutPayerColumn);
+        autoResizeColumn(statutPayerColumn);
+
+        listages.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        autoResizeColumn2(idListe);
+        autoResizeColumn2(nomListe);
+        autoResizeColumn2(ecoListe);
     }
     @FXML
     private void onSaveBTN() throws SQLException {
@@ -500,6 +537,68 @@ public class EleveController {
         fadeOut.setToValue(0);
 
         fadeOut.setOnFinished(e -> formOverlayAddNote.setVisible(false));
+        fadeOut.play();
+        loadEleves();
+        btnAjouterT();
+    }
+    @FXML
+    private void onAnnulerListe() throws SQLException {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOverlayListEcolage);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+
+        fadeOut.setOnFinished(e -> formOverlayListEcolage.setVisible(false));
+        fadeOut.play();
+        loadEleves();
+    }
+    @FXML
+    private void onEnregistrerEcolage() throws SQLException {
+        ObservableList<EcolageparmoiT> data = attribuerEcolages.getItems();
+        //selectedEleve = eleves.getSelectionModel().getSelectedItem();
+        if (selectedEleve != null){
+            for (EcolageparmoiT e : data) {
+                if (e.isStatut() && !e.isDisabled()) {
+                    ecolageparmoiT = new EcolageparmoiT(selectedEleve.getIdeleve(), selectedEleve.getNummat(),
+                            e.getIdecolage(),true,java.sql.Date.valueOf(txtDateEcolage.getValue()),e.getMoiseco());
+                    ecolageDAOT.insertEcolageparmoiT(ecolageparmoiT);
+                    FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOverlayAddEcolage);
+                    fadeOut.setFromValue(1);
+                    fadeOut.setToValue(0);
+
+                    fadeOut.setOnFinished(event -> formOverlayAddEcolage.setVisible(false));
+                    fadeOut.play();
+                    loadEleves();
+                    loadEcolage(selectedEleve.getIdeleve());
+                }
+            }
+        }
+    }
+    @FXML
+    private void onListageEco() throws SQLException {
+        formOverlayListEcolage.setVisible(true);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), formOverlayListEcolage);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+        loadEcolageNonPayer();
+    }
+    private void calculerTotal() {
+        int nbSelection = 0;
+        for (EcolageparmoiT e : attribuerEcolages.getItems()) {
+            if (e.isStatut() && !e.isDisabled()) {
+                nbSelection++;
+            }
+        }
+        int total = prix * nbSelection;
+        lblTotalEcolage.setText(total + "Ar");
+    }
+    @FXML
+    private void onAnnulerEcolage() throws SQLException {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOverlayAddEcolage);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+
+        fadeOut.setOnFinished(e -> formOverlayAddEcolage.setVisible(false));
         fadeOut.play();
         loadEleves();
         btnAjouterT();
@@ -583,6 +682,22 @@ public class EleveController {
         }
         column.setPrefWidth(max + 70);
     }
+    private void loadEcolagesForEleve(String ideleve) {
+        moisPayes = ecolageDAOT.getMoisPayes(ideleve);
+        ObservableList<EcolageparmoiT> data = FXCollections.observableArrayList();
+        String[] mois = {"Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
+                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Decembre"};
+        for (String m : mois){
+            EcolageparmoiT e = new EcolageparmoiT(m, false);
+            e.setIdeleve(ideleve);
+            if (moisPayes.contains(m)){
+                e.setStatut(true);
+                e.setDisabled(true);
+            }
+            data.add(e);
+        }
+        attribuerEcolages.setItems(data);
+    }
     private void loadParent(int idparent) throws SQLException {
         try{
             ParentT parentT = parentDAOT.getParents(idparent);
@@ -639,7 +754,7 @@ public class EleveController {
     private void filterEcolage() throws SQLException {
         if(comboClasseEcolage.getValue() != null){
             int id = eleveDAO.getIdClass(comboClasseEcolage.getValue().toString());
-            int prix = classeDAO.getPrixEcolage(id);
+            prix = classeDAO.getPrixEcolage(id);
             lblPrixEcolage.setText(prix+" Ar");
         }
     }
@@ -691,6 +806,8 @@ public class EleveController {
         comboClasseNote.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
         comboProf.setItems(FXCollections.observableArrayList(profDAO.getNomProf()));
         comboClasseEcolage.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
+        comboAnneeListe.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctAnnees()));
+        comboClasseListe.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
     }
     private void loadEleves() throws SQLException {
         if (comboAnnee.getValue() == null && comboClasse.getValue() == null){
@@ -726,6 +843,13 @@ public class EleveController {
             attribuerNotes.setItems(eleves);
         }
     }
+    private void loadEcolageNonPayer() throws SQLException {
+        if (comboAnneeListe.getValue() == null && comboClasseListe.getValue() == null && comboMoisListe.getValue() == null){
+            allElevesNonPayer = FXCollections.observableArrayList(ecolageDAOT.getListNonPayer());
+            listages.setItems(allElevesNonPayer);
+        }
+
+    }
 
     private void filterTable() {
         String searchText = txtSearch.getText() == null ? "" : txtSearch.getText().toLowerCase();
@@ -745,6 +869,28 @@ public class EleveController {
                         throw new RuntimeException(e);
                     }
                 }
+        ));
+    }
+
+    private void filterTableListe() {
+        String searchText = txtSearchListe.getText() == null ? "" : txtSearchListe.getText().toLowerCase();
+        String selectedAnnee = comboAnneeListe.getValue() == null ? null : comboAnneeListe.getValue().toString();
+        String selectedMoi = comboMoisListe.getValue() == null ? null : comboMoisListe.getValue().toString();
+        String selectedClasse = comboClasseListe.getValue() == null ? null : comboClasseListe.getValue().toString();
+
+        listages.setItems(allElevesNonPayer.filtered(eleve ->
+        {
+            try {
+                return (searchText.isEmpty()
+                || eleve.getNomeleve().toLowerCase().contains(searchText)
+                || eleve.getNummat().toLowerCase().contains(searchText))
+                && (selectedAnnee == null || eleve.getAnneescolaire().equals(selectedAnnee))
+                && (selectedClasse == null || eleve.getClasse().equals(selectedClasse))
+                && (selectedMoi == null || eleve.getListMoi().contains(selectedMoi));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         ));
     }
 
@@ -894,6 +1040,8 @@ public class EleveController {
             lblNumEcolage.setText(selectedEleve.getNummat());
             lblNomEcolage.setText(selectedEleve.getNomeleve());
             lblPrenomEcolage.setText(selectedEleve.getPrenomeleve());
+            comboClasseEcolage.setValue(selectedEleve.getClasse());
+            txtDateEcolage.setValue(LocalDate.now());
         } else {
             Alert.AlertType alertType = Alert.AlertType.INFORMATION;
             Alert alert = new Alert(alertType);

@@ -10,6 +10,7 @@ public class EcolageparmoiT {
     private boolean statut;
     private Date ecolagemoi;
     private String moiseco;
+    private Boolean disabled;
     public EcolageparmoiT(String ideleve, String nummat, int idecolage, boolean statut, Date ecolagemoi, String moiseco) {
         this.ideleve = ideleve;
         this.nummat = nummat;
@@ -17,10 +18,12 @@ public class EcolageparmoiT {
         this.statut = statut;
         this.ecolagemoi = ecolagemoi;
         this.moiseco = moiseco;
+        this.disabled = false;
     }
     public EcolageparmoiT(String moiseco, boolean statut) {
         this.moiseco = moiseco;
         this.statut = statut;
+        this.disabled = false;
     }
     public String getIdeleve() {
         return ideleve;
@@ -59,6 +62,9 @@ public class EcolageparmoiT {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(ecolagemoi);
     }
+    public Date getecolagemoiAsDate() {
+        return  ecolagemoi;
+    }
     public void setEcolagemoi(Date ecolagemoi) {
         this.ecolagemoi = ecolagemoi;
     }
@@ -67,5 +73,11 @@ public class EcolageparmoiT {
     }
     public void setMoiseco(String moiseco) {
         this.moiseco = moiseco;
+    }
+    public Boolean isDisabled() {
+        return disabled;
+    }
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
     }
 }
