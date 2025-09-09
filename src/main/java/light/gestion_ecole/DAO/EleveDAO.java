@@ -10,7 +10,8 @@ import java.util.List;
 public class EleveDAO {
     public List<Eleve> getEleves() throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT * FROM eleve";
+        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
+                "datenaiss, genre, anneescolaire, ispassant ,examennational, handicap FROM eleve ORDER BY nummat";
 
         try (Connection conn  = Database.connect();
              Statement stmt = conn.createStatement();
@@ -135,7 +136,8 @@ public class EleveDAO {
     }
     public List<Eleve> filtreAnnee(String annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT * from ELEVE where anneescolaire = ?";
+        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
+                "datenaiss, genre, anneescolaire, ispassant ,examennational, handicap FROM eleve where anneescolaire = ? ORDER BY nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, annee);
             ResultSet rs = stmt.executeQuery();
@@ -152,7 +154,8 @@ public class EleveDAO {
     }
     public List<Eleve> filtreClasse(int classe) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT * from ELEVE where idClass = ?";
+        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
+                "datenaiss, genre, anneescolaire, ispassant ,examennational, handicap from ELEVE where idClass = ? ORDER BY nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setInt(1, classe);
             ResultSet rs = stmt.executeQuery();
@@ -169,7 +172,8 @@ public class EleveDAO {
     }
     public List<Eleve> filtreDeuxCombo(String annee,int classe) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT * from ELEVE where anneescolaire = ? AND idclass = ?";
+        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
+                "datenaiss, genre, anneescolaire, ispassant ,examennational, handicap from ELEVE where anneescolaire = ? AND idclass = ? ORDER BY nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, annee);
             stmt.setInt(2, classe);
@@ -207,7 +211,7 @@ public class EleveDAO {
     }
     public List<Eleve> getNumNom(int classe,String Annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT nummat,nomeleve || ' ' || prenomeleve as nomeleve from ELEVE WHERE idclass = ? AND anneescolaire = ?";
+        String sql = "SELECT nummat,nomeleve || ' ' || prenomeleve as nomeleve from ELEVE WHERE idclass = ? AND anneescolaire = ? ORDER BY nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setInt(1, classe);
             stmt.setString(2, Annee);

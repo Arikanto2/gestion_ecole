@@ -107,6 +107,11 @@ public class ParentController {
         });
         loadComboData();
         loadParent();
+        tableParent.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableParent.getColumns().forEach(column -> {
+            column.setReorderable(false);
+            column.setResizable(false);
+        });
     }
     private void loadParent() throws SQLException {
         observableParent = FXCollections.observableArrayList(parentDAOT.getAllParents());

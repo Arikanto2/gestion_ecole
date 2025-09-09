@@ -28,6 +28,7 @@ public class Eleve {
     private Boolean ispassant;
     private Boolean examennational;
     private String handicap;
+    private String listMoi;
 
     public Eleve(String idEleve, String matricule,int idclass, int idparent,
                  String nom, String prenom, String adresse, Date datenaiss, String sex,
@@ -50,6 +51,13 @@ public class Eleve {
     public Eleve(String nummat,String nomeleve){
         this.nummat = nummat;
         this.nomeleve = nomeleve;
+    }
+    public Eleve(String nummat, String nomeleve, String listMoi, String annee, int idclass) {
+        this.nummat = nummat;
+        this.nomeleve = nomeleve;
+        this.listMoi = listMoi;
+        this.anneescolaire = annee;
+        this.idclass = idclass;
     }
 
     /////////////// constructeur pour pdf pour chaque classe //////////////
@@ -215,6 +223,10 @@ public class Eleve {
             return handicap;
         }
     }
-
-
+    public String getListMoi(){
+        return listMoi;
+    }
+    public void setListMoi(String listMoi) {
+        this.listMoi = listMoi;
+    }
 }
