@@ -11,19 +11,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.geometry.Pos;
-import javafx.util.Duration;
 import light.gestion_ecole.DAO.ClasseDAO;
 import light.gestion_ecole.DAO.ProfDAO;
 import light.gestion_ecole.DAO.StatDAO;
 import light.gestion_ecole.Model.Classe;
-import org.controlsfx.control.Notifications;
+import light.gestion_ecole.Model.Notification;
 
 import java.sql.SQLException;
+import java.util.List;
+
+import static light.gestion_ecole.Model.Notification.*;
 
 public class classecontroller {
     @FXML
     private TableView<Classe> tableView;
+
     @FXML
     private TableColumn<Classe, String> Designation;
     @FXML
@@ -130,6 +132,7 @@ public class classecontroller {
                 classeDAO.getAllClasses(annee)
         );
 
+
         FilteredList<Classe> filteredClasse = new FilteredList<>(liste, e -> true);
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -160,7 +163,10 @@ public class classecontroller {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/ajout_modif_classe.fxml"));
             Parent root = loader.load();
 
+
             TextField txtID = (TextField) root.lookup("#txtID");
+            Label id = (Label)  root.lookup("#id");
+            TextField txtDesignation = (TextField) root.lookup("#textFielDesignation");
             ComboBox<String> comboDesignation = (ComboBox<String>) root.lookup("#comboDesignation");
             TextField txtPrix = (TextField) root.lookup("#txtPrix");
             ComboBox<String> comboprof = (ComboBox<String>) root.lookup("#comboprof");
@@ -170,17 +176,24 @@ public class classecontroller {
             profs.add(0, "");
             comboprof.setPromptText("Sélectionner un prof...");
             comboprof.setItems(profs);
+            id.setVisible(false);
+            txtID.setVisible(false);
+            id.setManaged(false);
+            txtID.setManaged(false);
 
             Button btnEnregistrer = (Button) root.lookup("#btnEnregistrer");
             Button btnAnnuler = (Button) root.lookup("#btnAnnuler");
-
-            comboDesignation.getItems().addAll("12eme","11eme", "10eme", "CE",
-                    "CM1", "CM2", "6eme",
-                    "5eme", "4eme", "3eme",
-                    "Seconde", "Première", "TA", "TC", "TD");
+            List<String> designclasse = ClasseDAO.getdesignationclasse();
+            comboDesignation.getItems().addAll(designclasse);
+            txtDesignation.setVisible(false);
+            txtDesignation.setManaged(false);
 
             if (classeAModifier == null){
                 txtID.setDisable(true);
+                txtDesignation.setVisible(true);
+                txtDesignation.setManaged(true);
+                comboDesignation.setVisible(false);
+                comboDesignation.setManaged(false);
             }
             if (classeAModifier != null) {
                 txtID.setText(String.valueOf(classeAModifier.getIdClasse()));
@@ -200,21 +213,26 @@ public class classecontroller {
             btnEnregistrer.setOnAction(e -> {
                 try {
                     String designation = comboDesignation.getValue();
+                    String design = txtDesignation.getText().trim();
                     String prixStr = txtPrix.getText();
                     String prof = comboprof.getValue();
 
-                    if (designation == null || prixStr.isEmpty()) {
-                        showWarning("Veuillez remplir tous les champs !");
-                        return;
-                    }
 
                     double prix = Double.parseDouble(prixStr);
 
                     if (classeAModifier == null) {
-                        Classe nouvelleClasse = new Classe(0, designation, prof, prix);
+                        if (design == null || design.isEmpty() || design.equals("") || prixStr.isEmpty()) {
+                            showWarning("Veuillez remplir tous les champs !");
+                            return;
+                        }
+                        Classe nouvelleClasse = new Classe(0, design, prof, prix);
                         classeDAO.ajouterClasse(nouvelleClasse);
-                        showSuccess("Classe ajoutée avec succès !");
+                        Notification.showSuccess("Classe ajoutée avec succès !");
                     } else {
+                        if (designation == null || prixStr.isEmpty()) {
+                            showWarning("Veuillez remplir tous les champs !");
+                            return;
+                        }
                         int idclass = Integer.parseInt(txtID.getText());
                         classeAModifier.setIdClasse(idclass);
                         classeAModifier.setDesignation(designation);
@@ -231,8 +249,9 @@ public class classecontroller {
                     showError("Erreur : " + ex.getMessage());
                 }
             });
-
-            stage.showAndWait();
+            stage.setResizable(false);
+            stage.setMaximized(false);
+            stage.show();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -247,7 +266,7 @@ public class classecontroller {
 
 
             pdfClasse_Elves pdf = loader.getController();
-            pdf.setClasse(c_pdp);
+            pdf.setClasse(c_pdp,anneeScolaire.getSelectionModel().getSelectedItem().toString());
 
             Stage stage1 = new Stage();
             stage1.setTitle("Eleves de " + c_pdp.getDesignation());
@@ -268,33 +287,5 @@ public class classecontroller {
         }
     }
 
-    private void showSuccess(String message) {
-        Notifications.create()
-                .title("Succès")
-                .text(message)
-                .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(1.5))
-                .owner(tableView.getScene().getWindow())
-                .showInformation();
-    }
 
-    private void showWarning(String message) {
-        Notifications.create()
-                .title("Attention")
-                .text(message)
-                .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(1.5))
-                .owner(tableView.getScene().getWindow())
-                .showWarning();
-    }
-
-    private void showError(String message) {
-        Notifications.create()
-                .title("Erreur")
-                .text(message)
-                .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(1.5))
-                .owner(tableView.getScene().getWindow())
-                .showError();
-    }
 }

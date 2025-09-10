@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,9 +20,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.converter.DoubleStringConverter;
 import light.gestion_ecole.DAO.*;
+import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.*;
 
 import java.io.IOException;
@@ -88,6 +91,7 @@ public class EleveController {
 
     @FXML private Button btnAjouterT;
     @FXML private Button btnModifierT;
+    @FXML private Button StatEleve;
 
     @FXML private AnchorPane formOverlay;
     @FXML private ComboBox comboClasse2;
@@ -203,7 +207,33 @@ public class EleveController {
     @FXML
     public void initialize() throws SQLException {
         buttonList = List.of(btnAjouterT,btnModifierT,btnNewEleve,btnEnregistrerT,btnAnnulerT,btnEnregistrerModifT,btnAnnulerModifT);
-
+        StatEleve.setOnMouseClicked(e->{
+            if(selectedEleve != null){
+                StatUnElveController.eleve = selectedEleve;
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/light/gestion_ecole/View/StatUnEleve-View.fxml"));
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load(), 320, 240);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                Stage stage = new Stage();
+                stage.setTitle("Statistique (" + selectedEleve.getNummat() +")");
+                stage.setScene(scene);
+                stage.setMinWidth(750);
+                stage.setMinHeight(460);
+                stage.setResizable(false);
+                stage.setMaximized(false);
+                stage.show();
+            }
+            else{
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Selection!");
+                alert.setHeaderText(null);
+                alert.setContentText("Veuiller selectionner un élève.");
+                alert.show();
+            }
+        });
         idEleve.setCellValueFactory(new PropertyValueFactory<>("nummat"));
         nomEleve.setCellValueFactory(new PropertyValueFactory<>("nomeleve"));
         prenomEleve.setCellValueFactory(new  PropertyValueFactory<>("prenomeleve"));

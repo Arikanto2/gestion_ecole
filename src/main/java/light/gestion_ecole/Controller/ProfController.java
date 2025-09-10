@@ -77,21 +77,26 @@ public class ProfController {
         FilteredList<Professeur> filteredProfs = new FilteredList<>(list, p -> true);
         
         searchField.textProperty().addListener((obs, oldVal, newVal) -> {
-           filteredProfs.setPredicate(professeur -> {
-               if(newVal == null || newVal.isEmpty() ){
-                   return true;
-               }
-               String lowerCase = newVal.toLowerCase();
-               
-               if(professeur.getNom().toLowerCase().contains(lowerCase)){
-                   return true;
-               } else if (professeur.getTitulaire().toLowerCase().contains(lowerCase)) {
-                   return true;
-               } else if (professeur.getEmail().toLowerCase().contains(lowerCase)) {
-                   return true;
-               }
-               return false;
-           }); 
+            filteredProfs.setPredicate(professeur -> {
+                if (newVal == null || newVal.isEmpty()) {
+                    return true;
+                }
+                String lowerCase = newVal.toLowerCase();
+
+                String nom = professeur.getNom() == null ? "" : professeur.getNom().toLowerCase();
+                String titulaire = professeur.getTitulaire() == null ? "" : professeur.getTitulaire().toLowerCase();
+                String email = professeur.getEmail() == null ? "" : professeur.getEmail().toLowerCase();
+
+                if (nom.contains(lowerCase)) {
+                    return true;
+                } else if (titulaire.contains(lowerCase)) {
+                    return true;
+                } else if (email.contains(lowerCase)) {
+                    return true;
+                }
+                return false;
+            });
+
         });
 
         SortedList<Professeur> sortedList = new SortedList<>(filteredProfs);
@@ -178,7 +183,8 @@ public class ProfController {
                    new Alert(Alert.AlertType.ERROR, "Erreur : " + ex.getMessage()).showAndWait();
                }
            });
-
+           stage.setResizable(false);
+           stage.setMaximized(false);
            stage.showAndWait();
 
        }catch (Exception ex) {

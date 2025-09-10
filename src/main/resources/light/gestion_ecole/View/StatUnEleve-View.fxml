@@ -21,10 +21,15 @@
                 <Circle radius="25" stroke="#314480" fill="white" strokeWidth="1"/>
                 <Label text=""  fx:id="premierLettre" style="-fx-font-size: 18"/>
             </StackPane>
+            <Region HBox.hgrow="ALWAYS"/>
             <Label text="" styleClass="ttxt" fx:id="nummat"/>
+            <Region HBox.hgrow="ALWAYS"/>
             <Label text="" styleClass="ttxt" fx:id="nompre"/>
+            <Region HBox.hgrow="ALWAYS"/>
             <Label text="" styleClass="ttxt" fx:id="pre"/>
+            <Region HBox.hgrow="ALWAYS"/>
             <Label text="" styleClass="ttxt" fx:id="classeelve"/>
+            <Region HBox.hgrow="ALWAYS"/>
             <Label text="" styleClass="ttxt" fx:id="anneescolaire"/>
 
         </HBox>

@@ -3,11 +3,10 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.collections.FXCollections?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="light.gestion_ecole.Controller.EleveController">
+            fx:controller="light.gestion_ecole.Controller.EleveController" >
     <top>
         <HBox spacing="10" alignment="CENTER">
             <BorderPane.margin>
@@ -582,8 +581,14 @@
                     <Insets top="40" bottom="40" left="320"/>
                 </HBox.margin>
             </Pane>
+            <Button text="Statistique" fx:id="StatEleve" style="-fx-font-size: 14px;
+    -fx-background-color: linear-gradient(to right,#0088cc,#1f6391);
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 50px;
+    -fx-pref-width: 100;"/>
             <Button text="Ajouter" fx:id="btnAjouterT" onAction="#btnAjouterT"/>
             <Button text="Modifier" fx:id="btnModifierT" onAction="#btnModifierT"/>
+
         </HBox>
     </bottom>
 </BorderPane>
