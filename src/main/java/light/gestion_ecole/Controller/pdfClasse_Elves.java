@@ -1,5 +1,6 @@
 package light.gestion_ecole.Controller;
 
+import com.itextpdf.layout.properties.HorizontalAlignment;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -28,6 +29,9 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.layout.element.Image;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -103,7 +107,7 @@ public class pdfClasse_Elves {
         ObservableList<Eleve> data = FXCollections.observableList(eleves);
         tableView.setItems(data);
         lbleleves.setText(data.size() + " éleves");
-    }
+  }
 
     @FXML
     public void exporterPDF() {
@@ -126,6 +130,18 @@ public class pdfClasse_Elves {
                 PdfWriter writer = new PdfWriter(filePath);
                 PdfDocument pdfDoc = new PdfDocument(writer);
                 Document document = new Document(pdfDoc);
+
+                try {
+                    String logoPath = getClass().getResource("/light/gestion_ecole/Photo/logo.png").toExternalForm();
+                    ImageData imageData = ImageDataFactory.create(logoPath);
+                    Image logo = new Image(imageData);
+
+                    logo.setHorizontalAlignment(HorizontalAlignment.CENTER); // centré en haut
+
+                    document.add(logo);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
 
                 document.add(new Paragraph("Classe : " + classeselected.getDesignation())
                         .setBold().setFontSize(16));
@@ -170,5 +186,5 @@ public class pdfClasse_Elves {
             }
         }
     }
-
 }
+

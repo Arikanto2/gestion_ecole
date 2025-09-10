@@ -11,14 +11,14 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/light/gestion_ecole/View/Main-View.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/light/gestion_ecole/View/Login-View.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Connexion");
         stage.setScene(scene);
-        /*stage.setMinWidth(650);
+        stage.setMinWidth(650);
         stage.setMinHeight(550);
         stage.setResizable(false);
-        stage.setMaximized(false);*/
+        stage.setMaximized(false);
         stage.show();
 
     }

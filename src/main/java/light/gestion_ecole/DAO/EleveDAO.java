@@ -11,7 +11,8 @@ import java.util.List;
 public class EleveDAO {
     public List<Eleve> getEleves() throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT * FROM eleve";
+        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
+                "datenaiss, genre, anneescolaire, handicap FROM eleve ORDER BY nummat";
 
         try (Connection conn  = Database.connect();
              Statement stmt = conn.createStatement();
@@ -21,8 +22,7 @@ public class EleveDAO {
                         ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
                         rs.getString("prenomeleve"),rs.getString("adresseeleve"),
                         rs.getDate("datenaiss"),rs.getString("genre"),
-                        rs.getString("anneescolaire"),rs.getBoolean("ispassant"),
-                        rs.getBoolean("examennational"),rs.getString("handicap")));
+                        rs.getString("anneescolaire"),rs.getString("handicap")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -104,8 +104,8 @@ public class EleveDAO {
 
     public void insertEleve(Eleve eleve) throws SQLException {
         String sql = "INSERT INTO ELEVE (ideleve, nummat,idclass, idparent, nomeleve, prenomeleve," +
-                "adresseeleve, datenaiss, genre, anneescolaire, ispassant, examennational,handicap)" +
-                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+                "adresseeleve, datenaiss, genre, anneescolaire,handicap)" +
+                " VALUES (?,?,?,?,?,?,?,?,?,?,?) ";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, eleve.getIdeleve());
             stmt.setString(2, eleve.getNummat());
@@ -117,9 +117,7 @@ public class EleveDAO {
             stmt.setDate(8, (Date) eleve.getDatenaissance2());
             stmt.setString(9,eleve.getGenreeleve());
             stmt.setString(10,eleve.getAnneescolaire());
-            stmt.setBoolean(11, Boolean.parseBoolean(eleve.getIspassant()));
-            stmt.setBoolean(12, Boolean.parseBoolean(eleve.getExamennational()));
-            stmt.setString(13, eleve.getHandicap());
+            stmt.setString(11, eleve.getHandicap());
             stmt.executeUpdate();
         }
     }
@@ -136,7 +134,8 @@ public class EleveDAO {
     }
     public List<Eleve> filtreAnnee(String annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT * from ELEVE where anneescolaire = ?";
+        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
+                "datenaiss, genre, anneescolaire, handicap FROM eleve where anneescolaire = ? ORDER BY nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, annee);
             ResultSet rs = stmt.executeQuery();
@@ -145,15 +144,15 @@ public class EleveDAO {
                         ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
                         rs.getString("prenomeleve"),rs.getString("adresseeleve"),
                         rs.getDate("datenaiss"),rs.getString("genre"),
-                        rs.getString("anneescolaire"),rs.getBoolean("ispassant"),
-                        rs.getBoolean("examennational"),rs.getString("handicap")));
+                        rs.getString("anneescolaire"),rs.getString("handicap")));
             }
         }
         return eleves;
     }
     public List<Eleve> filtreClasse(int classe) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT * from ELEVE where idClass = ?";
+        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
+                "datenaiss, genre, anneescolaire, handicap from ELEVE where idClass = ? ORDER BY nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setInt(1, classe);
             ResultSet rs = stmt.executeQuery();
@@ -162,15 +161,15 @@ public class EleveDAO {
                         ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
                         rs.getString("prenomeleve"),rs.getString("adresseeleve"),
                         rs.getDate("datenaiss"),rs.getString("genre"),
-                        rs.getString("anneescolaire"),rs.getBoolean("ispassant"),
-                        rs.getBoolean("examennational"),rs.getString("handicap")));
+                        rs.getString("anneescolaire"),rs.getString("handicap")));
             }
         }
         return eleves;
     }
     public List<Eleve> filtreDeuxCombo(String annee,int classe) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT * from ELEVE where anneescolaire = ? AND idclass = ?";
+        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
+                "datenaiss, genre, anneescolaire, handicap from ELEVE where anneescolaire = ? AND idclass = ? ORDER BY nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, annee);
             stmt.setInt(2, classe);
@@ -180,8 +179,7 @@ public class EleveDAO {
                         ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
                         rs.getString("prenomeleve"),rs.getString("adresseeleve"),
                         rs.getDate("datenaiss"),rs.getString("genre"),
-                        rs.getString("anneescolaire"),rs.getBoolean("ispassant"),
-                        rs.getBoolean("examennational"),rs.getString("handicap")));
+                        rs.getString("anneescolaire"),rs.getString("handicap")));
             }
         }
         return eleves;
@@ -189,7 +187,7 @@ public class EleveDAO {
 
     public void updateEleve(Eleve eleve) throws SQLException {
         String sql = "UPDATE ELEVE SET idclass = ?, idparent = ?, nomeleve = ?, prenomeleve = ?,adresseeleve =?, datenaiss = ?, genre =?, " +
-                "anneescolaire = ?, ispassant = ?, examennational = ?,handicap = ? WHERE ideleve = ?";
+                "anneescolaire = ?,handicap = ? WHERE ideleve = ?";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, eleve.getIdclass());
             stmt.setInt(2, eleve.getIdparent());
@@ -199,16 +197,14 @@ public class EleveDAO {
             stmt.setDate(6, (Date) eleve.getDatenaissance2());
             stmt.setString(7, eleve.getGenreeleve());
             stmt.setString(8, eleve.getAnneescolaire());
-            stmt.setBoolean(9, Boolean.parseBoolean(eleve.getIspassant()));
-            stmt.setBoolean(10, Boolean.parseBoolean(eleve.getExamennational()));
-            stmt.setString(11, eleve.getHandicap());
-            stmt.setString(12, eleve.getIdeleve());
+            stmt.setString(9, eleve.getHandicap());
+            stmt.setString(10, eleve.getIdeleve());
             stmt.executeUpdate();
         }
     }
     public List<Eleve> getNumNom(int classe,String Annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT nummat,nomeleve || ' ' || prenomeleve as nomeleve from ELEVE WHERE idclass = ? AND anneescolaire = ?";
+        String sql = "SELECT nummat,nomeleve || ' ' || prenomeleve as nomeleve from ELEVE WHERE idclass = ? AND anneescolaire = ? ORDER BY nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setInt(1, classe);
             stmt.setString(2, Annee);
