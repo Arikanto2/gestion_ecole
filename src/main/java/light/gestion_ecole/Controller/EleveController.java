@@ -106,12 +106,11 @@ public class EleveController {
     @FXML private TextField txtContact;
     @FXML private TextField txtEmail;
 
-    @FXML private RadioButton passantOui;
-    @FXML private RadioButton passantNon;
-    @FXML private ToggleGroup passantGroup;
-    @FXML private RadioButton nationalOui;
-    @FXML private RadioButton nationalNon;
-    @FXML private ToggleGroup nationalGroup;
+    @FXML private CheckBox check1;
+    @FXML private CheckBox check2;
+    @FXML private CheckBox check3;
+    @FXML private CheckBox check4;
+
     @FXML private Button btnNewEleve;
     @FXML private Button btnEnregistrerT;
     @FXML private Button btnAnnulerT;
@@ -119,7 +118,10 @@ public class EleveController {
     @FXML private AnchorPane formOverlayUpdate;
     @FXML private ComboBox comboClasseModif;
     @FXML private ComboBox comboSexeModif;
-    @FXML private ComboBox comboHandicapModif;
+    @FXML private CheckBox checkModif1;
+    @FXML private CheckBox checkModif2;
+    @FXML private CheckBox checkModif3;
+    @FXML private CheckBox checkModif4;
     @FXML private TextField txtNomModif;
     @FXML private TextField txtPrenomModif;
     @FXML private TextField txtAnneeScolaireModif;
@@ -133,12 +135,6 @@ public class EleveController {
     @FXML private TextField  txtTuteurProfessionModif;
     @FXML private TextField txtContactModif;
     @FXML private TextField txtEmailModif;
-    @FXML private RadioButton passantOuiModif;
-    @FXML private RadioButton passantNonModif;
-    @FXML private ToggleGroup passantGroupModif;
-    @FXML private RadioButton nationalOuiModif;
-    @FXML private RadioButton nationalNonModif;
-    @FXML private ToggleGroup nationalGroupModif;
     @FXML private Button btnEnregistrerModifT;
     @FXML private Button btnAnnulerModifT;
 
@@ -398,7 +394,6 @@ public class EleveController {
                     lblSexe.setText(newSelection.getGenreeleve());
                     lblClasse.setText(newSelection.getClasse());
                     lblAnneScolaire.setText(newSelection.getAnneescolaire());
-                    //lblExamenNational.setText(newSelection.getExamennational());
                     lblHandicap.setText(newSelection.getHandicap());
 
                     loadParent(newSelection.getIdparent());
@@ -456,7 +451,7 @@ public class EleveController {
             }
         });
         comboCoef.getItems().addAll(1.0,2.0,3.0,4.0,5.0,6.0);
-        passantGroup = new ToggleGroup();
+        /*passantGroup = new ToggleGroup();
         passantOui.setToggleGroup(passantGroup);
         passantNon.setToggleGroup(passantGroup);
         nationalGroup = new ToggleGroup();
@@ -467,7 +462,7 @@ public class EleveController {
         passantNonModif.setToggleGroup(passantGroupModif);
         nationalGroupModif = new ToggleGroup();
         nationalOuiModif.setToggleGroup(nationalGroupModif);
-        nationalNonModif.setToggleGroup(nationalGroupModif);
+        nationalNonModif.setToggleGroup(nationalGroupModif);*/
 
         eleves.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(nomEleve);
@@ -621,18 +616,17 @@ public class EleveController {
             txtdateNaissanceModif.setValue(LocalDate.parse(selected.getDatenaissance(), formatter));
             comboSexeModif.setValue(selected.getGenreeleve());
             comboClasseModif.setValue(selected.getClasse());
-            comboHandicapModif.setValue(selected.getHandicap());
-            Boolean isPassant = selected.getIspassant2();
-            if (isPassant){
-                passantOuiModif.setSelected(true);
-            } else {
-                passantNonModif.setSelected(true);
-            }
-            Boolean isExamenNational = selected.getNational();
-            if (isExamenNational){
-                nationalOuiModif.setSelected(true);
-            }else {
-                nationalNonModif.setSelected(true);
+            String res = selected.getHandicap();
+            String[] selec = res.split("-");
+            List<CheckBox> checkBoxes = List.of(checkModif1,checkModif2,checkModif3,checkModif4);
+
+            for (CheckBox checkBox : checkBoxes) {
+                checkBox.setSelected(false);
+                for (String val : selec) {
+                    if (checkBox.getText().equals(val)) {
+                        checkBox.setSelected(true);
+                    }
+                }
             }
             int IdParent = selected.getIdparent();
             ParentT parentT = parentDAOT.getParents(IdParent);
@@ -894,12 +888,12 @@ public class EleveController {
         ));
     }
 
-    private boolean getBooleanFromRadio(ToggleGroup group, RadioButton radioButton) {
+    /*private boolean getBooleanFromRadio(ToggleGroup group, RadioButton radioButton) {
         if (group.getSelectedToggle() == null) {
             return false;
         }
         return group.getSelectedToggle() == radioButton;
-    }
+    }*/
 
     @FXML
     private void openEleveView() {
@@ -932,14 +926,20 @@ public class EleveController {
 
         int idClass = eleveDAO.getIdClass((String) comboClasse2.getValue());
         int idPrt = parentDAOT.getIdParents(txtContact.getText());
-        boolean estPassant = getBooleanFromRadio(passantGroup, passantOui);
-        boolean estNational = getBooleanFromRadio(nationalGroup, nationalOui);
+        List<CheckBox> checkBoxes = List.of(check1,check2,check3,check4);
+        List<String> checkString = new ArrayList<>();
+        for (CheckBox checkBox : checkBoxes) {
+            if (checkBox.isSelected()) {
+                checkString.add(checkBox.getText());
+            }
+        }
+        String result = String.join("-",checkString);
         int nb = eleveDAO.nbrEleves()+1;
         String matricule = "00"+ nb + getGenreeleve2();
         String id = matricule+'-'+ txtAnneeScolaire.getText();
         Eleve eleve = new Eleve(id,matricule,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
                 txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),
-                estPassant,estNational,(String) comboHandicap.getValue());
+                result);
         eleveDAO.insertEleve(eleve);
         handleCancel();
         loadEleves();
@@ -948,11 +948,17 @@ public class EleveController {
     private void handleSaveUpdate() throws SQLException {
         Eleve eleve = eleves.getSelectionModel().getSelectedItem();
         int idClass = eleveDAO.getIdClass((String) comboClasseModif.getValue());
-        boolean estPassant = getBooleanFromRadio(passantGroupModif, passantOuiModif);
-        boolean estNational = getBooleanFromRadio(nationalGroupModif, nationalOuiModif);
+        List<CheckBox> checkBoxes = List.of(checkModif1,checkModif2,checkModif3,checkModif4);
+        List<String> checkString = new ArrayList<>();
+        for (CheckBox checkBox : checkBoxes) {
+            if (checkBox.isSelected()) {
+                checkString.add(checkBox.getText());
+            }
+        }
+        String result = String.join("-",checkString);
         Eleve eleve1 = new Eleve(eleve.getIdeleve(),eleve.getNummat(),idClass,eleve.getIdparent(),txtNomModif.getText(),
                 txtPrenomModif.getText(),txtAdresseModif.getText(),java.sql.Date.valueOf(txtdateNaissanceModif.getValue()),
-                (String) comboSexeModif.getValue(),txtAnneeScolaireModif.getText(),estPassant,estNational,(String) comboHandicapModif.getValue());
+                (String) comboSexeModif.getValue(),txtAnneeScolaireModif.getText(),result);
         eleveDAO.updateEleve(eleve1);
         ParentT parentT = new ParentT(eleve.getIdparent(),txtNomPereModif.getText(),txtProfessionPereModif.getText(),txtNomMereModif.getText(),
                 txtProfessionMereModif.getText(),txtTuteurModif.getText(),txtTuteurProfessionModif.getText(),txtContactModif.getText(),txtEmailModif.getText());

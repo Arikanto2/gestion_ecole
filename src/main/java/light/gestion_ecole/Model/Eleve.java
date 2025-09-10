@@ -32,7 +32,7 @@ public class Eleve {
 
     public Eleve(String idEleve, String matricule,int idclass, int idparent,
                  String nom, String prenom, String adresse, Date datenaiss, String sex,
-                 String annee_scolaire, Boolean ispassant, Boolean examennational,String handicap) {
+                 String annee_scolaire,String handicap) {
         this.ideleve = idEleve;
         this.nummat = matricule;
         //this.idattitude = idattitude;
@@ -44,8 +44,8 @@ public class Eleve {
         this.datenaissance = datenaiss;
         this.genreeleve = sex;
         this.anneescolaire = annee_scolaire;
-        this.ispassant = ispassant;
-        this.examennational = examennational;
+        /*this.ispassant = ispassant;
+        this.examennational = examennational;*/
         this.handicap = handicap;
     }
     public Eleve(String nummat,String nomeleve){
