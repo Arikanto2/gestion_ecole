@@ -258,7 +258,6 @@ public class EleveDAO {
         }
     }
 
-
     public List<Eleve> getElevesFiltre(Classe classe, String anneescolaire) {
         String sql = "SELECT Row_number() Over (Order by e.nomeleve ASC ) AS numero, e.nomeleve, e.prenomeleve FROM classe c " +
                 "join eleve e on c.idclass = e.idclass " +
