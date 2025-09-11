@@ -1,6 +1,5 @@
 package light.gestion_ecole.DAO;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import light.gestion_ecole.Model.Classe;
