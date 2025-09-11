@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="light.gestion_ecole.Controller.Rang_classeController"
+      spacing="10"
+      prefHeight="400.0" prefWidth="600.0">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Classe de:"/>
+        <Label  fx:id="txtClasse" text="-" style="-fx-font-weight: bold;"/>
+    </HBox>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Titulaire :"/>
+        <Label  fx:id="txtprof" text="-" style="-fx-font-weight: bold;"/>
+    </HBox>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <ComboBox fx:id="evaluation" promptText="Typeevaluation" />
+    </HBox>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Label text="Effectifs :"/>
+        <Label  fx:id="txteleves"  text="0" style="-fx-font-weight: bold;"/>
+    </HBox>
+    <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="rang" text="Rang" />
+            <TableColumn fx:id="rnom" text="Nom" />
+            <TableColumn fx:id="rprenom" text="prenoms" />
+            <TableColumn fx:id="moyenne" text="moyenne"/>
+        </columns>
+    </TableView>
+</VBox>

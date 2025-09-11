@@ -28,6 +28,52 @@ public class NoteT {
         this.numnat = e.getNummat();
     }
 
+    ///////////pour rang et moyenne ///////////
+    private int rang;
+    private String nom;
+    private String prenom;
+    private Double moyenne;
+
+    public NoteT(int rang, String nom, String prenom, Double moyenne) {
+        this.rang = rang;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.moyenne = moyenne;
+    }
+    public int getRang() {
+        return rang;
+    }
+
+    public void setRang(int rang) {
+        this.rang = rang;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public Double getMoyenne() {
+        return moyenne;
+    }
+
+    public void setMoyenne(Double moyenne) {
+        this.moyenne = moyenne;
+    }
+
+    /// //////////////////////////////////////////////////////
+
     public String getIdeleve() {
         return ideleve;
     }
@@ -76,4 +122,6 @@ public class NoteT {
     public void setTypeevaluation(String typeevaluation) {
         this.typeevaluation = typeevaluation;
     }
+
+
 }

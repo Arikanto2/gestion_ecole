@@ -169,7 +169,56 @@ public class NoteDAOT {
             }
         }
     }
+    /////// pour les rangs dans classe //////////////////
+    public List<NoteT> rang_classe (String evalu, int idclass, String annee) throws SQLException {
+        List<NoteT> rang = new ArrayList<>();
+        String sql = "SELECT c.rang, c.nomeleve, c.prenomeleve, c.moyenne FROM " +
+                "(" +
+                "SELECT e.ideleve, e.nomeleve,e.prenomeleve, " +
+                "SUM(en.note * en.coefficient) / SUM(en.coefficient) As moyenne, " +
+                "RANK() OVER( " +
+                " PARTITION BY en.typeevaluation, e.idclass " +
+                " ORDER BY SUM(en.note * en.coefficient) / SUM(en.coefficient) DESC " +
+                "  ) AS rang " +
+                "FROM eleve e " +
+                "JOIN enseigner en ON e.ideleve=en.ideleve " +
+                "WHERE en.typeevaluation = ? " +
+                " AND e.idclass = ? " +
+                " AND e.anneescolaire = ? " +
+                " GROUP BY e.ideleve, e.nomeleve, e.prenomeleve, en.typeevaluation, e.idclass " +
+                ") As c " +
+                "ORDER BY c.rang";
 
+        try(Connection conn = Database.connect();){
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, evalu);
+            stmt.setInt(2, idclass);
+            stmt.setString(3, annee);
+            ResultSet rs = stmt.executeQuery();
 
+            while (rs.next()){
+                rang.add(new NoteT(
+                        rs.getInt("rang"),
+                        rs.getString("nomeleve"),
+                        rs.getString("prenomeleve"),
+                        rs.getDouble("moyenne")
+                ));
+            }
+        }
+    return rang;
+    }
+    public List<String> getevaluation() throws SQLException {
+        List<String> evaluation = new ArrayList<>();
+        String sql = "SELECT DISTINCT typeevaluation FROM enseigner ORDER BY typeevaluation DESC";
+        try(Connection conn = Database.connect();){
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                evaluation.add(rs.getString("typeevaluation"));
+            }
+        }
+        return evaluation;
+    }
+    /// ///////////////////////////////////////////////////
 
 }
