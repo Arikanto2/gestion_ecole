@@ -737,6 +737,7 @@
                 </HBox.margin>
             </Pane>
             <Button text="Ajouter" fx:id="btnAjouterT" onAction="#btnAjouterT"/>
+            <Button text="Statistique" fx:id="btNStat" />
             <Button text="Modifier" fx:id="btnModifierT" onAction="#btnModifierT"/>
         </HBox>
     </bottom>
