@@ -1,5 +1,15 @@
 package light.gestion_ecole.Controller;
 
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -8,10 +18,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,16 +30,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.converter.DoubleStringConverter;
 import light.gestion_ecole.DAO.*;
-import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.*;
+import org.controlsfx.control.Notifications;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -89,7 +103,6 @@ public class EleveController {
 
     @FXML private Button btnAjouterT;
     @FXML private Button btnModifierT;
-    @FXML private Button StatEleve;
 
     @FXML private AnchorPane formOverlay;
     @FXML private ComboBox comboClasse2;
@@ -148,7 +161,6 @@ public class EleveController {
     @FXML private AnchorPane formOverlayAddEcolage;
     @FXML private Label lblNumAttitude;
     @FXML private Label lblNomAttitude;
-    @FXML private Label lblPrenomAttitude;
     @FXML private DatePicker txtDate;
     @FXML private ComboBox comboParticipation;
     @FXML private ComboBox comboComportement;
@@ -171,7 +183,6 @@ public class EleveController {
 
     @FXML private  Label lblNumEcolage;
     @FXML private Label lblNomEcolage;
-    @FXML private Label lblPrenomEcolage;
     @FXML private ComboBox comboClasseEcolage;
     @FXML private DatePicker txtDateEcolage;
     @FXML private TableView<EcolageparmoiT> attribuerEcolages;
@@ -189,6 +200,33 @@ public class EleveController {
     @FXML private TableColumn<Eleve, String> idListe;
     @FXML private TableColumn<Eleve, String> nomListe;
     @FXML private TableColumn<Eleve, String> ecoListe;
+
+    @FXML private AnchorPane formOverlayAddAvertissement;
+    @FXML private Label lblNumAvertissement;
+    @FXML private Label lblNomAvertissement;
+    @FXML private Label lblClasseAvertissement;
+    @FXML private ComboBox comboAvertissement;
+
+    @FXML private AnchorPane formOvelayAddReinscrit;
+    @FXML private ComboBox comboClasseR;
+    @FXML private TextField txtAnneeScolaireR;
+    @FXML private TextField txtNomR;
+    @FXML private TextField txtPrenomR;
+    @FXML private DatePicker txtdateNaissanceR;
+    @FXML private ComboBox comboSexeR;
+    @FXML private TextField txtAdresseR;
+    @FXML private CheckBox check1R;
+    @FXML private CheckBox check2R;
+    @FXML private CheckBox check3R;
+    @FXML private CheckBox check4R;
+    @FXML private TextField txtNomPereR;
+    @FXML private TextField txtProfessionPereR;
+    @FXML private TextField txtNomMereR;
+    @FXML private TextField txtProfessionMereR;
+    @FXML private TextField txtTuteurR;
+    @FXML private TextField txtTuteurProfessionR;
+    @FXML private TextField txtContactR;
+    @FXML private TextField txtEmailR;
 
     private List<Button> buttonList;
 
@@ -215,33 +253,7 @@ public class EleveController {
     @FXML
     public void initialize() throws SQLException {
         buttonList = List.of(btnAjouterT,btnModifierT,btnNewEleve,btnEnregistrerT,btnAnnulerT,btnEnregistrerModifT,btnAnnulerModifT);
-        StatEleve.setOnMouseClicked(e->{
-            if(selectedEleve != null){
-                StatUnElveController.eleve = selectedEleve;
-                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/light/gestion_ecole/View/StatUnEleve-View.fxml"));
-                Scene scene = null;
-                try {
-                    scene = new Scene(fxmlLoader.load(), 320, 240);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                Stage stage = new Stage();
-                stage.setTitle("Statistique (" + selectedEleve.getNummat() +")");
-                stage.setScene(scene);
-                stage.setMinWidth(750);
-                stage.setMinHeight(460);
-                stage.setResizable(false);
-                stage.setMaximized(false);
-                stage.show();
-            }
-            else{
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Selection!");
-                alert.setHeaderText(null);
-                alert.setContentText("Veuiller selectionner un élève.");
-                alert.show();
-            }
-        });
+
         idEleve.setCellValueFactory(new PropertyValueFactory<>("nummat"));
         nomEleve.setCellValueFactory(new PropertyValueFactory<>("nomeleve"));
         datenaiss.setCellValueFactory(new PropertyValueFactory<>("datenaissance"));
@@ -387,7 +399,6 @@ public class EleveController {
             };
             return cell;
         });
-        //columnPayer.setCellFactory(CheckBoxTableCell.forTableColumn(columnPayer));
         attribuerEcolages.setEditable(true);
         eleves.getColumns().forEach(col -> {
             col.setReorderable(false);
@@ -481,18 +492,6 @@ public class EleveController {
             }
         });
         comboCoef.getItems().addAll(1.0,2.0,3.0,4.0,5.0,6.0);
-        /*passantGroup = new ToggleGroup();
-        passantOui.setToggleGroup(passantGroup);
-        passantNon.setToggleGroup(passantGroup);
-        nationalGroup = new ToggleGroup();
-        nationalOui.setToggleGroup(nationalGroup);
-        nationalNon.setToggleGroup(nationalGroup);
-        passantGroupModif = new ToggleGroup();
-        passantOuiModif.setToggleGroup(passantGroupModif);
-        passantNonModif.setToggleGroup(passantGroupModif);
-        nationalGroupModif = new ToggleGroup();
-        nationalOuiModif.setToggleGroup(nationalGroupModif);
-        nationalNonModif.setToggleGroup(nationalGroupModif);*/
 
         eleves.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(nomEleve);
@@ -579,7 +578,6 @@ public class EleveController {
     @FXML
     private void onEnregistrerEcolage() throws SQLException {
         ObservableList<EcolageparmoiT> data = attribuerEcolages.getItems();
-        //selectedEleve = eleves.getSelectionModel().getSelectedItem();
         if (selectedEleve != null){
             for (EcolageparmoiT e : data) {
                 if (e.isStatut() && !e.isDisabled()) {
@@ -668,6 +666,27 @@ public class EleveController {
             txtTuteurProfessionModif.setText(parentT.getProfessiontuteur());
             txtContactModif.setText(parentT.getContact());
             txtEmailModif.setText(parentT.getEmailparent());
+        } else {
+            Alert.AlertType alertType = Alert.AlertType.WARNING;
+            Alert alert = new Alert(alertType);
+            alert.setTitle("Attention");
+            alert.setContentText("Aucun element selectionner");
+            alert.showAndWait();
+        }
+    }
+    @FXML
+    private void onAvertissement() throws SQLException {
+        selectedEleve = eleves.getSelectionModel().getSelectedItem();
+        if (selectedEleve != null) {
+            onCancelButton();
+            formOverlayAddAvertissement.setVisible(true);
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), formOverlayAddAvertissement);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+            lblNumAvertissement.setText(selectedEleve.getNummat());
+            lblNomAvertissement.setText(selectedEleve.getNomeleve());
+            lblClasseAvertissement.setText(selectedEleve.getClasse());
         } else {
             Alert.AlertType alertType = Alert.AlertType.WARNING;
             Alert alert = new Alert(alertType);
@@ -832,6 +851,7 @@ public class EleveController {
         comboClasseEcolage.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
         comboAnneeListe.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctAnnees()));
         comboClasseListe.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
+        comboClasseR.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
     }
     private void loadEleves() throws SQLException {
         if (comboAnnee.getValue() == null && comboClasse.getValue() == null){
@@ -918,13 +938,6 @@ public class EleveController {
         ));
     }
 
-    /*private boolean getBooleanFromRadio(ToggleGroup group, RadioButton radioButton) {
-        if (group.getSelectedToggle() == null) {
-            return false;
-        }
-        return group.getSelectedToggle() == radioButton;
-    }*/
-
     @FXML
     private void openEleveView() {
         formOverlay.setVisible(true);
@@ -945,6 +958,18 @@ public class EleveController {
         fadeOut.setOnFinished(e -> formOverlay.setVisible(false));
         fadeOut.play();
         loadEleves();
+    }
+
+    @FXML
+    private void onCancelReinscrit() throws SQLException {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOvelayAddReinscrit);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+
+        fadeOut.setOnFinished(e -> formOvelayAddReinscrit.setVisible(false));
+        fadeOut.play();
+        loadEleves();
+        btnAjouterT();
     }
 
     // Bouton "Enregistrer"
@@ -973,6 +998,40 @@ public class EleveController {
         eleveDAO.insertEleve(eleve);
         handleCancel();
         loadEleves();
+    }
+    @FXML
+    private void onSaveReinscrit() throws SQLException {
+        //selectedEleve = eleves.getSelectionModel().getSelectedItem();
+        if (selectedEleve != null) {
+            ParentT parent = new ParentT(selectedEleve.getIdparent(),txtNomPereR.getText(),txtProfessionPereR.getText(),
+                    txtNomMereR.getText(),txtProfessionMereR.getText(),txtTuteurR.getText(),txtTuteurProfessionR.getText(),
+                    txtContactR.getText(),txtEmailR.getText());
+            parentDAOT.updateParents(parent);
+
+            int idClass = eleveDAO.getIdClass((String) comboClasseR.getValue());
+            List<CheckBox> checkBoxes = List.of(check1R,check2R,check3R,check4R);
+            List<String> checkString = new ArrayList<>();
+            for (CheckBox checkBox : checkBoxes) {
+                if (checkBox.isSelected()) {
+                    checkString.add(checkBox.getText());
+                }
+            }
+            String result = String.join("-",checkString);
+            String mat = selectedEleve.getNummat();
+            String id = mat+'-'+ txtAnneeScolaireR.getText();
+            Eleve eleve = new Eleve(id,mat,idClass,selectedEleve.getIdparent(),txtNomR.getText(),txtPrenomR.getText(),txtAdresseR.getText(),
+                    java.sql.Date.valueOf(txtdateNaissanceR.getValue()),(String) comboSexeR.getValue(),txtAnneeScolaireR.getText(),result);
+            eleveDAO.insertEleve(eleve);
+            loadEleves();
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOvelayAddReinscrit);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+
+            fadeOut.setOnFinished(e -> formOvelayAddReinscrit.setVisible(false));
+            fadeOut.play();
+            comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
+            comboClasse.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
+        }
     }
     @FXML
     private void handleSaveUpdate() throws SQLException {
@@ -1043,7 +1102,6 @@ public class EleveController {
             fadeIn.play();
             lblNumAttitude.setText(selectedEleve.getNummat());
             lblNomAttitude.setText(selectedEleve.getNomeleve());
-            lblPrenomAttitude.setText(selectedEleve.getPrenomeleve());
         }
         else {
             Alert.AlertType alertType = Alert.AlertType.INFORMATION;
@@ -1064,6 +1122,51 @@ public class EleveController {
         fadeIn.play();
     }
     @FXML
+    private void onReinscrit() throws SQLException{
+        selectedEleve = eleves.getSelectionModel().getSelectedItem();
+        if (selectedEleve != null) {
+            onCancelButton();
+            formOvelayAddReinscrit.setVisible(true);
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), formOvelayAddReinscrit);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+            txtNomR.setText(selectedEleve.getNomeleve2());
+            txtPrenomR.setText(selectedEleve.getPrenomeleve());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.FRENCH);
+            txtdateNaissanceR.setValue(LocalDate.parse(selectedEleve.getDatenaissance(), formatter));
+            comboSexeR.setValue(selectedEleve.getGenreeleve());
+            txtAdresseR.setText(selectedEleve.getAdresseeleve());
+            String handicap = selectedEleve.getHandicap();
+            String[] res = handicap.split("-");
+            List<CheckBox> checkBoxes = List.of(check1R,check2R,check3R,check4R);
+            for (CheckBox checkBox : checkBoxes) {
+                checkBox.setSelected(false);
+                for (String val : res) {
+                    if (checkBox.getText().equals(val)) {
+                        checkBox.setSelected(true);
+                    }
+                }
+            }
+            ParentT parent = parentDAOT.getParents(selectedEleve.getIdparent());
+            txtNomPereR.setText(parent.getNompere());
+            txtProfessionPereR.setText(parent.getProfessionpere());
+            txtNomMereR.setText(parent.getNommere());
+            txtProfessionMereR.setText(parent.getProfessionmere());
+            txtTuteurR.setText(parent.getTuteur());
+            txtTuteurProfessionR.setText(parent.getProfessiontuteur());
+            txtContactR.setText(parent.getContact());
+            txtEmailR.setText(parent.getEmailparent());
+
+        } else {
+            Alert.AlertType alertType = Alert.AlertType.INFORMATION;
+            Alert alert = new Alert(alertType);
+            alert.setTitle("Attention");
+            alert.setContentText("Aucun element selectionner");
+            alert.showAndWait();
+        }
+    }
+    @FXML
     private void onEcolage() throws SQLException{
         selectedEleve = eleves.getSelectionModel().getSelectedItem();
         if (selectedEleve != null) {
@@ -1075,7 +1178,6 @@ public class EleveController {
             fadeIn.play();
             lblNumEcolage.setText(selectedEleve.getNummat());
             lblNomEcolage.setText(selectedEleve.getNomeleve());
-            lblPrenomEcolage.setText(selectedEleve.getPrenomeleve());
             comboClasseEcolage.setValue(selectedEleve.getClasse());
             txtDateEcolage.setValue(LocalDate.now());
         } else {
@@ -1093,6 +1195,17 @@ public class EleveController {
         fadeOut.setToValue(0);
 
         fadeOut.setOnFinished(e -> formOverlayAddAttitude.setVisible(false));
+        fadeOut.play();
+        loadEleves();
+        btnAjouterT();
+    }
+    @FXML
+    private void btnAnnulerAvertissement() throws SQLException{
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOverlayAddAvertissement);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+
+        fadeOut.setOnFinished(e -> formOverlayAddAvertissement.setVisible(false));
         fadeOut.play();
         loadEleves();
         btnAjouterT();
@@ -1127,5 +1240,85 @@ public class EleveController {
             alert.showAndWait();
         }
     }
+    @FXML
+    private void onSaveAvertissement() throws SQLException{
+        if (selectedEleve != null){
+            try {
+                eleveDAO.giveAvertissement(selectedEleve.getIdeleve(),(String) comboAvertissement.getValue());
+                btnAnnulerAvertissement();
+                loadEleves();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
+    @FXML
+    private void onPdf() throws SQLException{
+        if (selectedEleve != null){
+            try {
+                String userDesktop = System.getProperty("user.home") + "/Desktop";
+                String filePath = userDesktop + "/Eleve_" + selectedEleve.getIdeleve().trim() + ".pdf";
+
+                PdfWriter writer = new PdfWriter(filePath);
+                PdfDocument pdfDoc = new PdfDocument(writer);
+                Document document = new Document(pdfDoc);
+
+                /*try {
+                    String logoPath = getClass().getResource("/light/gestion_ecole/Photo/logo.png").toExternalForm();
+                    ImageData imageData = ImageDataFactory.create(logoPath);
+                    Image logo = new Image(imageData);
+
+                    logo.setHorizontalAlignment(HorizontalAlignment.CENTER); // centré en haut
+
+                    document.add(logo);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }*/
+                String eval =  comboEvaluation.getValue().toString().toUpperCase();
+                document.add(new Paragraph("RELEVE DE NOTE D'" + eval)
+                        .setBold().setFontSize(16).setTextAlignment(TextAlignment.CENTER).setUnderline());
+                document.add(new Paragraph("NOM ET PRENOMS : " + selectedEleve.getNomeleve()));
+                document.add(new Paragraph("ANNE SCOLAIRE: " + selectedEleve.getAnneescolaire()));
+                document.add(new Paragraph("CLASSE DE: " + selectedEleve.getClasse()));
+                document.add(new Paragraph("\n"));
+
+                Table table = new Table(4);
+                table.addHeaderCell("Matières").setBold();
+                table.addHeaderCell("Coefficient").setBold();
+                table.addHeaderCell("Note").setBold();
+                table.addHeaderCell("Commentaire").setBold();
+
+                for (NoteT note : notes.getItems()) {
+                    table.addCell(String.valueOf(note.getMatiere()));
+                    table.addCell(String.valueOf(note.getCoefficient()));
+                    table.addCell(String.valueOf(note.getNote()));
+                    table.addCell(String.valueOf(note.getCommentaire()));
+                }
+
+                document.add(table);
+                document.add(new Paragraph("Total coefficient: "+ lblTotalCoef.getText()).setBold());
+                document.add(new Paragraph("Total: " + lblTotalNote.getText()).setBold());
+                document.add(new Paragraph("Moyenne: "+lblMoyenne.getText()).setBold());
+                document.add(new Paragraph("Rang: "+ lblRang.getText()).setBold());
+                document.add(new Paragraph("\n"));
+                SimpleDateFormat sdf = new SimpleDateFormat("d MMMM yyyy", Locale.FRENCH);
+                document.add(new Paragraph("Fait le"+ sdf.format(Date.valueOf(LocalDate.now()))).setBold().setTextAlignment(TextAlignment.RIGHT).setPaddingRight(30));
+                document.add(new Paragraph("LE DIRECTEUR").setBold().setTextAlignment(TextAlignment.RIGHT).setPaddingRight(35));
+                document.add(new Paragraph("\n"));
+                document.add(new Paragraph("RASOLOFONDRADIMBY Andriantsoa").setBold().setTextAlignment(TextAlignment.RIGHT).setPaddingRight(15));
+                document.close();
+
+                Notifications.create()
+                        .title("Succès")
+                        .text("PDF généré avec succès sur le Bureau : " + filePath)
+                        .position(Pos.CENTER)
+                        .hideAfter(Duration.seconds(3))
+                        .showInformation();
+
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

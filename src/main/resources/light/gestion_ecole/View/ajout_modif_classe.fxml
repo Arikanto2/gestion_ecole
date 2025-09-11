@@ -19,7 +19,7 @@
            style="-fx-font-size: 14px;
            -fx-text-fill: #444;
            -fx-font-weight: bold;"
-    fx:id="id"/>
+    />
     <TextField fx:id="txtID" GridPane.rowIndex="0" GridPane.columnIndex="1"
                style="-fx-pref-width: 200px;
                -fx-padding: 6 10;
@@ -34,23 +34,14 @@
            -fx-text-fill: #444;
            -fx-font-weight: bold;"
     />
-
-    <StackPane GridPane.rowIndex="1" GridPane.columnIndex="1">
-        <ComboBox fx:id="comboDesignation"
-                  style="-fx-pref-width: 200px;
+    <ComboBox fx:id="comboDesignation" GridPane.rowIndex="1" GridPane.columnIndex="1"
+              style="-fx-pref-width: 200px;
               -fx-padding: 6 10;
               -fx-background-radius: 6;
               -fx-border-radius: 6;
               -fx-border-color: #cccccc;
               -fx-background-color: #ffffff;"
-        />
-        <TextField fx:id="textFielDesignation" style="-fx-pref-width: 200px;
-              -fx-padding: 6 10;
-              -fx-background-radius: 6;
-              -fx-border-radius: 6;
-              -fx-border-color: #cccccc;
-              -fx-background-color: #ffffff;"/>
-    </StackPane>
+    />
 
     <Label text="Prix Écolage :" GridPane.rowIndex="2" GridPane.columnIndex="0"
            style="-fx-font-size: 14px;
@@ -82,14 +73,14 @@
 
     <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="4" GridPane.columnIndex="1">
         <Button fx:id="btnEnregistrer" text="Enregistrer"
-                style="-fx-background-color: linear-gradient(to right,#80d4ff,#2980b9);
+                style="-fx-background-color: #4CAF50;
                 -fx-text-fill: white;
                 -fx-font-weight: bold;
                 -fx-background-radius: 8;
                 -fx-padding: 8 16;"
         />
         <Button fx:id="btnAnnuler" text="Annuler"
-                style="-fx-background-color: linear-gradient(to right,#ff9999,#ff3333);
+                style="-fx-background-color: #f44336;
                 -fx-text-fill: white;
                 -fx-font-weight: bold;
                 -fx-background-radius: 8;

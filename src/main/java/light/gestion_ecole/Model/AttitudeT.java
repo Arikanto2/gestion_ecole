@@ -20,7 +20,6 @@ public class AttitudeT {
         this.dateattitude=dateattitude;
         this.retard = retard;
     }
-    public AttitudeT(){}
     public int getIdattitude() {
         return idattitude;
     }

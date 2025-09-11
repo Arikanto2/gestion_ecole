@@ -580,7 +580,6 @@ public class StatDAO {
 
             return pourcentage;
         }
-
     }
     public static double[] getMGParTrimestre(String anneescolaire) {
         double[] moyenne = new double[6];
@@ -728,54 +727,4 @@ public class StatDAO {
         }
         return moyenne;
     }
-    public static String getExamenNatParClasse(String anneescolaire, String designation) {
-        LocalDate today = LocalDate.now();
-        String[] annees = anneescolaire.split("-");
-        int anneeFin = Integer.parseInt(annees[1]);
-        LocalDate finAnneeScolaire = LocalDate.of(anneeFin, Month.AUGUST, 20);
-
-        if (today.isBefore(finAnneeScolaire)) {
-            return "En cours";
-        } else {
-            String sql = "SELECT e.examennational, COUNT(*) AS nb " +
-                    "FROM eleve e JOIN classe c ON c.idclass = e.idclass " +
-                    "WHERE e.anneescolaire = ? AND c.designation = ? " +
-                    "GROUP BY e.examennational";
-
-            double afaka = 0;
-            double tsafaka = 0;
-
-            try (Connection conn = Database.connect();
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-                stmt.setString(1, anneescolaire);
-                stmt.setString(2, designation);
-
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        boolean val = rs.getBoolean("examennational");
-                        if (!rs.wasNull()) {
-                            int count = rs.getInt("nb");
-                            if (val) {
-                                afaka = count;
-                            } else {
-                                tsafaka = count;
-                            }
-                        }
-                    }
-                }
-
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-
-            double total = afaka + tsafaka;
-            if (total == 0) {
-                return "0% (0/0)";
-            } else {
-                return String.format("%.2f%% (%d/%d)", (afaka / total) * 100, (int) afaka, (int) total);
-            }
-        }
-    }
-
 }

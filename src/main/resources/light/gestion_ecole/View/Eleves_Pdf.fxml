@@ -37,7 +37,7 @@
     </TableView>
     <HBox spacing="10" alignment="CENTER">
         <Button fx:id="afficherStatClasse" text="Statistiques"/>
-        <Button fx:id="btnpdf" text="Exporter PDF"/>
+        <Button fx:id="btnpdf" text="Telecharger to pdf"/>
         <Button fx:id="fermer" text="Fermer"/>
     </HBox>
 </VBox>
