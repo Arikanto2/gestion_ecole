@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          hgap="15" vgap="15"
+          style="-fx-background-color: #ffffff;
+                 -fx-border-color: #dddddd;
+                 -fx-border-radius: 10;
+                 -fx-background-radius: 10;">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Id classe :" GridPane.rowIndex="0" GridPane.columnIndex="0"
+           style="-fx-font-size: 14px;
+           -fx-text-fill: #444;
+           -fx-font-weight: bold;"
+    fx:id="id"/>
+    <TextField fx:id="txtID" GridPane.rowIndex="0" GridPane.columnIndex="1"
+               style="-fx-pref-width: 200px;
+               -fx-padding: 6 10;
+               -fx-background-radius: 6;
+               -fx-border-radius: 6;
+               -fx-border-color: #cccccc;
+               -fx-background-color: #ffffff;"
+    />
+
+    <Label text="Désignation :" GridPane.rowIndex="1" GridPane.columnIndex="0"
+           style="-fx-font-size: 14px;
+           -fx-text-fill: #444;
+           -fx-font-weight: bold;"
+    />
+
+    <StackPane GridPane.rowIndex="1" GridPane.columnIndex="1">
+        <ComboBox fx:id="comboDesignation"
+                  style="-fx-pref-width: 200px;
+              -fx-padding: 6 10;
+              -fx-background-radius: 6;
+              -fx-border-radius: 6;
+              -fx-border-color: #cccccc;
+              -fx-background-color: #ffffff;"
+        />
+        <TextField fx:id="textFielDesignation" style="-fx-pref-width: 200px;
+              -fx-padding: 6 10;
+              -fx-background-radius: 6;
+              -fx-border-radius: 6;
+              -fx-border-color: #cccccc;
+              -fx-background-color: #ffffff;"/>
+    </StackPane>
+
+    <Label text="Prix Écolage :" GridPane.rowIndex="2" GridPane.columnIndex="0"
+           style="-fx-font-size: 14px;
+           -fx-text-fill: #444;
+           -fx-font-weight: bold;"
+    />
+    <TextField fx:id="txtPrix" GridPane.rowIndex="2" GridPane.columnIndex="1"
+               style="-fx-pref-width: 200px;
+               -fx-padding: 6 10;
+               -fx-background-radius: 6;
+               -fx-border-radius: 6;
+               -fx-border-color: #cccccc;
+               -fx-background-color: #ffffff;"
+    />
+
+    <Label text="Professeur Titulaire :" GridPane.rowIndex="3" GridPane.columnIndex="0"
+           style="-fx-font-size: 14px;
+           -fx-text-fill: #444;
+           -fx-font-weight: bold;"
+    />
+    <ComboBox fx:id="comboprof" GridPane.rowIndex="3" GridPane.columnIndex="1"
+              style="-fx-pref-width: 200px;
+              -fx-padding: 6 10;
+              -fx-background-radius: 6;
+              -fx-border-radius: 6;
+              -fx-border-color: #cccccc;
+              -fx-background-color: #ffffff;"
+    />
+
+    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="4" GridPane.columnIndex="1">
+        <Button fx:id="btnEnregistrer" text="Enregistrer"
+                style="-fx-background-color: linear-gradient(to right,#80d4ff,#2980b9);
+                -fx-text-fill: white;
+                -fx-font-weight: bold;
+                -fx-background-radius: 8;
+                -fx-padding: 8 16;"
+        />
+        <Button fx:id="btnAnnuler" text="Annuler"
+                style="-fx-background-color: linear-gradient(to right,#ff9999,#ff3333);
+                -fx-text-fill: white;
+                -fx-font-weight: bold;
+                -fx-background-radius: 8;
+                -fx-padding: 8 16;"
+        />
+    </HBox>
+</GridPane>

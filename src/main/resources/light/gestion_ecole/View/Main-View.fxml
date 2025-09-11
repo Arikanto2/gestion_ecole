@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="light.gestion_ecole.Controller.MainController"
+            prefHeight="400.0" prefWidth="600.0" stylesheets="@../Style/Style.css">
+    <left>
+        <Pane id="sidebar">
+            <BorderPane.margin>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </BorderPane.margin>
+            <VBox spacing="15" >
+
+                <padding>
+                    <Insets top="20" right="25"  left="25"/>
+                </padding>
+                <StackPane alignment="CENTER">
+                    <VBox.margin>
+                        <Insets bottom="50"/>
+                    </VBox.margin>
+                    <Circle radius="35" stroke="#314480" fill="white" strokeWidth="1"/>
+                    <Label text="" id="useLettre" fx:id="premierLet"/>
+                </StackPane>
+
+
+
+                <HBox alignment="TOP_LEFT" spacing="5" fx:id="menuAccueil">
+                    <ImageView fitWidth="25" fitHeight="25" preserveRatio="true">
+                        <image>
+                            <Image url="@../Photo/icons8-home-240.png"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Accueil">
+                        <HBox.margin>
+                            <Insets top="3"/>
+                        </HBox.margin>
+                    </Label>
+                </HBox>
+                <HBox alignment="TOP_LEFT" spacing="5" fx:id="menuEleve">
+                    <ImageView fitWidth="25" fitHeight="25" preserveRatio="true">
+                        <image>
+                            <Image url="@../Photo/icons8-student-96 (1).png"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Elèves">
+                        <HBox.margin>
+                            <Insets top="3"/>
+                        </HBox.margin>
+                    </Label>
+                </HBox>
+                <HBox alignment="TOP_LEFT" spacing="5" fx:id="menuProf">
+                    <ImageView fitWidth="25" fitHeight="25" preserveRatio="true">
+                        <image>
+                            <Image url="@../Photo/icons8-teacher-96.png"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Professeurs">
+                        <HBox.margin>
+                            <Insets top="3"/>
+                        </HBox.margin>
+                    </Label>
+                </HBox>
+                <HBox alignment="TOP_LEFT" spacing="5" fx:id="menuParent">
+                    <ImageView fitWidth="25" fitHeight="25" preserveRatio="true">
+                        <image>
+                            <Image url="@../Photo/icons8-adoption-96.png"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Parents">
+                        <HBox.margin>
+                            <Insets top="3"/>
+                        </HBox.margin>
+                    </Label>
+                </HBox>
+                <HBox alignment="TOP_LEFT" spacing="5" fx:id="menuClasse">
+                    <ImageView fitWidth="25" fitHeight="25" preserveRatio="true">
+                        <image>
+                            <Image url="@../Photo/icons8-school-96.png"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Classes">
+                        <HBox.margin>
+                            <Insets top="3"/>
+                        </HBox.margin>
+                    </Label>
+                </HBox>
+                <HBox alignment="TOP_LEFT" spacing="5" fx:id="menuStat">
+                    <ImageView fitWidth="25" fitHeight="25" preserveRatio="true">
+                        <image>
+                            <Image url="@../Photo/icons8-google-analytics-144.png"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Statistiques">
+                        <HBox.margin>
+                            <Insets top="3"/>
+                        </HBox.margin>
+                    </Label>
+                </HBox>
+                <HBox alignment="CENTER" fx:id="poweroff">
+                    <VBox.margin>
+                        <Insets top="180"/>
+                    </VBox.margin>
+                    <ImageView fitWidth="25" fitHeight="25" preserveRatio="true" >
+                        <image>
+                            <Image url="@../Photo/icons8-power-off-80.png"/>
+                        </image>
+
+                    </ImageView>
+                </HBox>
+            </VBox>
+        </Pane>
+    </left>
+    <center>
+        <BorderPane styleClass="conteneur">
+            <BorderPane.margin>
+                <Insets top="15" right="15" bottom="15" left="5"/>
+            </BorderPane.margin>
+            <top>
+                <HBox spacing="20" alignment="CENTER_LEFT" styleClass="entete">
+                    <BorderPane.margin>
+                        <Insets right="25" left="25"/>
+                    </BorderPane.margin>
+                    <padding>
+                        <Insets top="15" right="10" left="10" bottom="10"/>
+                    </padding>
+                    <Label text="LYCEE LOTERANA RAKOTO ANDRIANARIJAONA" styleClass="labelEntete"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="" styleClass="labelEntete" id="nomUtilisateur" fx:id="nomUtilisateur"/>
+
+                </HBox>
+
+            </top>
+            <center>
+                <StackPane fx:id="contentArea"/>
+            </center>
+            <bottom>
+                <HBox spacing="20" alignment="CENTER_LEFT" styleClass="footer">
+                    <BorderPane.margin>
+                        <Insets right="25" left="25"/>
+                    </BorderPane.margin>
+                    <padding>
+                        <Insets top="10" right="25" left="25" bottom="10"/>
+                    </padding>
+                    <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
+                        <image>
+                            <Image url="@../Photo/500px-Lutherrose.svg.png"/>
+                        </image>
+                    </ImageView>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <VBox alignment="CENTER" id="Faneva">
+                        <Label text='"Mba ho tahaka ny zava-maniry maroroka ny zanakay lahy, ary ho tahaka ny  vatofehizoro '/>
+                        <Label text='voasoratra tsara toy ny fomban’ny  lapan’Andriana ny  zanakay vavy "'/>
+                        <Label text="Salamo 144:12"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
+                        <image>
+                            <Image url="@../Photo/500px-Lutherrose.svg.png"/>
+                        </image>
+                    </ImageView>
+
+
+                </HBox>
+            </bottom>
+
+        </BorderPane>
+    </center>
+
+</BorderPane>

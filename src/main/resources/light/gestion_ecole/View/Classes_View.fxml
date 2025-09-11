@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="light.gestion_ecole.Controller.classecontroller"
+      spacing="10"
+      prefHeight="400.0" prefWidth="600.0">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <HBox alignment="CENTER">
+        <VBox.margin>
+            <Insets right="150" left="150"/>
+        </VBox.margin>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <ComboBox fx:id="anneeScolaire" promptText="Annéescolaire" id="AnneeClasse"/>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Label text="Recherche :" styleClass="ttxt"/>
+            <TextField fx:id="searchField" promptText="Tapez ici..."/>
+        </HBox>
+
+
+    </HBox>
+    <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+        <VBox.margin>
+            <Insets right="150" left="150"/>
+        </VBox.margin>
+        <columns>
+            <TableColumn fx:id="Designation" text="Classe"/>
+            <TableColumn fx:id="nbr_eleves" text="Effectifs"/>
+            <TableColumn fx:id="Ecolage" text="Ecolage" />
+            <TableColumn fx:id="Titulaire" text="Titulaire"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="btnAjouter" text="Ajouter" id="btnAjouterT" />
+        <Button fx:id="btnModifier" text="Modifier" id="btnModifierT"/>
+        <Button fx:id="btnSupprimer" text="Supprimer" id="btnSupprimerT"/>
+    </HBox>
+</VBox>

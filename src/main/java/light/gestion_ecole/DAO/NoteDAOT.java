@@ -1,0 +1,175 @@
+package light.gestion_ecole.DAO;
+
+import light.gestion_ecole.Model.Eleve;
+import light.gestion_ecole.Model.NoteT;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class NoteDAOT {
+    public List<NoteT> getNotes(String id,String eval) {
+        List<NoteT> notes = new ArrayList<NoteT>();
+        String sql = "SELECT * FROM ENSEIGNER WHERE ideleve = ? AND typeevaluation = ?";
+        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1,id);
+            stmt.setString(2,eval);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                notes.add(new NoteT(rs.getString("ideleve"),rs.getString("nummat"),rs.getInt("idprof"),
+                        rs.getString("matiere"),rs.getDouble("note")*rs.getDouble("coefficient"),rs.getDouble("coefficient"),
+                        rs.getString("commentaire"),rs.getString("typeevaluation")));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return notes;
+    }
+
+    public double getTotalCoef(String id,String eval) {
+        double coef = 0.0;
+        String sql = "SELECT SUM(coefficient) FROM ENSEIGNER WHERE ideleve = ? AND typeevaluation = ?";
+        try (Connection conn = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1,id);
+            stmt.setString(2,eval);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                coef = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return coef;
+    }
+    public double getTotalNote(String id,String eval) {
+        double note = 0.0;
+        String sql = "SELECT SUM(note*coefficient) FROM ENSEIGNER WHERE ideleve = ? AND typeevaluation = ?";
+        try (Connection conn = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1,id);
+            stmt.setString(2,eval);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                note = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return note;
+    }
+    public double getMoyenne(String id,String eval) {
+        double moyenne = 0.0;
+        String sql = "SELECT SUM(note*coefficient)/SUM(coefficient) FROM ENSEIGNER WHERE ideleve = ? AND typeevaluation = ?";
+        try (Connection conn = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1,id);
+            stmt.setString(2,eval);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                moyenne = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            throw  new RuntimeException(e);
+        }
+        return moyenne;
+    }
+    public int getRang(String id, int idclass, String eval, String annee) {
+        int rng = 0;
+        String sql = "SELECT rang FROM " +
+                "(SELECT e.ideleve,RANK() OVER (PARTITION BY en.typeevaluation,e.idclass ORDER BY (SUM(note*coefficient)/SUM(coefficient)) DESC)" +
+                " AS rang FROM ELEVE e JOIN ENSEIGNER en ON e.ideleve = en.ideleve WHERE en.typeevaluation = ? AND e.idclass = ? AND e.anneescolaire = ? " +
+                "GROUP BY e.ideleve,en.typeevaluation,e.idclass) AS classement WHERE ideleve = ? ";
+        try (Connection conn = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1,eval);
+            stmt.setInt(2,idclass);
+            stmt.setString(3,annee);
+            stmt.setString(4,id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                rng = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return rng;
+    }
+    public int getNbrEleve(int idclass, String annee) {
+        int nbrEleve = 0;
+        String sql = "SELECT COUNT(ideleve) FROM ELEVE WHERE idclass = ? AND anneescolaire = ?";
+        try (Connection conn = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1,idclass);
+            stmt.setString(2,annee);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                nbrEleve = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return  nbrEleve;
+    }
+    public NoteT getOrCreateNoteForEleve(Eleve e,String typeevaluation,String mat) {
+        String sql = "SELECT * FROM ENSEIGNER WHERE nummat = ? AND typeevaluation = ? AND matiere = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, e.getNummat());
+            stmt.setString(2, typeevaluation);
+            stmt.setString(3, mat);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                NoteT note = new NoteT(e);
+                note.setNote(rs.getDouble("note"));
+                note.setCommentaire(rs.getString("commentaire"));
+                return note;
+            } else {
+                return new NoteT(e); // Note vide si pas encore en base
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return new NoteT(e);
+        }
+    }
+
+    public void saveOrUpdate(NoteT note,String typeevaluation, String mat, int idprof, Double coeff,String id) throws SQLException {
+        String check = "SELECT 1 FROM ENSEIGNER WHERE nummat = ? AND typeevaluation = ? AND matiere = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement stmt = conn.prepareStatement(check)) {
+
+            stmt.setString(1, note.getNumnat());
+            stmt.setString(2, typeevaluation);
+            stmt.setString(3, mat);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // UPDATE
+                String sql = "UPDATE ENSEIGNER SET note = ?, commentaire = ? WHERE nummat = ? AND typeevaluation = ? AND matiere = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setDouble(1, note.getNote());
+                    ps.setString(2, note.getCommentaire());
+                    ps.setString(3, note.getNumnat());
+                    ps.setString(4, typeevaluation);
+                    ps.setString(5, mat);
+                    ps.executeUpdate();
+                }
+            } else {
+                // INSERT
+                String sql = "INSERT INTO ENSEIGNER (ideleve,nummat,idprof, coefficient, note, commentaire, typeevaluation, matiere) VALUES (?, ?, ?, ?,?,?,?,?)";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1,id);
+                    ps.setString(2, note.getNumnat());
+                    ps.setInt(3, idprof);
+                    ps.setDouble(4, coeff);
+                    ps.setDouble(5, note.getNote() != null ? note.getNote() : 0.0);
+                    ps.setString(6, note.getCommentaire());
+                    ps.setString(7, typeevaluation);
+                    ps.setString(8, mat);
+                    ps.executeUpdate();
+                }
+            }
+        }
+    }
+
+
+
+}

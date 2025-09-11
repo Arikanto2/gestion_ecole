@@ -1,0 +1,426 @@
+/*Style Fahazavana*/
+
+#sidebar{
+    -fx-border-color: #9ca6c5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-width: 1;
+
+    -fx-background-color: linear-gradient(to bottom, #e6f7ff, rgb(255, 255, 255));
+
+
+}
+
+
+#log{
+    -fx-background-color: rgba(230, 247, 255);
+}
+#sidebar Label {
+    -fx-text-fill: rgba(30, 39, 45, 0.91);
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 15;
+}
+#useLettre{
+    -fx-font-size: 25;
+}
+#userImage{
+    -fx-background-color: white;
+}
+.conteneur{
+    -fx-border-color: #9ca6c5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-width: 1;
+    -fx-background-color: #ffffff;
+}
+.entete{
+    -fx-border-color: transparent transparent #9ca6c5 transparent;
+    /*-fx-background-color: linear-gradient(to right, #e6f7ff, rgb(255, 255, 255));*/
+}
+.labelEntete {
+    -fx-font-family: "Goudy Old Style";
+    -fx-font-size: 16;
+    -fx-text-fill: rgba(6, 56, 86, 0.91);
+}
+.footer{
+    -fx-border-color:  #9ca6c5 transparent transparent transparent;
+}
+#Faneva Label{
+    -fx-font-family: "Goudy Old Style";
+    -fx-font-size: 13;
+    -fx-text-fill: rgba(65, 3, 13, 0.91);
+}
+.handicap{
+    -fx-font-family: "Book Antiqua";
+    -fx-font-size: 15;
+    -fx-underline: true;
+    -fx-text-fill: rgba(6, 56, 86, 0.91);
+}
+.fz{
+    -fx-font-family: "Book Antiqua";
+    -fx-font-size: 14;
+    -fx-text-fill: rgba(3, 31, 45, 0.91);
+}
+.fz1{
+    -fx-font-family: "Book Antiqua";
+    -fx-font-size: 16;
+    -fx-text-fill: rgba(12, 76, 108, 0.91);
+
+}
+.fz1:hover{
+    -fx-underline: true;
+    -fx-text-fill: rgba(99, 190, 243, 0.91);
+}
+.fz2{
+    -fx-pref-width: 100;
+    -fx-pref-height: 40;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5 5 5 5;
+}
+#btnAjouterT1 {
+    -fx-font-size: 14px;
+    -fx-background-color: linear-gradient(to right,#0088cc,#1f6391);
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 50px;
+}
+#btnAjouterT1:hover{
+    -fx-background-color: linear-gradient(to right,#80d4ff,#2980b9);
+    -fx-text-fill: #00111a;
+
+}
+
+#bgimage{
+    -fx-opacity: 0.5;
+}
+#anneeScolaire{
+    -fx-font-family: "Castellar";
+    -fx-font-size: 35;
+}
+#boutonImport{
+    -fx-background-color: linear-gradient(to right, rgb(220, 245, 208), rgb(255, 255, 255));
+    -fx-pref-width: 70;
+}
+#boutonImport:hover{
+    -fx-background-color: white;
+    -fx-text-fill: rgba(9, 102, 155);
+    -fx-underline: true;
+    -fx-font-size: 13;
+
+}
+#boutonExport:hover{
+    -fx-background-color: white;
+    -fx-text-fill: rgba(9, 102, 155);
+    -fx-underline: true;
+    -fx-font-size: 13;
+
+}
+#boutonExport{
+    -fx-background-color: linear-gradient(to right, rgba(227, 82, 11, 0.3), rgb(255, 255, 255));
+    -fx-pref-width: 70;
+}
+.menuRapid{
+    -fx-font-family: "Book Antiqua";
+    -fx-font-size: 14;
+    -fx-text-fill: rgb(6, 58, 93);
+
+
+
+}
+
+.menuRapid:hover{
+    -fx-text-fill: rgb(220, 245, 208);
+    -fx-underline: true;
+}
+
+.text1{
+    -fx-font-size: 100;
+}
+#ChartView{
+    -fx-border-color: #9ca6c5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-width: 1;
+}
+.menuSt{
+    -fx-effect: dropshadow(gaussian, rgba(201, 202, 208, 0.4), 5, 0.5, 2, 2);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: white;
+    -fx-pref-width: 250;
+    -fx-pref-height: 80;
+}
+#boxlogin{
+    -fx-effect: dropshadow(gaussian, rgba(201, 202, 208, 0.4), 5, 0.5, 5, 5);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: white;
+
+
+}
+.menuSt1{
+    -fx-effect: dropshadow(gaussian, rgba(201, 202, 208, 0.4), 5, 0.5, 2, 2);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: white;
+}
+#connectVous{
+    -fx-font-family: "Book Antiqua";
+    -fx-font-size: 20;
+    -fx-text-fill: rgb(6, 58, 93);
+}
+.combo{
+    -fx-pref-width: 100;
+}
+.titre{
+    -fx-font-family: "Castellar";
+    -fx-font-size: 20;
+}
+.courbe{
+    -fx-font-family: "Book Antiqua";
+    -fx-font-size: 17;
+    -fx-text-fill: rgba(6, 56, 86, 0.91);
+}
+.petitlegende{
+    -fx-font-size: 11;
+}
+.valuelegende{
+    -fx-font-size: 16;
+}
+#enteteStatElve{
+    -fx-background-color: linear-gradient(to bottom, #e6f7ff, rgb(255, 255, 255));
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+.ttxt{
+    -fx-font-family: "Book Antiqua";
+    -fx-text-fill: rgba(6, 56, 86, 0.91);
+    -fx-font-size: 14;
+}
+#AnneeClasse{
+    -fx-pref-height: 20;
+
+}
+
+/* Style Tolotra*/
+.table-view {
+    -fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff);
+    -fx-border-color: #dcdde1;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-table-cell-border-color: #ecf0f1;
+    -fx-padding: 5;
+}
+
+.table-view .column-header-background {
+    /*-fx-background-color: linear-gradient(to bottom, #2980b9, #1f6391);*/
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+.table-view .column-header, .table-view .table-column {
+    -fx-alignment: BASELINE-LEFT;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 8px;
+}
+
+.table-view .cell {
+    -fx-alignment: BASELINE_LEFT;
+    -fx-font-size: 13px;
+    -fx-padding: 6px;
+    -fx-text-fill: #2c3e50;
+}
+
+.table-view .row-cell {
+    -fx-background-color: #ffffff;
+}
+
+.table-view .row-cell:odd {
+    -fx-background-color: #f4f6f7;
+}
+
+.table-view .row-cell:hover {
+    -fx-background-color: #dfe6e9;
+}
+
+.table-view .row-cell:filled:selected {
+    -fx-background-color: #2980b9;
+    -fx-text-fill: white;
+}
+
+.table-view .row-cell:filled:selected .text {
+    -fx-fill: white;
+}
+.titled-pane {
+    -fx-background-color: #ecf0f1;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+}
+
+.detailsPane .label {
+    -fx-font-size: 13px;
+}
+
+.detailsPane .label:filled {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2980b9;
+}
+#btnAjouterT {
+    -fx-font-size: 14px;
+    -fx-background-color: linear-gradient(to right,#0088cc,#1f6391);
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 50px;
+    -fx-pref-width: 100;
+}
+#btnAjouterT:hover{
+    -fx-background-color: linear-gradient(to right,#80d4ff,#2980b9);
+    -fx-text-fill: #00111a;
+    -fx-border-radius: 50px;
+}
+#btnModifierT{
+    -fx-background-color: linear-gradient(to right,#0088cc,#2980b9);
+    -fx-font-size: 14px;
+    -fx-border-radius: 50px;
+    -fx-text-fill: #ffffff;
+    -fx-pref-width:100;
+}
+#btnModifierT:hover{
+    -fx-border-radius: 50px;
+    -fx-background-color: linear-gradient(to left,#80d4ff,#2980b9);
+    -fx-text-fill: #00111a;
+}
+#btnNewEleve{
+    -fx-background-color: linear-gradient(to left, #2980b9, #0088cc);
+    -fx-border-radius: 120px;
+    -fx-text-fill: White;
+    -fx-font-size: 12px;
+}
+#btnNewEleve:hover{
+    -fx-background-color: linear-gradient(to left, #0088cc,#80d4ff);
+    -fx-text-fill: black;
+    -fx-border-radius: 120px;
+}
+#btnSupprimerT{
+    -fx-background-color: linear-gradient(to right,#ff9999,#ff3333);
+    -fx-font-size: 14px;
+    -fx-border-radius: 50px;
+    -fx-text-fill: #ffffff;
+    -fx-pref-width: 100;
+}
+#btnSupprimerT:hover{
+    -fx-border-radius: 50px;
+    -fx-background-color: linear-gradient(to left,#ff3333,#ffcccc);
+    -fx-text-fill: #00111a;
+}
+#btnAnnulerT{
+    -fx-background-color: linear-gradient(to left, #ff9999, #ff6666);
+    -fx-border-radius: 120px;
+    -fx-text-fill: White;
+    -fx-font-size: 12px;
+}
+#btnAnnulerT:hover{
+    -fx-border-radius: 50px;
+    -fx-background-color: linear-gradient(to left,#ff9999,#ffcccc);
+    -fx-text-fill: #00111a;
+}
+#btnEnregistrerT{
+    -fx-background-color: linear-gradient(to left, #2980b9, #0088cc);
+    -fx-border-radius: 120px;
+    -fx-text-fill: White;
+    -fx-font-size: 12px;
+}
+.btnEnregistrerT{
+    -fx-background-color: linear-gradient(to left, #2980b9, #0088cc);
+    -fx-border-radius: 120px;
+    -fx-text-fill: White;
+    -fx-font-size: 12px;
+}
+.btnEnregistrerT:hover{
+    -fx-background-color: linear-gradient(to left, #0088cc,#80d4ff);
+    -fx-text-fill: black;
+    -fx-border-radius: 120px;
+}
+.btnAnnulerT{
+    -fx-background-color: linear-gradient(to left, #ff9999, #ff6666);
+    -fx-border-radius: 120px;
+    -fx-text-fill: White;
+    -fx-font-size: 12px;
+}
+#btnEnregistrerT:hover{
+    -fx-background-color: linear-gradient(to left, #0088cc,#80d4ff);
+    -fx-text-fill: black;
+    -fx-border-radius: 120px;
+}
+.btnAnnulerT:hover{
+    -fx-border-radius: 50px;
+    -fx-background-color: linear-gradient(to left,#ff9999,#ffcccc);
+    -fx-text-fill: #00111a;
+}
+/*Style Princy*/
+
+
+/*////////////////////////////////////////////    Style Princy    /////////////////////////////////*/
+
+/*.table-view {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: black;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 5;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #4a90e2, #357abd);
+    -fx-background-radius: 10 10 0 0;
+}
+
+.table-view .column-header {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+}
+
+.table-row-cell:filled:hover {
+    -fx-background-color: #dce9f9;
+}
+
+.text-field {
+    -fx-padding: 5 10;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #ccc;
+    -fx-focus-color: #4a90e2;
+}
+
+.text-field:hover {
+    -fx-border-color: #357abd;
+}
+
+.button {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3,0,0,1);
+}
+
+.button:hover {
+    -fx-background-color: #357abd;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.button:pressed {
+    -fx-background-color: #2a5d9f;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}*/
