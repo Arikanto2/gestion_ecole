@@ -18,7 +18,9 @@ import light.gestion_ecole.DAO.ProfDAO;
 import light.gestion_ecole.DAO.StatDAO;
 import light.gestion_ecole.Model.Classe;
 import org.controlsfx.control.Notifications;
+import java.lang.*;
 
+import java.io.Console;
 import java.sql.SQLException;
 
 public class classecontroller {
@@ -42,6 +44,7 @@ public class classecontroller {
     private Button btnSupprimer;
     @FXML ComboBox anneeScolaire;
 
+    private String annee;
     private ClasseDAO classeDAO = new ClasseDAO();
 
     @FXML
@@ -49,9 +52,6 @@ public class classecontroller {
         anneeScolaire.getItems().addAll(StatDAO.getAnnescolaire());
         anneeScolaire.getSelectionModel().select(0);
         loadclasse();
-        anneeScolaire.setOnAction(event -> {
-
-        });
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         Designation.setCellValueFactory(cell -> cell.getValue().designationProperty());
         nbr_eleves.setCellValueFactory(cell -> cell.getValue().nbrElevesProperty().asObject());
@@ -96,6 +96,7 @@ public class classecontroller {
                 dialog.showAndWait().ifPresent(response -> {
                     if (response == yesButton) {
                         try {
+                            System.out.println(selected.getIdClasse());
                             classeDAO.supprimerClasse(selected.getIdClasse());
                             loadclasse();
                             showSuccess("Classe supprimée avec succès !");
@@ -115,11 +116,31 @@ public class classecontroller {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Classe selected = row.getItem();
-                    ouvrirlisteEleves(selected);
+
+                    Dialog<ButtonType> dialog = new Dialog<>();
+                    dialog.setTitle("Confirmation");
+                    dialog.setHeaderText("Qu'est ce que vous voulez voir?");
+                    dialog.initOwner(tableView.getScene().getWindow());
+
+                    ButtonType rang = new ButtonType("Rang", ButtonBar.ButtonData.OK_DONE);
+                    ButtonType liste = new ButtonType("Liste", ButtonBar.ButtonData.OK_DONE);
+
+                    dialog.getDialogPane().getButtonTypes().addAll(rang, liste);
+                    dialog.getDialogPane().setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
+
+                    dialog.showAndWait().ifPresent(response -> {
+                        if (response == rang) {
+                            ouvrirrangeleves(selected);
+                        }
+                        else {
+                            ouvrirlisteEleves(selected);
+                        }
+                    });
                 }
             });
             return row;
         });
+        annee = anneeScolaire.valueProperty().get().toString();
     }
 
     private void loadclasse() throws SQLException {
@@ -239,12 +260,11 @@ public class classecontroller {
             showError("Erreur lors de l'ouverture du formulaire : " + ex.getMessage());
         }
     }
-
+    ////////////////////// listage des eleves par classe ///////////////////////////////
     private void ouvrirlisteEleves(Classe c_pdp) {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Eleves_Pdf.fxml"));
             Parent root = loader.load();
-
 
             pdfClasse_Elves pdf = loader.getController();
             pdf.setClasse(c_pdp);
@@ -267,6 +287,34 @@ public class classecontroller {
             showError("Erreur lors de l'ouverture de la liste des élèves : " + ex.getMessage());
         }
     }
+    /// ////////////////////////// par rang /////////////////////////////////////////
+    public  void ouvrirrangeleves(Classe c_pdp) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Eleves_Rang.fxml"));
+            Parent root = loader.load();
+
+            Rang_classeController rang = loader.getController();
+            rang.setRang(c_pdp, annee);
+
+            Stage stage1 = new Stage();
+            stage1.setTitle("Eleves de " + c_pdp.getDesignation());
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/light/gestion_ecole/Style/pdf.css").toExternalForm());
+            stage1.setScene(scene);
+            stage1.setResizable(false);
+            stage1.setMaximized(false);
+            stage1.setMaxWidth(395);
+            stage1.setMaxHeight(500);
+
+            stage1.showAndWait();
+
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
 
     private void showSuccess(String message) {
         Notifications.create()

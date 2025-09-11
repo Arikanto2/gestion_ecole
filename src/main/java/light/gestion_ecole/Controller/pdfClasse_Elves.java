@@ -52,6 +52,7 @@ public class pdfClasse_Elves {
         this.classeselected = classe;
         lblClasse.setText(classe.getDesignation());
         lblprof.setText(classe.getTitulaire());
+
         try{
             chargerEleves(classe.getDesignation());
         }catch (Exception e){
@@ -125,7 +126,7 @@ public class pdfClasse_Elves {
                     ImageData imageData = ImageDataFactory.create(logoPath);
                     Image logo = new Image(imageData);
 
-                    logo.setHorizontalAlignment(HorizontalAlignment.CENTER); // centré en haut
+                    logo.setHorizontalAlignment(HorizontalAlignment.CENTER);
 
                     document.add(logo);
                 } catch (Exception ex) {
