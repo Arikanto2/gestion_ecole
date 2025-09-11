@@ -138,8 +138,11 @@ public class ParentController {
                 }
             });
         } else {
-
-            Notification.showWarning("Aucun élément selectionnner");
+            Alert.AlertType alertType = Alert.AlertType.WARNING;
+            Alert alert = new Alert(alertType);
+            alert.setTitle("Attention");
+            alert.setContentText("Aucun element selectionner");
+            alert.showAndWait();
         }
     }
     @FXML
@@ -160,7 +163,11 @@ public class ParentController {
             txtContact.setText(selected.getContact());
             txtEmail.setText(selected.getEmailparent());
         } else {
-            Notification.showWarning("Aucun élément selectionnner");
+            Alert.AlertType alertType = Alert.AlertType.WARNING;
+            Alert alert = new Alert(alertType);
+            alert.setTitle("Attention");
+            alert.setContentText("Aucun element selectionner");
+            alert.showAndWait();
         }
     }
     private void autoResizeColumn2(TableColumn<?, ?> column) {
@@ -223,7 +230,11 @@ public class ParentController {
             txtContact2.setText(selected.getContact());
             txtEmail2.setText(selected.getEmailparent());
         } else {
-            Notification.showWarning("Aucun élément selectionnner");
+            Alert.AlertType alertType = Alert.AlertType.INFORMATION;
+            Alert alert = new Alert(alertType);
+            alert.setTitle("Attention");
+            alert.setContentText("Aucun element selectionner");
+            alert.showAndWait();
         }
     }
     @FXML

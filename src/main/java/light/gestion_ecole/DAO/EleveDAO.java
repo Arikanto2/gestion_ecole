@@ -1,7 +1,6 @@
 package light.gestion_ecole.DAO;
 
 
-import light.gestion_ecole.Model.Classe;
 import light.gestion_ecole.Model.Eleve;
 
 import java.sql.*;
@@ -14,15 +13,15 @@ public class EleveDAO {
         String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
                 "datenaiss, genre, anneescolaire, handicap FROM eleve ORDER BY nummat";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn  = Database.connect();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                eleves.add(new Eleve(rs.getString("ideleve"), rs.getString("nummat")
-                        , rs.getInt("idclass"), rs.getInt("idparent"), rs.getString("nomeleve"),
-                        rs.getString("prenomeleve"), rs.getString("adresseeleve"),
-                        rs.getDate("datenaiss"), rs.getString("genre"),
-                        rs.getString("anneescolaire"), rs.getString("handicap")));
+                eleves.add(new Eleve(rs.getString("ideleve"),rs.getString("nummat")
+                        ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
+                        rs.getString("prenomeleve"),rs.getString("adresseeleve"),
+                        rs.getDate("datenaiss"),rs.getString("genre"),
+                        rs.getString("anneescolaire"),rs.getString("handicap")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -33,7 +32,7 @@ public class EleveDAO {
     public List<String> getDistinctAnnees() throws SQLException {
         List<String> distinctAnnees = new ArrayList<>();
         String sql = "SELECT DISTINCT anneescolaire FROM eleve";
-        try (Connection conn = Database.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn  = Database.connect();Statement stmt = conn.createStatement();ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 distinctAnnees.add(rs.getString("anneescolaire"));
             }
@@ -44,7 +43,7 @@ public class EleveDAO {
     public List<String> getDistinctClasses() throws SQLException {
         List<String> distinctClasses = new ArrayList<>();
         String sql = "SELECT DISTINCT designation FROM CLASSE";
-        try (Connection conn = Database.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn  = Database.connect();Statement stmt = conn.createStatement();ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 distinctClasses.add(rs.getString("designation"));
             }
@@ -55,7 +54,7 @@ public class EleveDAO {
     public List<String> getDistinctSexe() throws SQLException {
         List<String> distinctSexes = new ArrayList<>();
         String sql = "SELECT DISTINCT genre FROM ELEVE";
-        try (Connection conn = Database.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn  = Database.connect();Statement stmt = conn.createStatement();ResultSet rs = stmt.executeQuery(sql)){
             while (rs.next()) {
                 distinctSexes.add(rs.getString("genre"));
             }
@@ -66,7 +65,7 @@ public class EleveDAO {
     public List<String> getDistinctHandicap() throws SQLException {
         List<String> distinctHandicap = new ArrayList<>();
         String sql = "SELECT DISTINCT handicap FROM ELEVE";
-        try (Connection conn = Database.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn  = Database.connect();Statement stmt = conn.createStatement();ResultSet rs = stmt.executeQuery(sql)){
             while (rs.next()) {
                 distinctHandicap.add(rs.getString("handicap"));
             }
@@ -77,7 +76,7 @@ public class EleveDAO {
     public static String getDistinctClasse(int id) throws SQLException {
         String sql = "SELECT DISTINCT designation FROM CLASSE where idclass = ?";
         String result = "";
-        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn  = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -89,10 +88,10 @@ public class EleveDAO {
         return result;
     }
 
-    public int getIdClass(String design) throws SQLException {
+    public int getIdClass(String design) throws SQLException{
         String sql = "SELECT idclass FROM CLASSE WHERE designation = ?";
         int result = 1;
-        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, design);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -106,7 +105,7 @@ public class EleveDAO {
         String sql = "INSERT INTO ELEVE (ideleve, nummat,idclass, idparent, nomeleve, prenomeleve," +
                 "adresseeleve, datenaiss, genre, anneescolaire,handicap)" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?,?) ";
-        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, eleve.getIdeleve());
             stmt.setString(2, eleve.getNummat());
             stmt.setInt(3, eleve.getIdclass());
@@ -115,8 +114,8 @@ public class EleveDAO {
             stmt.setString(6, eleve.getPrenomeleve());
             stmt.setString(7, eleve.getAdresseeleve());
             stmt.setDate(8, (Date) eleve.getDatenaissance2());
-            stmt.setString(9, eleve.getGenreeleve());
-            stmt.setString(10, eleve.getAnneescolaire());
+            stmt.setString(9,eleve.getGenreeleve());
+            stmt.setString(10,eleve.getAnneescolaire());
             stmt.setString(11, eleve.getHandicap());
             stmt.executeUpdate();
         }
@@ -124,65 +123,62 @@ public class EleveDAO {
 
     public int nbrEleves() throws SQLException {
         String sql = "SELECT count(*) as cmd FROM ELEVE";
-        try (Connection conn = Database.connect(); Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn  = Database.connect();Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
                 return rs.getInt("cmd");
             }
         }
         return 0;
     }
-
     public List<Eleve> filtreAnnee(String annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
         String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
                 "datenaiss, genre, anneescolaire, handicap FROM eleve where anneescolaire = ? ORDER BY nummat";
-        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, annee);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                eleves.add(new Eleve(rs.getString("ideleve"), rs.getString("nummat")
-                        , rs.getInt("idclass"), rs.getInt("idparent"), rs.getString("nomeleve"),
-                        rs.getString("prenomeleve"), rs.getString("adresseeleve"),
-                        rs.getDate("datenaiss"), rs.getString("genre"),
-                        rs.getString("anneescolaire"), rs.getString("handicap")));
+                eleves.add(new Eleve(rs.getString("ideleve"),rs.getString("nummat")
+                        ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
+                        rs.getString("prenomeleve"),rs.getString("adresseeleve"),
+                        rs.getDate("datenaiss"),rs.getString("genre"),
+                        rs.getString("anneescolaire"),rs.getString("handicap")));
             }
         }
         return eleves;
     }
-
     public List<Eleve> filtreClasse(int classe) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
         String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
                 "datenaiss, genre, anneescolaire, handicap from ELEVE where idClass = ? ORDER BY nummat";
-        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setInt(1, classe);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                eleves.add(new Eleve(rs.getString("ideleve"), rs.getString("nummat")
-                        , rs.getInt("idclass"), rs.getInt("idparent"), rs.getString("nomeleve"),
-                        rs.getString("prenomeleve"), rs.getString("adresseeleve"),
-                        rs.getDate("datenaiss"), rs.getString("genre"),
-                        rs.getString("anneescolaire"), rs.getString("handicap")));
+                eleves.add(new Eleve(rs.getString("ideleve"),rs.getString("nummat")
+                        ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
+                        rs.getString("prenomeleve"),rs.getString("adresseeleve"),
+                        rs.getDate("datenaiss"),rs.getString("genre"),
+                        rs.getString("anneescolaire"),rs.getString("handicap")));
             }
         }
         return eleves;
     }
-
-    public List<Eleve> filtreDeuxCombo(String annee, int classe) throws SQLException {
+    public List<Eleve> filtreDeuxCombo(String annee,int classe) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
         String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
                 "datenaiss, genre, anneescolaire, handicap from ELEVE where anneescolaire = ? AND idclass = ? ORDER BY nummat";
-        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, annee);
             stmt.setInt(2, classe);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                eleves.add(new Eleve(rs.getString("ideleve"), rs.getString("nummat")
-                        , rs.getInt("idclass"), rs.getInt("idparent"), rs.getString("nomeleve"),
-                        rs.getString("prenomeleve"), rs.getString("adresseeleve"),
-                        rs.getDate("datenaiss"), rs.getString("genre"),
-                        rs.getString("anneescolaire"), rs.getString("handicap")));
+                eleves.add(new Eleve(rs.getString("ideleve"),rs.getString("nummat")
+                        ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
+                        rs.getString("prenomeleve"),rs.getString("adresseeleve"),
+                        rs.getDate("datenaiss"),rs.getString("genre"),
+                        rs.getString("anneescolaire"),rs.getString("handicap")));
             }
         }
         return eleves;
@@ -191,7 +187,7 @@ public class EleveDAO {
     public void updateEleve(Eleve eleve) throws SQLException {
         String sql = "UPDATE ELEVE SET idclass = ?, idparent = ?, nomeleve = ?, prenomeleve = ?,adresseeleve =?, datenaiss = ?, genre =?, " +
                 "anneescolaire = ?,handicap = ? WHERE ideleve = ?";
-        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, eleve.getIdclass());
             stmt.setInt(2, eleve.getIdparent());
             stmt.setString(3, eleve.getNomeleve());
@@ -205,16 +201,15 @@ public class EleveDAO {
             stmt.executeUpdate();
         }
     }
-
-    public List<Eleve> getNumNom(int classe, String Annee) throws SQLException {
+    public List<Eleve> getNumNom(int classe,String Annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
         String sql = "SELECT nummat,nomeleve || ' ' || prenomeleve as nomeleve from ELEVE WHERE idclass = ? AND anneescolaire = ? ORDER BY nummat";
-        try (Connection conn = Database.connect(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setInt(1, classe);
             stmt.setString(2, Annee);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                eleves.add(new Eleve(rs.getString("nummat"), rs.getString("nomeleve")));
+                eleves.add(new Eleve(rs.getString("nummat"),rs.getString("nomeleve")));
             }
         }
         return eleves;
@@ -244,52 +239,28 @@ public class EleveDAO {
                 "where c.designation = ? " +
                 "Order by e.nomeleve Asc";
         try (Connection conn = Database.connect();
-             PreparedStatement ps = conn.prepareStatement(sql);) {
-            ps.setString(1, designation);
+        PreparedStatement ps = conn.prepareStatement(sql); ){
+            ps.setString(1,designation);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 ele_pdf.add(new Eleve(
-                        rs.getInt("numero"),
-                        rs.getString("nomeleve"),
-                        rs.getString("prenomeleve")
+                   rs.getInt("numero"),
+                   rs.getString("nomeleve"),
+                   rs.getString("prenomeleve")
                 ));
             }
         }
         return ele_pdf;
     }
-
-    public List<Eleve> getElevesFiltre(Classe c, String an) throws SQLException {
-        List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT * FROM eleve WHERE idclass = ? AND anneescolaire = ?";
-
+    public void giveAvertissement(String ideleve, String avertir) throws SQLException {
+        String sql = "update ELEVE SET avertissement = ? WHERE ideleve = ?";
         try (Connection conn = Database.connect();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, c.getIdClasse());
-            stmt.setString(2, an);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    eleves.add(new Eleve(
-                            rs.getString("ideleve"),
-                            rs.getString("nummat"),
-                            rs.getInt("idclass"),
-                            rs.getInt("idparent"),
-                            rs.getString("nomeleve"),
-                            rs.getString("prenomeleve"),
-                            rs.getString("adresseeleve"),
-                            rs.getDate("datenaiss"),
-                            rs.getString("genre"),
-                            rs.getString("anneescolaire"),
-                            rs.getString("handicap")
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setString(1, avertir);
+            stmt.setString(2, ideleve);
+            stmt.executeUpdate();
         }
-        return eleves;
     }
-
 
 }
