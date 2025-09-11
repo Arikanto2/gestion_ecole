@@ -104,11 +104,11 @@ public class pdfClasse_Elves {
 
 
     @FXML public void chargerEleves(Classe classe, String anneescolaire) throws SQLException {
-        List<Eleve> eleves = eleveDAO.getElevesFiltre(classe,anneescolaire);
+        /*List<Eleve> eleves = eleveDAO.getElevesFiltre(classe,anneescolaire);
 
         ObservableList<Eleve> data = FXCollections.observableList(eleves);
         tableView.setItems(data);
-        lbleleves.setText(data.size() + " éleves");
+        lbleleves.setText(data.size() + " éleves");*/
   }
 
     @FXML
