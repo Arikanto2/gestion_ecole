@@ -22,6 +22,7 @@ public class AttitudeDAOT {
         }
         return attitudeTS;
     }
+
     public void InsertAttitude(AttitudeT attitudeT) throws SQLException {
         String sql = "INSERT INTO ATTITUDE (ideleve,nummat,dateattitude,comportement,participation,retard) VALUES (?,?,?,?,?,?)";
         try (Connection conn = Database.connect();

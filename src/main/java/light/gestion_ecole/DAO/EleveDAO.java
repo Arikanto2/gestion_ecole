@@ -1,6 +1,7 @@
 package light.gestion_ecole.DAO;
 
 
+import light.gestion_ecole.Model.Classe;
 import light.gestion_ecole.Model.Eleve;
 
 import java.sql.*;
@@ -243,13 +244,7 @@ public class EleveDAO {
             ps.setString(1,designation);
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                ele_pdf.add(new Eleve(
-                   rs.getInt("numero"),
-                   rs.getString("nomeleve"),
-                   rs.getString("prenomeleve")
-                ));
-            }
+
         }
         return ele_pdf;
     }
@@ -262,8 +257,29 @@ public class EleveDAO {
             stmt.executeUpdate();
         }
     }
-    private void dedy(){
 
+
+    public List<Eleve> getElevesFiltre(Classe classe, String anneescolaire) {
+        String sql = "SELECT Row_number() Over (Order by e.nomeleve ASC ) AS numero, e.nomeleve, e.prenomeleve FROM classe c " +
+                "join eleve e on c.idclass = e.idclass " +
+                "where c.idclass = ? AND e.anneescolaire = ? " +
+                "Order by e.nomeleve Asc";
+        List<Eleve> ele_pdf = new ArrayList<>();
+        try(Connection conn = Database.connect();
+        PreparedStatement stmt = conn.prepareStatement(sql);){
+            stmt.setInt(1,classe.getIdClasse());
+            stmt.setString(2,anneescolaire);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ele_pdf.add(new Eleve(
+                        rs.getInt("numero"),
+                        rs.getString("nomeleve"),
+                        rs.getString("prenomeleve")
+                ));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ele_pdf;
     }
-
 }

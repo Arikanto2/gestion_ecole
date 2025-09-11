@@ -68,11 +68,10 @@ public class pdfClasse_Elves {
     }
 
     public void initialize() {
-        numero.setCellValueFactory(cell ->
-                new SimpleIntegerProperty(tableView.getItems().indexOf(cell.getValue()) + 1).asObject()
-        );
-        nom.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getNomeleve()));
-        prenom.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPrenomeleve()));
+        nom.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getNom()));
+        prenom.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPrenom()));
+        numero.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getNumero()).asObject());
+
 
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         numero.prefWidthProperty().bind(tableView.widthProperty().multiply(0.33));
