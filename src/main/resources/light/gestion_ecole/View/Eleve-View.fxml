@@ -290,62 +290,62 @@
                       prefWidth="750" prefHeight="291"
                       style="-fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff); -fx-padding:5;"
                       AnchorPane.topAnchor="50" AnchorPane.leftAnchor="15" AnchorPane.rightAnchor="15">
-                <ScrollPane fitToWidth="true">
-                    <VBox spacing="15" alignment="CENTER">
-                        <Label text="Ajout Note" styleClass="labelEntete" style="-fx-font-size: 18px"/>
-                        <TitledPane text="Informations Générales">
-                        <GridPane hgap="10" vgap="10" styleClass="detailsPane">
-                            <ComboBox fx:id="comboAnneeNote" GridPane.rowIndex="0" GridPane.columnIndex="2" promptText="Annee Scolaire"/>
-                            <ComboBox fx:id="comboClasseNote" GridPane.rowIndex="0" GridPane.columnIndex="3" promptText="Classe"/>
-                            <ComboBox fx:id="comboEvaluation" value="Examen I" GridPane.rowIndex="0" GridPane.columnIndex="1">
-                                <items>
-                                    <FXCollections fx:factory="observableArrayList">
-                                        <String fx:value="Examen I"/>
-                                        <String fx:value="Examen II"/>
-                                        <String fx:value="Examen III"/>
-                                        <String fx:value="Interro 1"/>
-                                        <String fx:value="Interro 2"/>
-                                        <String fx:value="Interro 3"/>
-                                    </FXCollections>
-                                </items>
-                            </ComboBox>
-                            <ComboBox fx:id="comboProf" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Professeur"/>
-                            <ComboBox fx:id="comboMatiere" GridPane.rowIndex="1" GridPane.columnIndex="2" promptText="Matière">
-                                <items>
-                                    <FXCollections fx:factory="observableArrayList">
-                                        <String fx:value="Religion"/>
-                                        <String fx:value="Malagasy"/>
-                                        <String fx:value="Français"/>
-                                        <String fx:value="Anglais"/>
-                                        <String fx:value="Mathématiques"/>
-                                        <String fx:value="Histoire Géographie"/>
-                                        <String fx:value="S.V.T"/>
-                                        <String fx:value="Physiques Chimie"/>
-                                        <String fx:value="Informatique"/>
-                                        <String fx:value="EPS"/>
-                                    </FXCollections>
-                                </items>
-                            </ComboBox>
-                            <TextField fx:id="txtSiMatiere" GridPane.rowIndex="1" GridPane.columnIndex="3" promptText="Matière si nouveau"/>
-                            <ComboBox fx:id="comboCoef" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Coefficient"/>
-                            <TextField fx:id="txtSiCoef" GridPane.rowIndex="2" GridPane.columnIndex="2" promptText="Coefficient si nouveau"/>
-                        </GridPane>
-                        </TitledPane>
-                        <TitledPane text="Note des étudiants" expanded="false">
-                            <TableView fx:id="attribuerNotes" styleClass="table-view">
-                                <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                                </columnResizePolicy>
-                                <columns>
-                                    <TableColumn fx:id="columnMat" text="#"/>
-                                    <TableColumn fx:id="columnNom" text="Nom et prenoms"/>
-                                    <TableColumn fx:id="columnNote" text="Note /20"/>
-                                    <TableColumn fx:id="columnComment" text="Commentaire"/>
-                                </columns>
-                            </TableView>
-                        </TitledPane>
-                    </VBox>
-                </ScrollPane>
+                    <ScrollPane fitToWidth="true">
+                        <VBox spacing="15" alignment="CENTER">
+                            <Label text="Ajout Note" styleClass="labelEntete" style="-fx-font-size: 18px"/>
+                            <TitledPane text="Informations Générales">
+                                <GridPane hgap="10" vgap="10" styleClass="detailsPane">
+                                    <ComboBox fx:id="comboAnneeNote" GridPane.rowIndex="0" GridPane.columnIndex="2" promptText="Annee Scolaire"/>
+                                    <ComboBox fx:id="comboClasseNote" GridPane.rowIndex="0" GridPane.columnIndex="3" promptText="Classe"/>
+                                    <ComboBox fx:id="comboEvaluation" value="Examen I" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                                        <items>
+                                            <FXCollections fx:factory="observableArrayList">
+                                                <String fx:value="Examen I"/>
+                                                <String fx:value="Examen II"/>
+                                                <String fx:value="Examen III"/>
+                                                <String fx:value="Interro 1"/>
+                                                <String fx:value="Interro 2"/>
+                                                <String fx:value="Interro 3"/>
+                                            </FXCollections>
+                                        </items>
+                                    </ComboBox>
+                                    <ComboBox fx:id="comboProf" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Professeur"/>
+                                    <ComboBox fx:id="comboMatiere" GridPane.rowIndex="1" GridPane.columnIndex="2" promptText="Matière">
+                                        <items>
+                                            <FXCollections fx:factory="observableArrayList">
+                                                <String fx:value="Religion"/>
+                                                <String fx:value="Malagasy"/>
+                                                <String fx:value="Français"/>
+                                                <String fx:value="Anglais"/>
+                                                <String fx:value="Mathématiques"/>
+                                                <String fx:value="Histoire Géographie"/>
+                                                <String fx:value="S.V.T"/>
+                                                <String fx:value="Physiques Chimie"/>
+                                                <String fx:value="Informatique"/>
+                                                <String fx:value="EPS"/>
+                                            </FXCollections>
+                                        </items>
+                                    </ComboBox>
+                                    <TextField fx:id="txtSiMatiere" GridPane.rowIndex="1" GridPane.columnIndex="3" promptText="Matière si nouveau"/>
+                                    <ComboBox fx:id="comboCoef" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Coefficient"/>
+                                    <TextField fx:id="txtSiCoef" GridPane.rowIndex="2" GridPane.columnIndex="2" promptText="Coefficient si nouveau"/>
+                                </GridPane>
+                            </TitledPane>
+                            <TitledPane text="Note des étudiants" expanded="false">
+                                <TableView fx:id="attribuerNotes" styleClass="table-view">
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
+                                    <columns>
+                                        <TableColumn fx:id="columnMat" text="#"/>
+                                        <TableColumn fx:id="columnNom" text="Nom et prenoms"/>
+                                        <TableColumn fx:id="columnNote" text="Note /20"/>
+                                        <TableColumn fx:id="columnComment" text="Commentaire"/>
+                                    </columns>
+                                </TableView>
+                            </TitledPane>
+                        </VBox>
+                    </ScrollPane>
                     <HBox alignment="BASELINE_CENTER" spacing="20">
                         <Button styleClass="btnEnregistrerT" text="Terminer" onAction="#onSaveBTN"/>
                         <Button styleClass="btnAnnulerT" text="Annuler" onAction="#onCancelBTN"/>
@@ -354,49 +354,49 @@
             </AnchorPane>
             <AnchorPane fx:id="formOverlayAddEcolage" visible="false" opacity="0"
                         style="-fx-background-color: rgba(0,0,0,0.5);">
-            <VBox alignment="CENTER" spacing="5"
-                  prefWidth="800" prefHeight="350"
-                  style="-fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff); -fx-padding:5;"
-                  AnchorPane.topAnchor="30" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
-                <Label text="Ecolage par moi" styleClass="labelEntete" style="-fx-font-size: 18px"/>
-                <ScrollPane fitToWidth="true">
-                    <TitledPane text="Ajout Ecolage">
-                        <VBox spacing="15" alignment="CENTER">
-                            <GridPane hgap="10" vgap="10" styleClass="detailsPane">
-                                <Label text="numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                <Label fx:id="lblNumEcolage" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                                <Label text="Nom:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                <Label fx:id="lblNomEcolage" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                                <!--Label text="Prenoms:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                                <Label fx:id="lblPrenomEcolage" GridPane.rowIndex="1" GridPane.columnIndex="3"/-->
-                                <Label text="Classe de:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                                <ComboBox fx:id="comboClasseEcolage" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Classe" prefWidth="120"/>
-                                <Label text="Date:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-                                <DatePicker fx:id="txtDateEcolage" GridPane.rowIndex="2" GridPane.columnIndex="3" promptText="Date" prefWidth="100"/>
-                            </GridPane>
-                            <TableView fx:id="attribuerEcolages" styleClass="table-view">
-                                <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                                </columnResizePolicy>
-                                <columns>
-                                    <TableColumn fx:id="moiColumn" text="Moi de" style="-fx-alignment: CENTER;"/>
-                                    <TableColumn fx:id="columnPayer" text="Payer" style="-fx-alignment: CENTER;"/>
-                                </columns>
-                            </TableView>
-                        </VBox>
-                    </TitledPane>
-                </ScrollPane>
-                <GridPane hgap="10" vgap="10" styleClass="detailsPane">
-                    <Label text="Prix Ecolage:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <Label fx:id="lblPrixEcolage" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                    <Label text="Total à payer:" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
-                    <Label fx:id="lblTotalEcolage" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
-                </GridPane>
-                <HBox alignment="BASELINE_CENTER" spacing="15">
-                    <Button text="Enregistrer" styleClass="btnEnregistrerT" onAction="#onEnregistrerEcolage"/>
-                    <Button text="Annuler" styleClass="btnAnnulerT" onAction="#onAnnulerEcolage"/>
-                </HBox>
-            </VBox>
+                <VBox alignment="CENTER" spacing="5"
+                      prefWidth="800" prefHeight="350"
+                      style="-fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff); -fx-padding:5;"
+                      AnchorPane.topAnchor="30" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+                    <Label text="Ecolage par moi" styleClass="labelEntete" style="-fx-font-size: 18px"/>
+                    <ScrollPane fitToWidth="true">
+                        <TitledPane text="Ajout Ecolage">
+                            <VBox spacing="15" alignment="CENTER">
+                                <GridPane hgap="10" vgap="10" styleClass="detailsPane">
+                                    <Label text="numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <Label fx:id="lblNumEcolage" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                    <Label text="Nom:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                    <Label fx:id="lblNomEcolage" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                    <!--Label text="Prenoms:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                                    <Label fx:id="lblPrenomEcolage" GridPane.rowIndex="1" GridPane.columnIndex="3"/-->
+                                    <Label text="Classe de:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                    <ComboBox fx:id="comboClasseEcolage" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Classe" prefWidth="120"/>
+                                    <Label text="Date:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                                    <DatePicker fx:id="txtDateEcolage" GridPane.rowIndex="2" GridPane.columnIndex="3" promptText="Date" prefWidth="100"/>
+                                </GridPane>
+                                <TableView fx:id="attribuerEcolages" styleClass="table-view">
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
+                                    <columns>
+                                        <TableColumn fx:id="moiColumn" text="Moi de" style="-fx-alignment: CENTER;"/>
+                                        <TableColumn fx:id="columnPayer" text="Payer" style="-fx-alignment: CENTER;"/>
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                        </TitledPane>
+                    </ScrollPane>
+                    <GridPane hgap="10" vgap="10" styleClass="detailsPane">
+                        <Label text="Prix Ecolage:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <Label fx:id="lblPrixEcolage" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        <Label text="Total à payer:" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+                        <Label fx:id="lblTotalEcolage" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
+                    </GridPane>
+                    <HBox alignment="BASELINE_CENTER" spacing="15">
+                        <Button text="Enregistrer" styleClass="btnEnregistrerT" onAction="#onEnregistrerEcolage"/>
+                        <Button text="Annuler" styleClass="btnAnnulerT" onAction="#onAnnulerEcolage"/>
+                    </HBox>
+                </VBox>
             </AnchorPane>
             <AnchorPane fx:id="formOverlayListEcolage" visible="false" opacity="0"
                         style="-fx-background-color: rgba(0,0,0,0.5);">
@@ -737,9 +737,10 @@
                 </HBox.margin>
             </Pane>
             <Button text="Ajouter" fx:id="btnAjouterT" onAction="#btnAjouterT"/>
+            <Button text="Statistique" fx:id="btNStat" />
             <Button text="Modifier" fx:id="btnModifierT" onAction="#btnModifierT"/>
         </HBox>
     </bottom>
 </BorderPane>
 
-<?light.gestion_ecole.Controller.MainController ?>
+        <?light.gestion_ecole.Controller.MainController ?>
