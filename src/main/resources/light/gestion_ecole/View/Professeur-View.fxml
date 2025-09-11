@@ -16,16 +16,10 @@
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <VBox.margin>
-            <Insets left="20" right="20" />
-        </VBox.margin>
         <Label text="Recherche :"/>
         <TextField fx:id="searchField" promptText="Tapez ici..."/>
     </HBox>
     <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
-        <VBox.margin>
-            <Insets left="20" top="20" right="20" />
-        </VBox.margin>
         <columns>
             <TableColumn fx:id="Nom" text="Nom"/>
             <TableColumn fx:id="Titulaire" text="Titulaire"/>
@@ -36,11 +30,8 @@
     </TableView>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <VBox.margin>
-            <Insets left="20"  right="20" />
-        </VBox.margin>
-        <Button fx:id="btnAjouter" text="Ajouter" id="btnAjouterT"/>
-        <Button fx:id="btnModifier" text="Modifier" id="btnModifierT"/>
-        <Button fx:id="btnSupprimer" text="Supprimer" id="btnSupprimerT"/>
+        <Button fx:id="btnAjouter" text="Ajouter"/>
+        <Button fx:id="btnModifier" text="Modifier"/>
+        <Button fx:id="btnSupprimer" text="Supprimer"/>
     </HBox>
 </VBox>

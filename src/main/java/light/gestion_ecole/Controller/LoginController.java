@@ -114,6 +114,7 @@ public class LoginController {
         String mail1 = mail.getText();
         String password = passwordField.getText();
         Utilisateur util = new Utilisateur(mail1,password);
+        System.out.println(mail1 + " " + password);
         try {
             String isUtilexist = UtilisateurDAO.Connecter(util);
             if (!isUtilexist.equals("")) {

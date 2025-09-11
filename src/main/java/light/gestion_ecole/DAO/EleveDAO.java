@@ -1,7 +1,6 @@
 package light.gestion_ecole.DAO;
 
 
-import light.gestion_ecole.Model.Classe;
 import light.gestion_ecole.Model.Eleve;
 
 import java.sql.*;
@@ -254,39 +253,14 @@ public class EleveDAO {
         }
         return ele_pdf;
     }
-    public List<Eleve> getElevesFiltre(Classe c, String an) throws SQLException {
-        List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT * FROM eleve WHERE idclass = ? AND anneescolaire = ?";
-
+    public void giveAvertissement(String ideleve, String avertir) throws SQLException {
+        String sql = "update ELEVE SET avertissement = ? WHERE ideleve = ?";
         try (Connection conn = Database.connect();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, c.getIdClasse());
-            stmt.setString(2, an);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    eleves.add(new Eleve(
-                            rs.getString("ideleve"),
-                            rs.getString("nummat"),
-                            rs.getInt("idclass"),
-                            rs.getInt("idparent"),
-                            rs.getString("nomeleve"),
-                            rs.getString("prenomeleve"),
-                            rs.getString("adresseeleve"),
-                            rs.getDate("datenaiss"),
-                            rs.getString("genre"),
-                            rs.getString("anneescolaire"),
-                            rs.getBoolean("ispassant"),
-                            rs.getBoolean("examennational"),
-                            rs.getString("handicap")
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setString(1, avertir);
+            stmt.setString(2, ideleve);
+            stmt.executeUpdate();
         }
-        return eleves;
     }
-
 
 }

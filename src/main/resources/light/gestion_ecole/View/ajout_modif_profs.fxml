@@ -59,10 +59,10 @@
 
     <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="6" GridPane.columnIndex="1">
         <Button fx:id="btnEnregistrerProf" text="Enregistrer"
-                style="-fx-background-color: linear-gradient(to right,#80d4ff,#2980b9); -fx-text-fill: white;
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;
                 -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 16;"/>
         <Button fx:id="btnAnnulerProf" text="Annuler"
-                style="-fx-background-color: linear-gradient(to right,#ff9999,#ff3333); -fx-text-fill: white;
+                style="-fx-background-color: #f44336; -fx-text-fill: white;
                 -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 16;"/>
     </HBox>
 </GridPane>

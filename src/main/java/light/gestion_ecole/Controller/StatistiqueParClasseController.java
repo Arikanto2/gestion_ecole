@@ -106,31 +106,32 @@ public class StatistiqueParClasseController {
         nbMoyenne =  participation[1];
         nbJamais = participation[2];
 
+
         Label TitreASS = new Label("En moyenne, un élève :");
         TitreASS.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: rgba(6,56,86,0.91); -fx-font-family: Goudy Old Style;");
 
-        Label retard = new Label("• a " + String.format("%.2f", nbretard/nbElve) + " retards en moyenne ("+ nbretard+"/"+(int)nbElve + ")");
+        Label retard = new Label("• a " + (nbretard/nbElve) + " retards en moyenne ("+ nbretard+"/"+(int)nbElve + ")");
         retard.setStyle("-fx-font-size: 12px; -fx-text-fill: rgba(6,56,86,0.91);");
 
-        Label abss = new Label("• a " + String.format("%.2f", nbAbsence/nbElve) + " absences en moyenne ("+ nbAbsence+"/"+(int)nbElve + ")");
+        Label abss = new Label("• a " + (nbAbsence/nbElve) + " absences en moyenne ("+ nbAbsence+"/"+(int)nbElve + ")");
         abss.setStyle("-fx-font-size: 12px; -fx-text-fill: rgba(6,56,86,0.91);");
 
-        Label ExcellentPar = new Label("• participe activement environ " + String.format("%.2f", nbExcellentPa/nbElve) + " fois");
+        Label ExcellentPar = new Label("• participe activement environ " + (nbExcellentPa/nbElve) + " fois");
         ExcellentPar.setStyle("-fx-font-size: 12px; -fx-text-fill: rgba(6,56,86,0.91);");
 
-        Label MoyennePar = new Label("• participe moyennement environ " + String.format("%.2f", nbMoyenne/nbElve) + " fois");
+        Label MoyennePar = new Label("• participe moyennement environ " + (nbMoyenne/nbElve) + " fois");
         MoyennePar.setStyle("-fx-font-size: 12px; -fx-text-fill: rgba(6,56,86,0.91);");
 
-        Label JamaisPar = new Label("• ne participe jamais dans environ " + String.format("%.2f", nbJamais/nbElve) + " cas");
+        Label JamaisPar = new Label("• ne participe jamais dans environ " + (nbJamais/nbElve) + " cas");
         JamaisPar.setStyle("-fx-font-size: 12px; -fx-text-fill: rgba(6,56,86,0.91);");
 
-        Label ExcellenComp = new Label("• a un comportement excellent dans " + String.format("%.2f", nbExcellenteComp/nbElve) + " cas");
+        Label ExcellenComp = new Label("• a un comportement excellent dans " + (nbExcellenteComp/nbElve) + " cas");
         ExcellenComp.setStyle("-fx-font-size: 12px; -fx-text-fill: rgba(6,56,86,0.91);");
 
-        Label Correcte = new Label("• a un comportement correct dans " + String.format("%.2f", nbCorrect/nbElve) + " cas");
+        Label Correcte = new Label("• a un comportement correct dans " + (nbCorrect/nbElve) + " cas");
         Correcte.setStyle("-fx-font-size: 12px; -fx-text-fill: rgba(6,56,86,0.91);");
 
-        Label Mauvais =  new Label("• a un mauvais comportement dans " + String.format("%.2f", nbMauvais/nbElve) + " cas");
+        Label Mauvais =  new Label("• a un mauvais comportement dans " + (nbMauvais/nbElve) + " cas");
         Mauvais.setStyle("-fx-font-size: 12px; -fx-text-fill: rgba(6,56,86,0.91);");
 
         VBox root = new VBox(10, retard, abss, ExcellentPar, MoyennePar, JamaisPar, ExcellenComp, Correcte, Mauvais);
@@ -141,6 +142,7 @@ public class StatistiqueParClasseController {
         root1.setStyle("-fx-padding: 15px; -fx-background-color: #edf4f5; ");
         Assi.getChildren().add(root1);
         Assi.setMargin(root1, new Insets(10, 10, 10, 10));
-    }
 
+
+    }
 }

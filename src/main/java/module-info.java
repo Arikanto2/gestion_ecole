@@ -15,7 +15,6 @@ module light.gestion_ecole {
     requires io;
 
     requires org.controlsfx.controls;
-    requires org.apache.poi.ooxml;
 
 
     opens light.gestion_ecole to javafx.fxml;

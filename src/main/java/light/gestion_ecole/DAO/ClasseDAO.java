@@ -11,18 +11,15 @@ import java.util.List;
 
 public class ClasseDAO {
     public static List<Classe> getAllClasses(String anne) throws SQLException {
+
         List<Classe> classes = new ArrayList<>();
-        String sql = "SELECT c.idclass, c.designation, " +
-                "COUNT(e.idclass) AS nbr_eleves, " +
-                "c.\"Titulaire\", c.prixecolage " +
+        String sql = "SELECT c.idclass, c.designation, COUNT(e.idclass) As nbr_eleves, c.\"Titulaire\", c.prixecolage " +
                 "FROM classe c " +
-                "LEFT JOIN eleve e ON c.idclass = e.idclass " +
-                "AND e.avertissement IS DISTINCT FROM 'renvoyé' " +
-                "AND e.anneescolaire = ? " +
-                "GROUP BY c.idclass, c.designation, c.\"Titulaire\", c.prixecolage " +
+                "LEFT JOIN eleve e ON c.idclass = e.idclass WHERE e.avertissement IS DISTINCT FROM 'renvoyé' AND e.anneescolaire = ? " +
+                "GROUP BY c.designation, c.idclass " +
                 "ORDER BY c.designation";
         try (Connection conn = Database.connect();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, anne);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -35,14 +32,14 @@ public class ClasseDAO {
                     ));
                 }
             }
-        } catch (SQLException e) {
+
+
+        }catch (SQLException e){
             e.printStackTrace();
         }
+
         return classes;
     }
-
-
-
 
     public void ajouterClasse(Classe c) throws SQLException {
         String sql = "INSERT INTO classe (designation, \"Titulaire\", prixecolage) VALUES (?, ?, ?)";
@@ -77,7 +74,7 @@ public class ClasseDAO {
     }
 
     // recupere les classe(combobox)
-    public static ObservableList<String> getdesignationclasse() throws SQLException {
+    public ObservableList<String> getdesignationclasse() throws SQLException {
         ObservableList<String> classes = FXCollections.observableArrayList();
         String sql = "SELECT designation FROM classe " +
                 "where \"Titulaire\" is null or \"Titulaire\" = '' ";
