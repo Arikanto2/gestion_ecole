@@ -293,8 +293,8 @@ public class classecontroller {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Eleves_Rang.fxml"));
             Parent root = loader.load();
 
-            Rang_classeController rang = loader.getController();
-            rang.setRang(c_pdp, annee);
+            //Rang_classeController rang = loader.getController();
+            //rang.setRang(c_pdp, annee);
 
             Stage stage1 = new Stage();
             stage1.setTitle("Eleves de " + c_pdp.getDesignation());
