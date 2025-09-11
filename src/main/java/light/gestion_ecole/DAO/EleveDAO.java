@@ -262,5 +262,8 @@ public class EleveDAO {
             stmt.executeUpdate();
         }
     }
+    private void dedy(){
+
+    }
 
 }
