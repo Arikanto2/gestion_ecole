@@ -130,6 +130,10 @@ public class Eleve {
     public String getNomeleve() {
         return nomeleve;
     }
+    public String getNomeleve2(){
+        String[] nom = nomeleve.split(" ");
+        return nom[0];
+    }
     public void setNomeleve(String nomeleve) {
         this.nomeleve = nomeleve;
     }
