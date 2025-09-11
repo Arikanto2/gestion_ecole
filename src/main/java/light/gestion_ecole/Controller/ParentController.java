@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import light.gestion_ecole.DAO.*;
@@ -20,6 +21,7 @@ import light.gestion_ecole.Model.*;
 import javax.sound.sampled.Mixer;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,19 +60,16 @@ public class ParentController {
     @FXML private AnchorPane formOverlay;
     @FXML private ComboBox comboClasse2;
     @FXML private ComboBox comboSexe;
-    @FXML private ComboBox comboHandicap;
+    @FXML private CheckBox check1;
+    @FXML private CheckBox check2;
+    @FXML private CheckBox check3;
+    @FXML private CheckBox check4;
     @FXML private TextField txtNom;
     @FXML private TextField txtPrenom;
     @FXML private TextField txtAnneeScolaire;
     @FXML private DatePicker txtdateNaissance;
     @FXML private TextField txtAdresse;
 
-    @FXML private RadioButton passantOui;
-    @FXML private RadioButton passantNon;
-    @FXML private ToggleGroup passantGroup;
-    @FXML private RadioButton nationalOui;
-    @FXML private RadioButton nationalNon;
-    @FXML private ToggleGroup nationalGroup;
     @FXML private Button enregistrerBtn;
     @FXML private Button annulerBtn;
     @FXML private Button btnAjouterT;
@@ -96,17 +95,24 @@ public class ParentController {
         contact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         emailParent.setCellValueFactory(new PropertyValueFactory<>("emailparent"));
         rechercheParent.textProperty().addListener((observable, oldValue, newValue) -> filterTable());
-        passantGroup = new ToggleGroup();
-        passantOui.setToggleGroup(passantGroup);
-        passantNon.setToggleGroup(passantGroup);
-        nationalGroup = new ToggleGroup();
-        nationalOui.setToggleGroup(nationalGroup);
-        nationalNon.setToggleGroup(nationalGroup);
         buttonList.forEach(button -> {
             button.setCursor(Cursor.HAND);
         });
         loadComboData();
         loadParent();
+        tableParent.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        autoResizeColumn2(nomPere);
+        autoResizeColumn2(professionPere);
+        autoResizeColumn2(nomMere);
+        autoResizeColumn2(professionMere);
+        autoResizeColumn2(tuteur);
+        autoResizeColumn2(professionTuteur);
+        autoResizeColumn2(contact);
+        autoResizeColumn2(emailParent);
+        tableParent.getColumns().forEach(column -> {
+            column.setReorderable(false);
+            column.setResizable(false);
+        });
     }
     private void loadParent() throws SQLException {
         observableParent = FXCollections.observableArrayList(parentDAOT.getAllParents());
@@ -163,6 +169,21 @@ public class ParentController {
             alert.setContentText("Aucun element selectionner");
             alert.showAndWait();
         }
+    }
+    private void autoResizeColumn2(TableColumn<?, ?> column) {
+        Text t = new Text(column.getText());
+        double max = t.getLayoutBounds().getWidth();
+
+        for (int i = 0; i < tableParent.getItems().size(); i++) {
+            if (column.getCellData(i) != null){
+                t = new Text(column.getCellData(i).toString());
+                double calcWidth = t.getLayoutBounds().getWidth();
+                if (calcWidth > max) {
+                    max = calcWidth;
+                }
+            }
+        }
+        column.setPrefWidth(max + 70);
     }
 
     @FXML
@@ -221,14 +242,20 @@ public class ParentController {
         int idClass = eleveDAO.getIdClass((String) comboClasse2.getValue());
         ParentT selected =tableParent.getSelectionModel().getSelectedItem();
         int idPrt = selected.getIdparent();
-        boolean estPassant = getBooleanFromRadio(passantGroup, passantOui);
-        boolean estNational = getBooleanFromRadio(nationalGroup, nationalOui);
         int nb = eleveDAO.nbrEleves()+1;
+        List<CheckBox> checkBoxes = List.of(check1,check2,check3,check4);
+        List<String> checkString = new ArrayList<>();
+        for (CheckBox checkBox : checkBoxes) {
+            if (checkBox.isSelected()) {
+                checkString.add(checkBox.getText());
+            }
+        }
+        String result = String.join("-",checkString);
         String matricule = "00"+ nb + getGenreeleve2();
         String id = matricule+'-'+ txtAnneeScolaire.getText();
         Eleve eleve = new Eleve(id,matricule,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
                 txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),
-                estPassant,estNational,(String) comboHandicap.getValue());
+                result);
         eleveDAO.insertEleve(eleve);
         handleCancel();
     }
@@ -238,13 +265,6 @@ public class ParentController {
         else
             return "F";
     }
-    private boolean getBooleanFromRadio(ToggleGroup group, RadioButton radioButton) {
-        if (group.getSelectedToggle() == null) {
-            return false;
-        }
-        return group.getSelectedToggle() == radioButton;
-    }
-
     private void filterTable() {
         String txtRecherche = rechercheParent.getText() == null ? "" : rechercheParent.getText().toLowerCase();
         tableParent.setItems(observableParent.filtered(parentT ->

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          hgap="15" vgap="15"
+          style="-fx-background-color: #ffffff;
+                 -fx-border-color: #dddddd;
+                 -fx-border-radius: 10;
+                 -fx-background-radius: 10;"
+          fx:controller="light.gestion_ecole.Controller.AjoutAbsenceController"
+          stylesheets="@../Style/Style.css"
+>
+<padding>
+    <Insets top="20" right="20" bottom="20" left="20"/>
+</padding>
+
+<Label text="Matricule :" GridPane.rowIndex="0" GridPane.columnIndex="0"
+       style="-fx-font-size: 14px;
+           -fx-text-fill: rgba(12, 76, 108, 0.91);
+           -fx-font-family: 'Book Antiqua';"
+/>
+<TextField fx:id="nummat" GridPane.rowIndex="0" GridPane.columnIndex="1"
+           style="-fx-pref-width: 200px;
+               -fx-padding: 6 10;
+               -fx-background-radius: 6;
+               -fx-border-radius: 6;
+               -fx-border-color: #cccccc;
+               -fx-background-color: #ffffff;"
+/>
+
+<Label text="Absence :" GridPane.rowIndex="1" GridPane.columnIndex="0"
+       style="-fx-font-size: 14px;
+           -fx-text-fill: rgba(12, 76, 108, 0.91);
+           -fx-font-family: 'Book Antiqua';"
+/>
+<DatePicker fx:id="DateAb" GridPane.rowIndex="1" GridPane.columnIndex="1"
+          style="-fx-pref-width: 220px;
+              -fx-padding: 6 10;
+              -fx-background-radius: 6;
+              -fx-border-radius: 6;
+              -fx-border-color: #cccccc;
+              -fx-background-color: #ffffff;"
+/>
+
+<Label text="Retour :" GridPane.rowIndex="2" GridPane.columnIndex="0"
+       style="-fx-font-size: 14px;
+           -fx-text-fill: rgba(12, 76, 108, 0.91);
+           -fx-font-family: 'Book Antiqua';"
+/>
+<DatePicker fx:id="DateRe" GridPane.rowIndex="2" GridPane.columnIndex="1"
+           style="-fx-pref-width: 220px;
+               -fx-padding: 6 10;
+               -fx-background-radius: 6;
+               -fx-border-radius: 6;
+               -fx-border-color: #cccccc;
+               -fx-background-color: #ffffff;"
+/>
+
+<Label text="Motif :" GridPane.rowIndex="3" GridPane.columnIndex="0"
+       style="-fx-font-size: 14px;
+           -fx-text-fill: rgba(12, 76, 108, 0.91);
+           -fx-font-family: 'Book Antiqua';"
+/>
+<TextField fx:id="motifAbs" GridPane.rowIndex="3" GridPane.columnIndex="1"
+          style="-fx-pref-width: 200px;
+              -fx-padding: 6 10;
+              -fx-background-radius: 6;
+              -fx-border-radius: 6;
+              -fx-border-color: #cccccc;
+              -fx-background-color: #ffffff;"
+/>
+
+<HBox spacing="10" alignment="CENTER" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2">
+    <Button fx:id="btnEnregistrer" text="Ajouter" id="btnAjouterT"/>
+    <Button fx:id="btnAnnuler" text="Annuler" id="btnSupprimerT"/>
+    <HBox fx:id="btnSupprimer">
+        <ImageView fitWidth="30" fitHeight="30" preserveRatio="true" >
+            <image>
+                <Image url="@../Photo/icons8-supprimer-pour-toujours-96.png"/>
+            </image>
+        </ImageView>
+    </HBox>
+
+</HBox>
+</GridPane>

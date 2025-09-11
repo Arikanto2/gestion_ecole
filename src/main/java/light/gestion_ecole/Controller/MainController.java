@@ -77,8 +77,8 @@ public class MainController {
 
 
         });
-        /*nomUtilisateur.setText("@"+ LoginController.nom);
-        premierLet.setText(String.valueOf(LoginController.nom.charAt(0)));*/
+        nomUtilisateur.setText("@"+ LoginController.nom);
+        premierLet.setText(String.valueOf(LoginController.nom.charAt(0)));
 
         tousLesMenus = List.of(menuAccueil,menuStat,menuEleve,menuProf,menuClasse,menuParent);
         tousLesMenus.forEach(menu -> {

@@ -50,7 +50,7 @@
             <ScrollPane fitToWidth="true">
                 <VBox spacing="15">
 
-                    <TitledPane text="Informations Générales Parents" expanded="true">
+                    <TitledPane text="Informations Générales Parents">
                         <GridPane hgap="10" vgap="10">
                             <Label text="Nom Pere:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                             <TextField fx:id="txtNomPere" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
@@ -127,27 +127,11 @@
 
                                 <Label text="Adresse:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                                 <TextField fx:id="txtAdresse" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Adresse"/>
-                                <Label text="Passant:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-                                <HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="3">
-                                    <RadioButton fx:id="passantOui" text="Oui" toggleGroup="$passantGroup"/>
-                                    <RadioButton fx:id="passantNon" text="Non" toggleGroup="$passantGroup"/>
-                                </HBox>
-                                <Label text="Examen National:" GridPane.rowIndex="2" GridPane.columnIndex="5"/>
-                                <HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="6">
-                                    <RadioButton fx:id="nationalOui" text="Oui" toggleGroup="$nationalGroup"/>
-                                    <RadioButton fx:id="nationalNon" text="Non" toggleGroup="$nationalGroup"/>
-                                </HBox>
                                 <Label text="Handicap:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                                <ComboBox GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="comboHandicap" promptText="Choisir">
-                                    <items>
-                                        <FXCollections fx:factory="observableArrayList">
-                                            <String fx:value="Audition"/>
-                                            <String fx:value="Vision"/>
-                                            <String fx:value="Intelectuel"/>
-                                            <String fx:value="Psychomoteur"/>
-                                        </FXCollections>
-                                    </items>
-                                </ComboBox>
+                                <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="check1" text="Audition"/>
+                                <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="2" fx:id="check2" text="Vision"/>
+                                <CheckBox GridPane.rowIndex="4" GridPane.columnIndex="1" fx:id="check3" text="Intelectuel"/>
+                                <CheckBox GridPane.rowIndex="4" GridPane.columnIndex="2" fx:id="check4" text="Psychomoteur"/>
                             </GridPane>
                         </TitledPane>
 
