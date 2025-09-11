@@ -267,7 +267,7 @@ public class classecontroller {
             Parent root = loader.load();
 
             pdfClasse_Elves pdf = loader.getController();
-            pdf.setClasse(c_pdp);
+            pdf.setClasse(c_pdp,anneeScolaire.getSelectionModel().getSelectedItem().toString());
 
             Stage stage1 = new Stage();
             stage1.setTitle("Eleves de " + c_pdp.getDesignation());

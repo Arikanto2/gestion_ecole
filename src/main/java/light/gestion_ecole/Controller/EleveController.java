@@ -1264,7 +1264,7 @@ public class EleveController {
                 PdfDocument pdfDoc = new PdfDocument(writer);
                 Document document = new Document(pdfDoc);
 
-                /*try {
+                try {
                     String logoPath = getClass().getResource("/light/gestion_ecole/Photo/logo.png").toExternalForm();
                     ImageData imageData = ImageDataFactory.create(logoPath);
                     Image logo = new Image(imageData);
@@ -1274,7 +1274,7 @@ public class EleveController {
                     document.add(logo);
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                }*/
+                }
                 String eval =  comboEvaluation.getValue().toString().toUpperCase();
                 document.add(new Paragraph("RELEVE DE NOTE D'" + eval)
                         .setBold().setFontSize(16).setTextAlignment(TextAlignment.CENTER).setUnderline());

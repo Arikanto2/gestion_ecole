@@ -47,8 +47,9 @@ public class pdfClasse_Elves {
 
     private Classe classeselected;
     private EleveDAO eleveDAO = new EleveDAO();
+    private String anneescolaire;
 
-    public void setClasse (Classe classe){
+    public void setClasse (Classe classe, String st){
         this.classeselected = classe;
         lblClasse.setText(classe.getDesignation());
         lblprof.setText(classe.getTitulaire());
