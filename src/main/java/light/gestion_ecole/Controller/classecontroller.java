@@ -272,6 +272,7 @@ public class classecontroller {
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/light/gestion_ecole/Style/pdf.css").toExternalForm());
             stage1.setScene(scene);
+            Main.setStageIcon(stage1);
             stage1.setResizable(false);
             stage1.setMaximized(false);
             stage1.setMaxWidth(395);
