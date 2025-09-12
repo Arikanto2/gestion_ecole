@@ -1,6 +1,7 @@
 package light.gestion_ecole.Controller;
 
 import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -10,26 +11,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.geometry.Pos;
 import light.gestion_ecole.DAO.EleveDAO;
 import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.Classe;
 import light.gestion_ecole.Model.Eleve;
-
-// alert
 import light.gestion_ecole.Model.Notification;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.controlsfx.control.Notifications;
-
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Cell;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.layout.element.Image;
@@ -72,7 +64,6 @@ public class pdfClasse_Elves {
         prenom.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPrenom()));
         numero.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getNumero()).asObject());
 
-
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         numero.prefWidthProperty().bind(tableView.widthProperty().multiply(0.33));
         nom.prefWidthProperty().bind(tableView.widthProperty().multiply(0.33));
@@ -101,14 +92,14 @@ public class pdfClasse_Elves {
         });
     }
 
-
     @FXML public void chargerEleves(Classe classe, String anneescolaire) throws SQLException {
         List<Eleve> eleves = eleveDAO.getElevesFiltre(classe,anneescolaire);
 
         ObservableList<Eleve> data = FXCollections.observableList(eleves);
         tableView.setItems(data);
         lbleleves.setText(data.size() + " éleves");
-  }
+    }
+
 
     @FXML
     public void exporterPDF() {
@@ -120,42 +111,40 @@ public class pdfClasse_Elves {
             try {
                 String userDesktop = System.getProperty("user.home") + "/Desktop";
                 String filePath = userDesktop + "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
-                //String filePath = "D:\\Projet\\ProjetJava" + "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
 
                 PdfWriter writer = new PdfWriter(filePath);
                 PdfDocument pdfDoc = new PdfDocument(writer);
                 Document document = new Document(pdfDoc);
+                document.setMargins(20, 20, 20, 20);
 
                 try {
                     String logoPath = getClass().getResource("/light/gestion_ecole/Photo/logo.png").toExternalForm();
                     ImageData imageData = ImageDataFactory.create(logoPath);
                     Image logo = new Image(imageData);
-
-                    logo.setHorizontalAlignment(HorizontalAlignment.CENTER); // centré en haut
-
+                    logo.setHorizontalAlignment(HorizontalAlignment.CENTER);
                     document.add(logo);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
-                document.add(new Paragraph("Classe : " + classeselected.getDesignation())
-                        .setBold().setFontSize(16));
+                document.add(new Paragraph("Classe : " + classeselected.getDesignation()).setBold().setFontSize(14));
                 document.add(new Paragraph("Titulaire : " + classeselected.getTitulaire()));
                 document.add(new Paragraph("Nombre d'élèves : " + tableView.getItems().size()));
                 document.add(new Paragraph("\n"));
 
-                Table table = new Table(3);
+                Table table = new Table(UnitValue.createPercentArray(new float[]{1, 4, 4})).useAllAvailableWidth();
                 table.addHeaderCell("Numéro");
                 table.addHeaderCell("Nom");
                 table.addHeaderCell("Prénom");
 
                 for (int i = 0; i < tableView.getItems().size(); i++) {
                     Eleve eleve = tableView.getItems().get(i);
-                    table.addCell(String.valueOf(i + 1));
-                    table.addCell(eleve.getNomeleve());
-                    table.addCell(eleve.getPrenomeleve());
+                    String nomEleve = eleve.getNom() != null ? eleve.getNom() : "-";
+                    String prenomEleve = eleve.getPrenom() != null ? eleve.getPrenom() : "-";
+                    table.addCell(new Cell().add(new Paragraph(String.valueOf(i + 1))));
+                    table.addCell(new Cell().add(new Paragraph(nomEleve)));
+                    table.addCell(new Cell().add(new Paragraph(prenomEleve)));
                 }
-
 
                 document.add(table);
                 document.close();
@@ -169,4 +158,3 @@ public class pdfClasse_Elves {
         }
     }
 }
-
