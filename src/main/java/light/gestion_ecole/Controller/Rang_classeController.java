@@ -37,11 +37,22 @@ public class Rang_classeController {
     public void setRang(Classe classe, String annee) {
         txtClasse.setText(classe.getDesignation());
         txtprof.setText(classe.getTitulaire());
+        this.classeselected = classe;
         try{
             evaluation.getItems().addAll(noteDAO.getevaluation());
             evaluation.getSelectionModel().select(0);
             String eval = evaluation.valueProperty().get().toString();
             rangeleves(eval,classe.getIdClasse(),annee);
+
+            evaluation.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    try {
+                        rangeleves(newVal.toString(), classe.getIdClasse(), annee);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }catch(Exception e){
             e.printStackTrace();
         }

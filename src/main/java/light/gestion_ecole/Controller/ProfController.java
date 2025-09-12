@@ -52,23 +52,35 @@ public class ProfController {
         btnModifier.setOnAction(e->{
             Professeur selected = tableView.getSelectionModel().getSelectedItem();
             if (selected!=null) ouvrirform(selected);
-            else new Alert(Alert.AlertType.WARNING, "Sélectionnez un prof à modifier !").showAndWait();
+            else Notification.showWarning("Sélectionnez un professeur à modifier !");
         });
 
-        btnSupprimer.setOnAction(e->{
+        btnSupprimer.setOnAction(e -> {
             Professeur selected = tableView.getSelectionModel().getSelectedItem();
-            if (selected!=null) {
-                Alert conf = new Alert(Alert.AlertType.CONFIRMATION, "Supprimer cette classe ?", ButtonType.YES, ButtonType.NO);
-                conf.showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.YES) {
-                        try{
+            if (selected != null) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText("Supprimer ce professeur ?");
+                alert.initOwner(btnSupprimer.getScene().getWindow());
+
+                ButtonType yesButton = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
+                ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(yesButton, noButton);
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == yesButton) {
+                        try {
                             profDAO.supprimerProf(selected.getIdprof());
                             loadprofs();
-                        }catch (SQLException ex) {
+                            Notification.showSuccess("Professeur supprimé avec succès !");
+                        } catch (SQLException ex) {
                             ex.printStackTrace();
+                            Notification.showError("Erreur lors de la suppression : " + ex.getMessage());
                         }
                     }
                 });
+            } else {
+                Notification.showWarning("Sélectionnez un professeur à supprimer !");
             }
         });
     }
