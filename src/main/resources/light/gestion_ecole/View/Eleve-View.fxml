@@ -11,7 +11,7 @@
     <top>
         <HBox spacing="10" alignment="CENTER">
             <BorderPane.margin>
-                <Insets left="50" top="20" right="25" bottom="20"/>
+                <Insets left="25" top="20" right="25" bottom="10"/>
             </BorderPane.margin>
             <TextField fx:id="txtSearch" promptText="Rechercher un élève..." prefWidth="200"/>
             <Region HBox.hgrow="ALWAYS"/>
@@ -24,7 +24,7 @@
     </top>
     <center>
         <StackPane fx:id="contentArea">
-            <BorderPane.margin>
+        <BorderPane.margin>
                 <Insets left="25" top="20" right="20"/>
             </BorderPane.margin>
             <HBox alignment="CENTER">
@@ -68,7 +68,7 @@
                                     <TextField fx:id="txtPrenom" promptText="Randria" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                                     <Label text="Date Naissance:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                                    <DatePicker fx:id="txtdateNaissance" GridPane.rowIndex="5" promptText="01-01-2000" GridPane.columnIndex="1"/>
+                                    <DatePicker fx:id="txtdateNaissance" GridPane.rowIndex="5" promptText="JJ/MM/AAAA" GridPane.columnIndex="1"/>
 
                                     <Label text="Sexe:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                                     <ComboBox fx:id="comboSexe" promptText="Choisir" GridPane.rowIndex="6" GridPane.columnIndex="1">
@@ -737,7 +737,7 @@
                 </HBox.margin>
             </Pane>
             <Button text="Ajouter" fx:id="btnAjouterT" onAction="#btnAjouterT"/>
-            <Button text="Statistique" fx:id="btNStat" />
+            <Button text="Statistique" fx:id="btNStat" id="btnAjouterT"/>
             <Button text="Modifier" fx:id="btnModifierT" onAction="#btnModifierT"/>
         </HBox>
     </bottom>

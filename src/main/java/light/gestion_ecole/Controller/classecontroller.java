@@ -16,7 +16,9 @@ import javafx.util.Duration;
 import light.gestion_ecole.DAO.ClasseDAO;
 import light.gestion_ecole.DAO.ProfDAO;
 import light.gestion_ecole.DAO.StatDAO;
+import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.Classe;
+import light.gestion_ecole.Model.Notification;
 import org.controlsfx.control.Notifications;
 import java.lang.*;
 
@@ -63,7 +65,7 @@ public class classecontroller {
                 loadclasse();
             } catch (SQLException e) {
                 e.printStackTrace();
-                showError("Erreur lors du chargement des classes : " + e.getMessage());
+                Notification.showError("Erreur lors du chargement des classes : " + e.getMessage());
             }
         });
 
@@ -107,7 +109,7 @@ public class classecontroller {
                     }
                 });
             } else {
-                showWarning("Sélectionnez une classe à supprimer !");
+                Notification.showWarning("Sélectionnez une classe à supprimer !");
             }
     });
 
@@ -182,7 +184,8 @@ public class classecontroller {
             Parent root = loader.load();
 
             TextField txtID = (TextField) root.lookup("#txtID");
-            ComboBox<String> comboDesignation = (ComboBox<String>) root.lookup("#comboDesignation");
+            TextField designation =  (TextField) root.lookup("#textFielDesignation");
+
             TextField txtPrix = (TextField) root.lookup("#txtPrix");
             ComboBox<String> comboprof = (ComboBox<String>) root.lookup("#comboprof");
 
@@ -195,23 +198,19 @@ public class classecontroller {
             Button btnEnregistrer = (Button) root.lookup("#btnEnregistrer");
             Button btnAnnuler = (Button) root.lookup("#btnAnnuler");
 
-            comboDesignation.getItems().addAll("12eme","11eme", "10eme", "CE",
-                    "CM1", "CM2", "6eme",
-                    "5eme", "4eme", "3eme",
-                    "Seconde", "Première", "TA", "TC", "TD");
 
             if (classeAModifier == null){
                 txtID.setDisable(true);
             }
             if (classeAModifier != null) {
                 txtID.setText(String.valueOf(classeAModifier.getIdClasse()));
-                comboDesignation.setValue(classeAModifier.getDesignation());
                 txtPrix.setText(String.valueOf(classeAModifier.getPrixEcolage()));
                 comboprof.setValue(classeAModifier.getTitulaire());
                 txtID.setEditable(false);
             }
 
             Stage stage = new Stage();
+            Main.setStageIcon(stage);
             stage.setTitle(classeAModifier == null ? "Ajouter une Classe" : "Modifier Classe");
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -220,36 +219,37 @@ public class classecontroller {
 
             btnEnregistrer.setOnAction(e -> {
                 try {
-                    String designation = comboDesignation.getValue();
+
                     String prixStr = txtPrix.getText();
                     String prof = comboprof.getValue();
+                    String txtdesignation = designation.getText();
 
-                    if (designation == null || prixStr.isEmpty()) {
-                        showWarning("Veuillez remplir tous les champs !");
+                    if (prixStr.isEmpty()) {
+                        Notification.showWarning("Veuillez remplir tous les champs !");
                         return;
                     }
 
                     double prix = Double.parseDouble(prixStr);
 
                     if (classeAModifier == null) {
-                        Classe nouvelleClasse = new Classe(0, designation, prof, prix);
+                        Classe nouvelleClasse = new Classe(0, txtdesignation, prof, prix);
                         classeDAO.ajouterClasse(nouvelleClasse);
-                        showSuccess("Classe ajoutée avec succès !");
+                        Notification.showSuccess("Classe ajoutée avec succès !");
                     } else {
                         int idclass = Integer.parseInt(txtID.getText());
                         classeAModifier.setIdClasse(idclass);
-                        classeAModifier.setDesignation(designation);
+                        classeAModifier.setDesignation(txtdesignation);
                         classeAModifier.setPrixEcolage(prix);
                         classeAModifier.setProf(prof);
                         classeDAO.modifierClasse(classeAModifier);
-                        showSuccess("Classe modifiée avec succès !");
+                        Notification.showSuccess("Classe modifiée avec succès !");
                     }
 
                     loadclasse();
                     stage.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    showError("Erreur : " + ex.getMessage());
+                    Notification.showError("Veuillez entrer des valeur valide.");
                 }
             });
 
