@@ -2,6 +2,7 @@ package light.gestion_ecole.Model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class EcolageparmoiT {
     private String ideleve;
@@ -59,7 +60,10 @@ public class EcolageparmoiT {
         this.statut = statut;
     }
     public String getEcolagemoi() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        if (this.ecolagemoi == null) {
+            return "";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.FRENCH);
         return sdf.format(ecolagemoi);
     }
     public Date getecolagemoiAsDate() {

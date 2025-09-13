@@ -22,6 +22,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -30,9 +31,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.converter.DoubleStringConverter;
 import light.gestion_ecole.DAO.*;
+import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.*;
 import org.controlsfx.control.Notifications;
 
@@ -53,6 +56,7 @@ public class EleveController {
     @FXML private TableColumn<Eleve, String> nomEleve;
     @FXML private TableColumn<Eleve, String> datenaiss;
     @FXML private TableColumn<Eleve, ImageView> genreEleve;
+    @FXML private Button btNStat;
     //info General
     @FXML private Label lblNum;
     @FXML private Label lblNom;
@@ -271,6 +275,31 @@ public class EleveController {
         idListe.setCellValueFactory(new PropertyValueFactory<>("nummat"));
         nomListe.setCellValueFactory(new PropertyValueFactory<>("nomeleve"));
         ecoListe.setCellValueFactory(new PropertyValueFactory<>("listMoi"));
+        btNStat.setOnMouseClicked(event -> {
+            if(selectedEleve != null){
+                StatUnElveController.eleve = selectedEleve;
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/light/gestion_ecole/View/StatUnEleve-View.fxml"));
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load(), 320, 240);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                Stage stage = new Stage();
+                Main.setStageIcon(stage);
+                stage.setTitle("Statistique (" + selectedEleve.getNummat() + ")");
+                stage.setScene(scene);
+                stage.setMinWidth(750);
+                stage.setMinHeight(460);
+                stage.setResizable(false);
+                stage.setMaximized(false);
+                stage.show();
+
+            }
+            else {
+                Notification.showWarning("Veuillez selectionné un élève.");
+            }
+        });
 
         columnMat.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNummat()));
         columnNom.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNomeleve()));

@@ -19,12 +19,13 @@
         <Label text="Titulaire :"/>
         <Label  fx:id="txtprof" text="-" style="-fx-font-weight: bold;"/>
     </HBox>
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <ComboBox fx:id="evaluation" promptText="Typeevaluation" />
-    </HBox>
-    <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Label text="Effectifs :"/>
-        <Label  fx:id="txteleves"  text="0" style="-fx-font-weight: bold;"/>
+    <HBox spacing="20" alignment="CENTER_LEFT">
+        <ComboBox fx:id="evaluation" promptText="Type évaluation" />
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Label text="Effectifs :" />
+        <Label fx:id="txteleves" text="0" style="-fx-font-weight: bold;"/>
     </HBox>
     <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
         <columns>

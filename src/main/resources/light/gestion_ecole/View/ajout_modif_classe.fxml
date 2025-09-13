@@ -36,14 +36,6 @@
     />
 
     <StackPane GridPane.rowIndex="1" GridPane.columnIndex="1">
-        <ComboBox fx:id="comboDesignation"
-                  style="-fx-pref-width: 200px;
-              -fx-padding: 6 10;
-              -fx-background-radius: 6;
-              -fx-border-radius: 6;
-              -fx-border-color: #cccccc;
-              -fx-background-color: #ffffff;"
-        />
         <TextField fx:id="textFielDesignation" style="-fx-pref-width: 200px;
               -fx-padding: 6 10;
               -fx-background-radius: 6;

@@ -11,16 +11,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.geometry.Pos;
-import javafx.util.Duration;
 import light.gestion_ecole.DAO.ClasseDAO;
 import light.gestion_ecole.DAO.ProfDAO;
 import light.gestion_ecole.DAO.StatDAO;
+import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.Classe;
-import org.controlsfx.control.Notifications;
+import light.gestion_ecole.Model.Notification;
+
 import java.lang.*;
 
-import java.io.Console;
 import java.sql.SQLException;
 
 public class classecontroller {
@@ -63,7 +62,7 @@ public class classecontroller {
                 loadclasse();
             } catch (SQLException e) {
                 e.printStackTrace();
-                showError("Erreur lors du chargement des classes : " + e.getMessage());
+                Notification.showError("Erreur lors du chargement des classes : " + e.getMessage());
             }
         });
 
@@ -73,43 +72,38 @@ public class classecontroller {
         btnModifier.setOnAction(e -> {
             Classe selected = tableView.getSelectionModel().getSelectedItem();
             if (selected != null) ouvrirFormulaire(selected);
-            else showWarning("Sélectionnez une classe à modifier !");
+            else Notification.showWarning("Sélectionnez une classe à modifier !");
         });
 
         btnSupprimer.setOnAction(e -> {
             Classe selected = tableView.getSelectionModel().getSelectedItem();
             if (selected != null) {
-                // Création d'un Dialog de confirmation
-                Dialog<ButtonType> dialog = new Dialog<>();
-                dialog.setTitle("Confirmation");
-                dialog.setHeaderText("Supprimer cette classe ?");
-                dialog.initOwner(btnSupprimer.getScene().getWindow());
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText("Supprimer cette classe ?");
+                alert.initOwner(btnSupprimer.getScene().getWindow());
 
-                // Boutons Oui / Non
                 ButtonType yesButton = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
                 ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-                dialog.getDialogPane().getButtonTypes().addAll(yesButton, noButton);
 
-                // Centrer le dialog
-                dialog.getDialogPane().setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
+                alert.getButtonTypes().setAll(yesButton, noButton);
 
-                dialog.showAndWait().ifPresent(response -> {
+                alert.showAndWait().ifPresent(response -> {
                     if (response == yesButton) {
                         try {
-                            System.out.println(selected.getIdClasse());
                             classeDAO.supprimerClasse(selected.getIdClasse());
                             loadclasse();
-                            showSuccess("Classe supprimée avec succès !");
+                            Notification.showSuccess("Classe supprimée avec succès !");
                         } catch (SQLException ex) {
                             ex.printStackTrace();
-                            showError("Erreur lors de la suppression : " + ex.getMessage());
+                            Notification.showError("Erreur lors de la suppression : " + ex.getMessage());
                         }
                     }
                 });
             } else {
-                showWarning("Sélectionnez une classe à supprimer !");
+                Notification.showWarning("Sélectionnez une classe à supprimer !");
             }
-    });
+        });
 
         tableView.setRowFactory(tv -> {
             TableRow<Classe> row = new TableRow<>();
@@ -117,26 +111,26 @@ public class classecontroller {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Classe selected = row.getItem();
 
-                    Dialog<ButtonType> dialog = new Dialog<>();
-                    dialog.setTitle("Confirmation");
-                    dialog.setHeaderText("Qu'est ce que vous voulez voir?");
-                    dialog.initOwner(tableView.getScene().getWindow());
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Confirmation");
+                    alert.setHeaderText("Qu'est-ce que vous voulez voir ?");
+                    alert.initOwner(tableView.getScene().getWindow());
 
-                    ButtonType rang = new ButtonType("Rang", ButtonBar.ButtonData.OK_DONE);
-                    ButtonType liste = new ButtonType("Liste", ButtonBar.ButtonData.OK_DONE);
+                    ButtonType rang = new ButtonType("Rang");
+                    ButtonType liste = new ButtonType("Liste");
+                    ButtonType annuler = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-                    dialog.getDialogPane().getButtonTypes().addAll(rang, liste);
-                    dialog.getDialogPane().setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
+                    alert.getButtonTypes().setAll(rang, liste, annuler);
 
-                    dialog.showAndWait().ifPresent(response -> {
+                    alert.showAndWait().ifPresent(response -> {
                         if (response == rang) {
                             ouvrirrangeleves(selected);
-                        }
-                        else {
+                        } else if (response == liste) {
                             ouvrirlisteEleves(selected);
                         }
                     });
                 }
+
             });
             return row;
         });
@@ -182,7 +176,8 @@ public class classecontroller {
             Parent root = loader.load();
 
             TextField txtID = (TextField) root.lookup("#txtID");
-            ComboBox<String> comboDesignation = (ComboBox<String>) root.lookup("#comboDesignation");
+            TextField designation =  (TextField) root.lookup("#textFielDesignation");
+
             TextField txtPrix = (TextField) root.lookup("#txtPrix");
             ComboBox<String> comboprof = (ComboBox<String>) root.lookup("#comboprof");
 
@@ -195,23 +190,19 @@ public class classecontroller {
             Button btnEnregistrer = (Button) root.lookup("#btnEnregistrer");
             Button btnAnnuler = (Button) root.lookup("#btnAnnuler");
 
-            comboDesignation.getItems().addAll("12eme","11eme", "10eme", "CE",
-                    "CM1", "CM2", "6eme",
-                    "5eme", "4eme", "3eme",
-                    "Seconde", "Première", "TA", "TC", "TD");
 
             if (classeAModifier == null){
                 txtID.setDisable(true);
             }
             if (classeAModifier != null) {
                 txtID.setText(String.valueOf(classeAModifier.getIdClasse()));
-                comboDesignation.setValue(classeAModifier.getDesignation());
                 txtPrix.setText(String.valueOf(classeAModifier.getPrixEcolage()));
                 comboprof.setValue(classeAModifier.getTitulaire());
                 txtID.setEditable(false);
             }
 
             Stage stage = new Stage();
+            Main.setStageIcon(stage);
             stage.setTitle(classeAModifier == null ? "Ajouter une Classe" : "Modifier Classe");
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -220,36 +211,41 @@ public class classecontroller {
 
             btnEnregistrer.setOnAction(e -> {
                 try {
-                    String designation = comboDesignation.getValue();
+
                     String prixStr = txtPrix.getText();
                     String prof = comboprof.getValue();
+                    String txtdesignation = designation.getText();
+
 
                     if (designation == null || prixStr.isEmpty()) {
-                        showWarning("Veuillez remplir tous les champs !");
+
+                        Notification.showWarning("Veuillez remplir tous les champs !");
                         return;
                     }
 
                     double prix = Double.parseDouble(prixStr);
 
                     if (classeAModifier == null) {
-                        Classe nouvelleClasse = new Classe(0, designation, prof, prix);
+                        Classe nouvelleClasse = new Classe(0, txtdesignation, prof, prix);
                         classeDAO.ajouterClasse(nouvelleClasse);
-                        showSuccess("Classe ajoutée avec succès !");
+                        Notification.showSuccess("Classe ajoutée avec succès !");
                     } else {
                         int idclass = Integer.parseInt(txtID.getText());
                         classeAModifier.setIdClasse(idclass);
-                        classeAModifier.setDesignation(designation);
+                        classeAModifier.setDesignation(txtdesignation);
                         classeAModifier.setPrixEcolage(prix);
                         classeAModifier.setProf(prof);
                         classeDAO.modifierClasse(classeAModifier);
-                        showSuccess("Classe modifiée avec succès !");
+                        Notification.showSuccess("Classe modifiée avec succès !");
                     }
 
                     loadclasse();
                     stage.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    showError("Erreur : " + ex.getMessage());
+
+                    Notification.showError("Veuillez entrer des valeur valide.");
+
                 }
             });
 
@@ -257,7 +253,7 @@ public class classecontroller {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            showError("Erreur lors de l'ouverture du formulaire : " + ex.getMessage());
+            Notification.showError("Erreur lors de l'ouverture du formulaire : " + ex.getMessage());
         }
     }
     ////////////////////// listage des eleves par classe ///////////////////////////////
@@ -275,6 +271,7 @@ public class classecontroller {
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/light/gestion_ecole/Style/pdf.css").toExternalForm());
             stage1.setScene(scene);
+            Main.setStageIcon(stage1);
             stage1.setResizable(false);
             stage1.setMaximized(false);
             stage1.setMaxWidth(395);
@@ -284,7 +281,7 @@ public class classecontroller {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            showError("Erreur lors de l'ouverture de la liste des élèves : " + ex.getMessage());
+            Notification.showError("Erreur lors de l'ouverture de la liste des élèves : " + ex.getMessage());
         }
     }
     /// ////////////////////////// par rang /////////////////////////////////////////
@@ -313,36 +310,5 @@ public class classecontroller {
             ex.printStackTrace();
         }
 
-    }
-
-
-    private void showSuccess(String message) {
-        Notifications.create()
-                .title("Succès")
-                .text(message)
-                .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(2.5))
-                .owner(tableView.getScene().getWindow())
-                .showInformation();
-    }
-
-    private void showWarning(String message) {
-        Notifications.create()
-                .title("Attention")
-                .text(message)
-                .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(2.5))
-                .owner(tableView.getScene().getWindow())
-                .showWarning();
-    }
-
-    private void showError(String message) {
-        Notifications.create()
-                .title("Erreur")
-                .text(message)
-                .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(2.5))
-                .owner(tableView.getScene().getWindow())
-                .showError();
     }
 }

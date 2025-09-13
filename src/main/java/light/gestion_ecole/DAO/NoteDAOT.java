@@ -228,7 +228,7 @@ public class NoteDAOT {
     }
     public List<String> getevaluation() throws SQLException {
         List<String> evaluation = new ArrayList<>();
-        String sql = "SELECT DISTINCT typeevaluation FROM enseigner ORDER BY typeevaluation DESC";
+        String sql = "SELECT DISTINCT typeevaluation FROM enseigner ORDER BY typeevaluation ASC";
         try(Connection conn = Database.connect();){
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();

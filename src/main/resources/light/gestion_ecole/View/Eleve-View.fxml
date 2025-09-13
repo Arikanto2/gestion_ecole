@@ -11,7 +11,7 @@
     <top>
         <HBox spacing="10" alignment="CENTER">
             <BorderPane.margin>
-                <Insets left="50" top="20" right="25" bottom="20"/>
+                <Insets left="25" top="20" right="25" bottom="10"/>
             </BorderPane.margin>
             <TextField fx:id="txtSearch" promptText="Rechercher un élève..." prefWidth="200"/>
             <Region HBox.hgrow="ALWAYS"/>
@@ -24,7 +24,7 @@
     </top>
     <center>
         <StackPane fx:id="contentArea">
-            <BorderPane.margin>
+        <BorderPane.margin>
                 <Insets left="25" top="20" right="20"/>
             </BorderPane.margin>
             <HBox alignment="CENTER">
@@ -47,7 +47,7 @@
                 <VBox alignment="CENTER" spacing="5"
                       prefWidth="650" prefHeight="291"
                       style="-fx-background-color: white; -fx-padding:5;"
-                      AnchorPane.topAnchor="50" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50">
+                      AnchorPane.topAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="30">
 
                     <Label text="Créer un élève" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
 
@@ -68,7 +68,7 @@
                                     <TextField fx:id="txtPrenom" promptText="Randria" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                                     <Label text="Date Naissance:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                                    <DatePicker fx:id="txtdateNaissance" GridPane.rowIndex="5" promptText="01-01-2000" GridPane.columnIndex="1"/>
+                                    <DatePicker fx:id="txtdateNaissance" GridPane.rowIndex="5" promptText="JJ/MM/AAAA" GridPane.columnIndex="1"/>
 
                                     <Label text="Sexe:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                                     <ComboBox fx:id="comboSexe" promptText="Choisir" GridPane.rowIndex="6" GridPane.columnIndex="1">
@@ -245,8 +245,6 @@
                         <Label fx:id="lblNumAttitude" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                         <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
                         <Label fx:id="lblNomAttitude" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
-                        <!--Label text="Prenoms:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                        <Label fx:id="lblPrenomAttitude" GridPane.rowIndex="1" GridPane.columnIndex="3"/-->
                         <Label text="Date du :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
                         <DatePicker fx:id="txtDate" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Date" prefWidth="80"/>
                         <Label text="Participation:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
@@ -579,9 +577,6 @@
                             <Label text="Nom et prenoms:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
                             <Label fx:id="lblNom" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                            <!--Label text="Prénom:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                            <Label fx:id="lblPrenom" GridPane.rowIndex="2" GridPane.columnIndex="1"/-->
-
                             <Label text="Adresse:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                             <Label fx:id="lblAdresse" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
@@ -592,10 +587,6 @@
                             <Label fx:id="lblSexe" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
                             <Label text = "Handicap:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                             <Label fx:id="lblHandicap" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-                            <!--Label text="Statut:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
-                            <Label fx:id="lblIspassant" GridPane.rowIndex="9" GridPane.columnIndex="1"/-->
-                            <!--Label text="Examen National:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
-                            <Label fx:id="lblExamenNational" GridPane.rowIndex="10" GridPane.columnIndex="1"/-->
                             <Label text="Classe:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
                             <Label fx:id="lblClasse" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
                             <Label text="Annee Scolaire" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
@@ -735,9 +726,10 @@
                 </HBox.margin>
             </Pane>
             <Button text="Ajouter" fx:id="btnAjouterT" onAction="#btnAjouterT"/>
+            <Button text="Statistique" fx:id="btNStat" id="btnAjouterT"/>
             <Button text="Modifier" fx:id="btnModifierT" onAction="#btnModifierT"/>
         </HBox>
     </bottom>
 </BorderPane>
 
-<?light.gestion_ecole.Controller.MainController ?>
+        <?light.gestion_ecole.Controller.MainController ?>
