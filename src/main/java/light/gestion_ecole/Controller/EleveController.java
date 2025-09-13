@@ -48,6 +48,7 @@ import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.*;
 import org.controlsfx.control.Notifications;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Date;
@@ -970,6 +971,7 @@ public class EleveController {
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
         fadeIn.play();
+        txtAnneeScolaire.setText(comboAnnee.getValue().toString());
     }
 
     // Bouton "Annuler"
@@ -1272,9 +1274,13 @@ public class EleveController {
     private void onPdf() throws SQLException {
         if (selectedEleve != null) {
             try {
-                String userDesktop = System.getProperty("user.home") + "/Desktop";
-                String filePath = userDesktop + "/Eleve_" + selectedEleve.getIdeleve().trim() + ".pdf";
+                String userDesktop = System.getProperty("user.home") + "/Desktop/Listes_eleves/Bulletin";
+                File dossier = new File(userDesktop);
+                if (!dossier.exists()) {
+                    dossier.mkdirs();
+                }
 
+                String filePath = userDesktop + "/Eleve_" + selectedEleve.getIdeleve().trim() + ".pdf";
                 PdfWriter writer = new PdfWriter(filePath);
                 PdfDocument pdfDoc = new PdfDocument(writer);
 
