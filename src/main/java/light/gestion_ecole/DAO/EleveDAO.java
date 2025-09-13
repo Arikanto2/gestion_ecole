@@ -231,33 +231,8 @@ public class EleveDAO {
         }
         return ideleve;
     }
-    // pour pdf eleve
 
-    public List<Eleve> getalleleveinclasse(String designation) throws SQLException {
-        List<Eleve> ele_pdf = new ArrayList<>();
-        String sql = "SELECT Row_number() Over (Order by e.nomeleve ASC ) AS numero, e.nomeleve, e.prenomeleve FROM classe c " +
-                "join eleve e on c.idclass = e.idclass " +
-                "where c.designation = ? " +
-                "Order by e.nomeleve Asc";
-        try (Connection conn = Database.connect();
-        PreparedStatement ps = conn.prepareStatement(sql); ){
-            ps.setString(1,designation);
-            ResultSet rs = ps.executeQuery();
-
-
-        }
-        return ele_pdf;
-    }
-    public void giveAvertissement(String ideleve, String avertir) throws SQLException {
-        String sql = "update ELEVE SET avertissement = ? WHERE ideleve = ?";
-        try (Connection conn = Database.connect();
-        PreparedStatement stmt = conn.prepareStatement(sql);) {
-            stmt.setString(1, avertir);
-            stmt.setString(2, ideleve);
-            stmt.executeUpdate();
-        }
-    }
-
+    //////////////////// pour pdf eleve ////////////////
     public List<Eleve> getElevesFiltre(Classe classe, String anneescolaire) {
         String sql = "SELECT Row_number() Over (Order by e.nomeleve ASC ) AS numero, e.nomeleve, e.prenomeleve FROM classe c " +
                 "join eleve e on c.idclass = e.idclass " +
@@ -265,7 +240,7 @@ public class EleveDAO {
                 "Order by e.nomeleve Asc";
         List<Eleve> ele_pdf = new ArrayList<>();
         try(Connection conn = Database.connect();
-        PreparedStatement stmt = conn.prepareStatement(sql);){
+            PreparedStatement stmt = conn.prepareStatement(sql);){
             stmt.setInt(1,classe.getIdClasse());
             stmt.setString(2,anneescolaire);
             ResultSet rs = stmt.executeQuery();
@@ -281,4 +256,18 @@ public class EleveDAO {
         }
         return ele_pdf;
     }
+
+    ///////////////////////////////////////////////////////
+
+    public void giveAvertissement(String ideleve, String avertir) throws SQLException {
+        String sql = "update ELEVE SET avertissement = ? WHERE ideleve = ?";
+        try (Connection conn = Database.connect();
+        PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setString(1, avertir);
+            stmt.setString(2, ideleve);
+            stmt.executeUpdate();
+        }
+    }
+
+
 }
