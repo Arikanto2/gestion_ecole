@@ -36,8 +36,8 @@
                 </VBox.margin>
             </Label>
             <VBox>
-                <Label text="Adresse mail:" styleClass="fz"/>
-                <TextField promptText="exemple@gmail.com" focusTraversable="false" style="-fx-font-size:12px; -fx-font-family:'Arial';" fx:id="mail" />
+                <Label text="Nom d'utilisateur: " styleClass="fz"/>
+                <TextField promptText="votre nom d'utilisateu" focusTraversable="false" style="-fx-font-size:12px; -fx-font-family:'Arial';" fx:id="mail" />
             </VBox>
             <VBox spacing="5" alignment="CENTER_LEFT">
                 <Label text="Mot de passe:" styleClass="fz"/>
