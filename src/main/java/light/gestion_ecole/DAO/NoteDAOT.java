@@ -46,7 +46,7 @@ public class NoteDAOT {
     }
     public double getTotalNote(String id,String eval) {
         double note = 0.0;
-        String sql = "SELECT SUM(note*coefficient) FROM ENSEIGNER WHERE ideleve = ? AND typeevaluation = ?";
+        String sql = "SELECT SUM(note) FROM ENSEIGNER WHERE ideleve = ? AND typeevaluation = ?";
         try (Connection conn = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)){
             stmt.setString(1,id);
             stmt.setString(2,eval);
@@ -61,7 +61,7 @@ public class NoteDAOT {
     }
     public double getMoyenne(String id,String eval) {
         double moyenne = 0.0;
-        String sql = "SELECT SUM(note*coefficient)/SUM(coefficient) FROM ENSEIGNER WHERE ideleve = ? AND typeevaluation = ?";
+        String sql = "SELECT SUM(note)/SUM(coefficient) FROM ENSEIGNER WHERE ideleve = ? AND typeevaluation = ?";
         try (Connection conn = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)){
             stmt.setString(1,id);
             stmt.setString(2,eval);

@@ -1,15 +1,24 @@
 package light.gestion_ecole.Controller;
 
+import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.action.PdfAction;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Link;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -49,6 +58,10 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Paragraph;
+
 
 public class EleveController {
     @FXML private TableView<Eleve> eleves;
@@ -1256,66 +1269,111 @@ public class EleveController {
     }
 
     @FXML
-    private void onPdf() throws SQLException{
-        if (selectedEleve != null){
+    private void onPdf() throws SQLException {
+        if (selectedEleve != null) {
             try {
                 String userDesktop = System.getProperty("user.home") + "/Desktop";
                 String filePath = userDesktop + "/Eleve_" + selectedEleve.getIdeleve().trim() + ".pdf";
 
                 PdfWriter writer = new PdfWriter(filePath);
                 PdfDocument pdfDoc = new PdfDocument(writer);
-                Document document = new Document(pdfDoc);
 
+                // Marges larges et équilibrées
+                Document document = new Document(pdfDoc, PageSize.A4, false);
+                document.setMargins(50, 50, 50, 50);
+
+                // Polices
+                PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+                PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+                document.setFont(font);
+
+                // --- Logo centré en haut ---
                 try {
                     String logoPath = getClass().getResource("/light/gestion_ecole/Photo/logo.png").toExternalForm();
                     ImageData imageData = ImageDataFactory.create(logoPath);
                     Image logo = new Image(imageData);
-
-                    logo.setHorizontalAlignment(HorizontalAlignment.CENTER); // centré en haut
-
+                    logo.setHorizontalAlignment(HorizontalAlignment.CENTER);
+                    logo.setHeight(70);
+                    logo.setMarginBottom(20);
                     document.add(logo);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                String eval =  comboEvaluation.getValue().toString().toUpperCase();
-                document.add(new Paragraph("RELEVE DE NOTE D'" + eval)
-                        .setBold().setFontSize(16).setTextAlignment(TextAlignment.CENTER).setUnderline());
-                document.add(new Paragraph("NOM ET PRENOMS : " + selectedEleve.getNomeleve()));
-                document.add(new Paragraph("ANNE SCOLAIRE: " + selectedEleve.getAnneescolaire()));
-                document.add(new Paragraph("CLASSE DE: " + selectedEleve.getClasse()));
-                document.add(new Paragraph("\n"));
 
-                Table table = new Table(4);
-                table.addHeaderCell("Matières").setBold();
-                table.addHeaderCell("Coefficient").setBold();
-                table.addHeaderCell("Note").setBold();
-                table.addHeaderCell("Commentaire").setBold();
+                // --- Titre ---
+                String eval = comboEvaluation.getValue().toString().toUpperCase();
+                Paragraph titre = new Paragraph("RELEVÉ DE NOTES D’" + eval)
+                        .setFont(bold)
+                        .setFontSize(18)
+                        .setFontColor(ColorConstants.BLUE)
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setUnderline()
+                        .setMarginBottom(25);
+                document.add(titre);
 
-                for (NoteT note : notes.getItems()) {
-                    table.addCell(String.valueOf(note.getMatiere()));
-                    table.addCell(String.valueOf(note.getCoefficient()));
-                    table.addCell(String.valueOf(note.getNote()));
-                    table.addCell(String.valueOf(note.getCommentaire()));
+                // --- Infos élève ---
+                Table infos = new Table(new float[]{3, 7});
+                infos.setWidth(UnitValue.createPercentValue(100));
+                infos.setMarginBottom(20);
+
+                infos.addCell(new Cell().add(new Paragraph("Nom et Prénoms:")).setBold().setBackgroundColor(ColorConstants.LIGHT_GRAY));
+                infos.addCell(new Cell().add(new Paragraph(selectedEleve.getNomeleve())));
+                infos.addCell(new Cell().add(new Paragraph("Année scolaire:")).setBold().setBackgroundColor(ColorConstants.LIGHT_GRAY));
+                infos.addCell(new Cell().add(new Paragraph(selectedEleve.getAnneescolaire())));
+                infos.addCell(new Cell().add(new Paragraph("Classe:")).setBold().setBackgroundColor(ColorConstants.LIGHT_GRAY));
+                infos.addCell(new Cell().add(new Paragraph(selectedEleve.getClasse())));
+                document.add(infos);
+
+                // --- Tableau des notes ---
+                Table table = new Table(new float[]{4, 2, 2, 4});
+                table.setWidth(UnitValue.createPercentValue(100));
+
+                // En-têtes
+                String[] headers = {"Matières", "Coefficient", "Note", "Commentaire"};
+                for (String h : headers) {
+                    table.addHeaderCell(new Cell()
+                            .add(new Paragraph(h).setBold().setFontColor(ColorConstants.WHITE))
+                            .setBackgroundColor(ColorConstants.BLUE)
+                            .setTextAlignment(TextAlignment.CENTER));
                 }
 
+                // Lignes alternées
+                boolean alternate = false;
+                for (NoteT note : notes.getItems()) {
+                    Color bg = alternate ? ColorConstants.LIGHT_GRAY : ColorConstants.WHITE;
+                    table.addCell(new Cell().add(new Paragraph(note.getMatiere())).setBackgroundColor(bg));
+                    table.addCell(new Cell().add(new Paragraph(String.valueOf(note.getCoefficient()))).setBackgroundColor(bg).setTextAlignment(TextAlignment.CENTER));
+                    table.addCell(new Cell().add(new Paragraph(String.valueOf(note.getNote()))).setBackgroundColor(bg).setTextAlignment(TextAlignment.CENTER));
+                    table.addCell(new Cell().add(new Paragraph(note.getCommentaire())).setBackgroundColor(bg));
+                    alternate = !alternate;
+                }
                 document.add(table);
-                document.add(new Paragraph("Total coefficient: "+ lblTotalCoef.getText()).setBold());
-                document.add(new Paragraph("Total: " + lblTotalNote.getText()).setBold());
-                document.add(new Paragraph("Moyenne: "+lblMoyenne.getText()).setBold());
-                document.add(new Paragraph("Rang: "+ lblRang.getText()).setBold());
-                document.add(new Paragraph("\n"));
-                SimpleDateFormat sdf = new SimpleDateFormat("d MMMM yyyy", Locale.FRENCH);
-                document.add(new Paragraph("Fait le"+ sdf.format(Date.valueOf(LocalDate.now()))).setBold().setTextAlignment(TextAlignment.RIGHT).setPaddingRight(30));
-                document.add(new Paragraph("LE DIRECTEUR").setBold().setTextAlignment(TextAlignment.RIGHT).setPaddingRight(35));
-                document.add(new Paragraph("\n"));
-                document.add(new Paragraph("RASOLOFONDRADIMBY Andriantsoa").setBold().setTextAlignment(TextAlignment.RIGHT).setPaddingRight(15));
+
+                // --- Résumé ---
+                document.add(new Paragraph("\nRésumé")
+                        .setFont(bold).setFontSize(14).setFontColor(ColorConstants.BLUE)
+                        .setMarginTop(20));
+                document.add(new Paragraph("Total coefficient : " + lblTotalCoef.getText()));
+                document.add(new Paragraph("Total : " + lblTotalNote.getText()));
+                document.add(new Paragraph("Moyenne : " + lblMoyenne.getText()));
+                document.add(new Paragraph("Rang : " + lblRang.getText()));
+
+                // --- Signature ---
+                document.add(new Paragraph("\n\nFait le " + LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.FRENCH)))
+                        .setTextAlignment(TextAlignment.RIGHT));
+                document.add(new Paragraph("Le Directeur").setBold().setTextAlignment(TextAlignment.RIGHT));
+
+                // --- Contact ---
+                Link mail = new Link("lyceeloteranaivory@.com", PdfAction.createURI("mailto:lyceeloteranaivory@.com"));
+                document.add(new Paragraph().add("Contact : ").add(mail).setMarginTop(15));
+
                 document.close();
+                Notification.showSuccess("PDF GÉNÉRÉ SUR LE BUREAU : " + filePath);
 
-                Notification.showSuccess("PDF GENERE SUR LE BUREAU"+ filePath);
-
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
+
 }
