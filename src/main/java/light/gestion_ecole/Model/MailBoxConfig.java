@@ -1,25 +1,18 @@
 package light.gestion_ecole.Model;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.io.File;
 
 public class MailBoxConfig {
     public static Path getMailboxPath() {
-        String userHome = System.getProperty("user.home");
+        File[] roots = File.listRoots(); // liste tous les lecteurs disponibles (C:\, D:\, E:\, ...)
+        for (File root : roots) {
+            Path path = Paths.get(root.getAbsolutePath(), "Google Drive", "mailbox_sync");
+            if (Files.exists(path)) return path;
 
-        Path path1 = Paths.get(userHome, "Google Drive", "mailbox_sync");
-        Path path2 = Paths.get(userHome, "My Drive", "mailbox_sync");
-        Path path3 = Paths.get(userHome, "OneDrive", "Documents", "mailbox_sync");
-
-
-        if (Files.exists(path1)) return path1;
-        if (Files.exists(path2)) return path2;
-        if (Files.exists(path3)) return path3;
-
-        throw new RuntimeException("⚠️ Dossier mailbox_sync introuvable dans Google Drive !");
+            path = Paths.get(root.getAbsolutePath(), "Mon Drive", "mailbox_sync");
+            if (Files.exists(path)) return path;
+        }
+        throw new RuntimeException("⚠️ Dossier mailbox_sync introuvable sur aucun disque !");
     }
 }
-
-
-
