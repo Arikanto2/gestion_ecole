@@ -53,28 +53,6 @@ public class EleveDAO {
         return distinctClasses;
     }
 
-    /*public List<String> getDistinctSexe() throws SQLException {
-        List<String> distinctSexes = new ArrayList<>();
-        String sql = "SELECT DISTINCT genre FROM ELEVE";
-        try (Connection conn  = Database.connect();Statement stmt = conn.createStatement();ResultSet rs = stmt.executeQuery(sql)){
-            while (rs.next()) {
-                distinctSexes.add(rs.getString("genre"));
-            }
-        }
-        return distinctSexes;
-    }
-
-    public List<String> getDistinctHandicap() throws SQLException {
-        List<String> distinctHandicap = new ArrayList<>();
-        String sql = "SELECT DISTINCT handicap FROM ELEVE";
-        try (Connection conn  = Database.connect();Statement stmt = conn.createStatement();ResultSet rs = stmt.executeQuery(sql)){
-            while (rs.next()) {
-                distinctHandicap.add(rs.getString("handicap"));
-            }
-        }
-        return distinctHandicap;
-    }*/
-
     public static String getDistinctClasse(int id) throws SQLException {
         String sql = "SELECT DISTINCT designation FROM CLASSE where idclass = ?";
         String result = "";
@@ -122,40 +100,6 @@ public class EleveDAO {
         }
         return 0;
     }
-    /*public List<Eleve> filtreAnnee(String annee) throws SQLException {
-        List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
-                "datenaiss, genre, anneescolaire, handicap FROM eleve where anneescolaire = ? ORDER BY nummat";
-        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
-            stmt.setString(1, annee);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                eleves.add(new Eleve(rs.getString("ideleve"),rs.getString("nummat")
-                        ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
-                        rs.getString("prenomeleve"),rs.getString("adresseeleve"),
-                        rs.getDate("datenaiss"),rs.getString("genre"),
-                        rs.getString("anneescolaire"),rs.getString("handicap")));
-            }
-        }
-        return eleves;
-    }
-    public List<Eleve> filtreClasse(int classe) throws SQLException {
-        List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
-                "datenaiss, genre, anneescolaire, handicap from ELEVE where idClass = ? ORDER BY nummat";
-        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
-            stmt.setInt(1, classe);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                eleves.add(new Eleve(rs.getString("ideleve"),rs.getString("nummat")
-                        ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
-                        rs.getString("prenomeleve"),rs.getString("adresseeleve"),
-                        rs.getDate("datenaiss"),rs.getString("genre"),
-                        rs.getString("anneescolaire"),rs.getString("handicap")));
-            }
-        }
-        return eleves;
-    }*/
     public List<Eleve> filtreDeuxCombo(String annee,String classe) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
         String sql = "SELECT e.ideleve, e.nummat, e.idclass, e.idparent, (e.nomeleve ||' ' || e.prenomeleve) as nomeleve, e.prenomeleve, e.adresseeleve," +
