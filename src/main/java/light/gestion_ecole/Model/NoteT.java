@@ -110,9 +110,7 @@ public class NoteT {
     public void setCoefficient(double coefficient) {
         this.coefficient = coefficient;
     }
-    public String getCommentaire() {
-        return commentaire;
-    }
+    public String getCommentaire() { return commentaire;}
     public void setCommentaire(String commentaire) {
         this.commentaire = commentaire;
     }

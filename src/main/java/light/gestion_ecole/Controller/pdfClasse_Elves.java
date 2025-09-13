@@ -100,7 +100,6 @@ public class pdfClasse_Elves {
         lbleleves.setText(data.size() + " éleves");
     }
 
-
     @FXML
     public void exporterPDF() {
 

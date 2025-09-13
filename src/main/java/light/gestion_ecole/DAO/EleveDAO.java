@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EleveDAO {
-    public List<Eleve> getEleves() throws SQLException {
+    public List<Eleve> getEleves(String annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
         String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
-                "datenaiss, genre, anneescolaire, handicap FROM eleve ORDER BY nummat";
+                "datenaiss, genre, anneescolaire, handicap FROM eleve WHERE anneescolaire = ? ORDER BY nummat";
 
         try (Connection conn  = Database.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, annee);
+             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 eleves.add(new Eleve(rs.getString("ideleve"),rs.getString("nummat")
                         ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
@@ -32,7 +33,7 @@ public class EleveDAO {
 
     public List<String> getDistinctAnnees() throws SQLException {
         List<String> distinctAnnees = new ArrayList<>();
-        String sql = "SELECT DISTINCT anneescolaire FROM eleve";
+        String sql = "SELECT DISTINCT anneescolaire FROM eleve ORDER BY anneescolaire DESC";
         try (Connection conn  = Database.connect();Statement stmt = conn.createStatement();ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 distinctAnnees.add(rs.getString("anneescolaire"));
@@ -52,7 +53,7 @@ public class EleveDAO {
         return distinctClasses;
     }
 
-    public List<String> getDistinctSexe() throws SQLException {
+    /*public List<String> getDistinctSexe() throws SQLException {
         List<String> distinctSexes = new ArrayList<>();
         String sql = "SELECT DISTINCT genre FROM ELEVE";
         try (Connection conn  = Database.connect();Statement stmt = conn.createStatement();ResultSet rs = stmt.executeQuery(sql)){
@@ -72,7 +73,7 @@ public class EleveDAO {
             }
         }
         return distinctHandicap;
-    }
+    }*/
 
     public static String getDistinctClasse(int id) throws SQLException {
         String sql = "SELECT DISTINCT designation FROM CLASSE where idclass = ?";
@@ -89,18 +90,7 @@ public class EleveDAO {
         return result;
     }
 
-    public int getIdClass(String design) throws SQLException{
-        String sql = "SELECT idclass FROM CLASSE WHERE designation = ?";
-        int result = 1;
-        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, design);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                result = rs.getInt("idclass");
-            }
-        }
-        return result;
-    }
+
 
     public void insertEleve(Eleve eleve) throws SQLException {
         String sql = "INSERT INTO ELEVE (ideleve, nummat,idclass, idparent, nomeleve, prenomeleve," +
@@ -132,7 +122,7 @@ public class EleveDAO {
         }
         return 0;
     }
-    public List<Eleve> filtreAnnee(String annee) throws SQLException {
+    /*public List<Eleve> filtreAnnee(String annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
         String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
                 "datenaiss, genre, anneescolaire, handicap FROM eleve where anneescolaire = ? ORDER BY nummat";
@@ -165,14 +155,14 @@ public class EleveDAO {
             }
         }
         return eleves;
-    }
-    public List<Eleve> filtreDeuxCombo(String annee,int classe) throws SQLException {
+    }*/
+    public List<Eleve> filtreDeuxCombo(String annee,String classe) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
-                "datenaiss, genre, anneescolaire, handicap from ELEVE where anneescolaire = ? AND idclass = ? ORDER BY nummat";
+        String sql = "SELECT e.ideleve, e.nummat, e.idclass, e.idparent, (e.nomeleve ||' ' || e.prenomeleve) as nomeleve, e.prenomeleve, e.adresseeleve," +
+                "e.datenaiss, e.genre, e.anneescolaire, e.handicap from ELEVE e JOIN CLASSE c ON e.idclass = c.idclass where anneescolaire = ? AND c.designation = ? ORDER BY nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, annee);
-            stmt.setInt(2, classe);
+            stmt.setString(2, classe);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 eleves.add(new Eleve(rs.getString("ideleve"),rs.getString("nummat")
@@ -202,11 +192,11 @@ public class EleveDAO {
             stmt.executeUpdate();
         }
     }
-    public List<Eleve> getNumNom(int classe,String Annee) throws SQLException {
+    public List<Eleve> getNumNom(String classe,String Annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT nummat,nomeleve || ' ' || prenomeleve as nomeleve from ELEVE WHERE idclass = ? AND anneescolaire = ? ORDER BY nummat";
+        String sql = "SELECT e.nummat,e.nomeleve || ' ' || e.prenomeleve as nomeleve from ELEVE e JOIN CLASSE c ON e.idclass = c.idclass WHERE c.designation = ? AND e.anneescolaire = ? ORDER BY e.nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
-            stmt.setInt(1, classe);
+            stmt.setString(1, classe);
             stmt.setString(2, Annee);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -214,6 +204,18 @@ public class EleveDAO {
             }
         }
         return eleves;
+    }
+    public int getIdClass(String design) throws SQLException {
+        String sql = "SELECT idclass FROM CLASSE WHERE designation = ?";
+        int idclass = 0;
+        try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setString(1, design);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                idclass = rs.getInt("idclass");
+            }
+        }
+        return idclass;
     }
 
     public String getIdEleve(String nummat, String annee) {
