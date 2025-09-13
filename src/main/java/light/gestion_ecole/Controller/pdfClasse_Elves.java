@@ -26,6 +26,7 @@ import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.layout.element.Image;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -108,9 +109,17 @@ public class pdfClasse_Elves {
         }
         else {
             try {
-                String userDesktop = System.getProperty("user.home") + "/Desktop";
-                //String filePath = userDesktop + "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
-                String filePath = "D:\\Projet\\Java"+ "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
+
+                String userDesktop = System.getProperty("user.home") + "/Desktop/Listes_eleves";
+                File dossier = new File(userDesktop);
+
+                if (!dossier.exists()) {
+                    dossier.mkdirs();
+                }
+
+                String filePath = userDesktop + "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
+
+
 
                 PdfWriter writer = new PdfWriter(filePath);
                 PdfDocument pdfDoc = new PdfDocument(writer);
