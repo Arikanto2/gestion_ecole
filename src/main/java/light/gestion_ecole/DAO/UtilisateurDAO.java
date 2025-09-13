@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class UtilisateurDAO {
     public static String Connecter(Utilisateur utilisateur) throws SQLException {
-        String sql = "SELECT * FROM utilisateur WHERE emailutil = ? AND mdp = ?";
+        String sql = "SELECT * FROM utilisateur WHERE nomutilisateur = ? AND mdp = ?";
         try(Connection connect = Database.connect();
             PreparedStatement stmt = connect.prepareStatement(sql);){
             stmt.setString(1,utilisateur.getEmail());
