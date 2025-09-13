@@ -110,7 +110,8 @@ public class pdfClasse_Elves {
         else {
             try {
                 String userDesktop = System.getProperty("user.home") + "/Desktop";
-                String filePath = userDesktop + "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
+                //String filePath = userDesktop + "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
+                String filePath = "D:\\Projet\\Java"+ "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
 
                 PdfWriter writer = new PdfWriter(filePath);
                 PdfDocument pdfDoc = new PdfDocument(writer);
@@ -129,7 +130,7 @@ public class pdfClasse_Elves {
 
                 document.add(new Paragraph("Classe : " + classeselected.getDesignation()).setBold().setFontSize(14));
                 document.add(new Paragraph("Titulaire : " + classeselected.getTitulaire()));
-                document.add(new Paragraph("Nombre d'élèves : " + tableView.getItems().size()));
+                document.add(new Paragraph("Effectifs : " + tableView.getItems().size()));
                 document.add(new Paragraph("\n"));
 
                 Table table = new Table(UnitValue.createPercentArray(new float[]{1, 4, 4})).useAllAvailableWidth();
