@@ -18,7 +18,6 @@ import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.Classe;
 import light.gestion_ecole.Model.Notification;
 
-import org.controlsfx.control.Notifications;
 import java.lang.*;
 
 import java.sql.SQLException;
