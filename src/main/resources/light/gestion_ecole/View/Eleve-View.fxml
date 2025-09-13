@@ -60,7 +60,7 @@
                                     <ComboBox fx:id="comboClasse2" promptText="Choisir une classe" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                                     <Label text="Année Scolaire:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                    <TextField fx:id="txtAnneeScolaire" promptText="2024-2025" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                    <TextField fx:id="txtAnneeScolaire" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
                                     <Label text="Nom:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                                     <TextField fx:id="txtNom" promptText="RAKOTO" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
@@ -145,7 +145,7 @@
                                     <ComboBox fx:id="comboClasseModif" promptText="Choisir une classe" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                                     <Label text="Année Scolaire:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                    <TextField fx:id="txtAnneeScolaireModif" promptText="2024-2025" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                    <TextField fx:id="txtAnneeScolaireModif" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
                                     <Label text="Nom:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                                     <TextField fx:id="txtNomModif" promptText="RAKOTO" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
