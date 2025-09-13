@@ -108,9 +108,9 @@ public class pdfClasse_Elves {
         }
         else {
             try {
-                String userDesktop = System.getProperty("user.home") + "/Desktop";
-                //String filePath = userDesktop + "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
-                String filePath = "D:\\Projet\\Java"+ "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
+              
+                String userDesktop = System.getProperty("user.home") + "/Desktop/Listes_eleves";
+                String filePath = userDesktop + "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
 
                 PdfWriter writer = new PdfWriter(filePath);
                 PdfDocument pdfDoc = new PdfDocument(writer);
