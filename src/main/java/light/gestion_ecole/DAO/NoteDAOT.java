@@ -20,7 +20,7 @@ public class NoteDAOT {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 notes.add(new NoteT(rs.getString("ideleve"),rs.getString("nummat"),rs.getInt("idprof"),
-                        rs.getString("matiere"),rs.getDouble("note")*rs.getDouble("coefficient"),rs.getDouble("coefficient"),
+                        rs.getString("matiere"),rs.getDouble("note"),rs.getDouble("coefficient"),
                         rs.getString("commentaire"),rs.getString("typeevaluation")));
             }
         } catch (SQLException e) {
@@ -72,7 +72,7 @@ public class NoteDAOT {
         } catch (SQLException e) {
             throw  new RuntimeException(e);
         }
-        return moyenne;
+        return Math.round(moyenne * 100.0)/100.0;
     }
     public int getRang(String id, int idclass, String eval, String annee) {
         int rng = 0;
@@ -123,7 +123,7 @@ public class NoteDAOT {
                 note.setCommentaire(rs.getString("commentaire"));
                 return note;
             } else {
-                return new NoteT(e); // Note vide si pas encore en base
+                return new NoteT(e);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -131,7 +131,7 @@ public class NoteDAOT {
         }
     }
 
-    public void saveOrUpdate(NoteT note,String typeevaluation, String mat, int idprof, Double coeff,String id) throws SQLException {
+    public void saveOrUpdate(NoteT note, String typeevaluation, String mat, int idprof, Double coeff, String id) throws SQLException {
         String check = "SELECT 1 FROM ENSEIGNER WHERE nummat = ? AND typeevaluation = ? AND matiere = ?";
         try (Connection conn = Database.connect();
              PreparedStatement stmt = conn.prepareStatement(check)) {
@@ -141,12 +141,16 @@ public class NoteDAOT {
             stmt.setString(3, mat);
             ResultSet rs = stmt.executeQuery();
 
+            String commentaire = (note.getCommentaire() == null || note.getCommentaire().isEmpty())
+                    ? generateCommentaire(note.getNote(), coeff)
+                    : note.getCommentaire();
+
             if (rs.next()) {
                 // UPDATE
                 String sql = "UPDATE ENSEIGNER SET note = ?, commentaire = ? WHERE nummat = ? AND typeevaluation = ? AND matiere = ?";
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
                     ps.setDouble(1, note.getNote());
-                    ps.setString(2, note.getCommentaire());
+                    ps.setString(2, commentaire);
                     ps.setString(3, note.getNumnat());
                     ps.setString(4, typeevaluation);
                     ps.setString(5, mat);
@@ -154,14 +158,14 @@ public class NoteDAOT {
                 }
             } else {
                 // INSERT
-                String sql = "INSERT INTO ENSEIGNER (ideleve,nummat,idprof, coefficient, note, commentaire, typeevaluation, matiere) VALUES (?, ?, ?, ?,?,?,?,?)";
+                String sql = "INSERT INTO ENSEIGNER (ideleve,nummat,idprof, coefficient, note, commentaire, typeevaluation, matiere) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                    ps.setString(1,id);
+                    ps.setString(1, id);
                     ps.setString(2, note.getNumnat());
                     ps.setInt(3, idprof);
                     ps.setDouble(4, coeff);
                     ps.setDouble(5, note.getNote() != null ? note.getNote() : 0.0);
-                    ps.setString(6, note.getCommentaire());
+                    ps.setString(6, commentaire);
                     ps.setString(7, typeevaluation);
                     ps.setString(8, mat);
                     ps.executeUpdate();
@@ -169,6 +173,21 @@ public class NoteDAOT {
             }
         }
     }
+
+    private String generateCommentaire(Double note, Double coefficient) {
+        if (note == null || coefficient == null || coefficient == 0) {
+            return "Non évalué";
+        }
+        double n = note / coefficient;
+
+        if (n >= 18) return "Honorable";
+        else if (n >= 16) return "Très Bien";
+        else if (n >= 14) return "Bien";
+        else if (n >= 12) return "Assez-Bien";
+        else if (n >= 10) return "Passable";
+        else return "Faible";
+    }
+
     /////// pour les rangs dans classe //////////////////
     public List<NoteT> rang_classe (String evalu, int idclass, String annee) throws SQLException {
         List<NoteT> rang = new ArrayList<>();

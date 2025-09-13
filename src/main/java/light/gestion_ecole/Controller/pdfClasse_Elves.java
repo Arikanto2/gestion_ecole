@@ -100,7 +100,6 @@ public class pdfClasse_Elves {
         lbleleves.setText(data.size() + " éleves");
     }
 
-
     @FXML
     public void exporterPDF() {
 
@@ -109,7 +108,7 @@ public class pdfClasse_Elves {
         }
         else {
             try {
-                String userDesktop = System.getProperty("user.home") + "/Desktop";
+                String userDesktop = System.getProperty("user.home") + "/Desktop/Listes_eleves";
                 String filePath = userDesktop + "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
 
                 PdfWriter writer = new PdfWriter(filePath);
