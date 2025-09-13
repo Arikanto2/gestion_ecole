@@ -339,7 +339,7 @@
                                 <columns>
                                     <TableColumn fx:id="columnMat" text="#"/>
                                     <TableColumn fx:id="columnNom" text="Nom et prenoms"/>
-                                    <TableColumn fx:id="columnNote" text="Note /20"/>
+                                    <TableColumn fx:id="columnNote" text="Note"/>
                                     <TableColumn fx:id="columnComment" text="Commentaire"/>
                                 </columns>
                             </TableView>
@@ -367,10 +367,8 @@
                                 <Label fx:id="lblNumEcolage" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                                 <Label text="Nom:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
                                 <Label fx:id="lblNomEcolage" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                                <!--Label text="Prenoms:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                                <Label fx:id="lblPrenomEcolage" GridPane.rowIndex="1" GridPane.columnIndex="3"/-->
                                 <Label text="Classe de:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                                <ComboBox fx:id="comboClasseEcolage" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Classe" prefWidth="120"/>
+                                <Label fx:id="comboClasseEcolage" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
                                 <Label text="Date:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
                                 <DatePicker fx:id="txtDateEcolage" GridPane.rowIndex="2" GridPane.columnIndex="3" promptText="Date" prefWidth="100"/>
                             </GridPane>

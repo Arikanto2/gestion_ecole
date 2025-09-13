@@ -56,14 +56,11 @@ public class EleveController {
     //info General
     @FXML private Label lblNum;
     @FXML private Label lblNom;
-    //@FXML private Label lblPrenom;
     @FXML private Label lblAdresse;
     @FXML private Label lblDateNaiss;
     @FXML private Label lblSexe;
     @FXML private Label lblClasse;
     @FXML private Label lblAnneScolaire;
-    //@FXML private Label lblIspassant;
-    //@FXML private Label lblExamenNational;
     @FXML private Label lblHandicap;
     //tuteur
     @FXML private Label lblNomPere;
@@ -107,11 +104,9 @@ public class EleveController {
     @FXML private AnchorPane formOverlay;
     @FXML private ComboBox comboClasse2;
     @FXML private ComboBox comboSexe;
-    @FXML private ComboBox comboHandicap;
     @FXML private TextField txtNom;
     @FXML private TextField txtPrenom;
     @FXML private TextField txtAnneeScolaire;
-    //@FXML private TextField txtnummat;
     @FXML private DatePicker txtdateNaissance;
     @FXML private TextField txtAdresse;
     @FXML private TextField txtNomPere;
@@ -183,7 +178,7 @@ public class EleveController {
 
     @FXML private  Label lblNumEcolage;
     @FXML private Label lblNomEcolage;
-    @FXML private ComboBox comboClasseEcolage;
+    @FXML private Label comboClasseEcolage;
     @FXML private DatePicker txtDateEcolage;
     @FXML private TableView<EcolageparmoiT> attribuerEcolages;
     @FXML private TableColumn<EcolageparmoiT, String> moiColumn;
@@ -484,12 +479,9 @@ public class EleveController {
                 }
             }
         });
-        comboClasseEcolage.valueProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                filterEcolage();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+        comboMatiere.setOnAction(event -> {
+            notesBuffer.clear();
+            attribuerNotes.refresh();
         });
         comboCoef.getItems().addAll(1.0,2.0,3.0,4.0,5.0,6.0);
 
@@ -541,18 +533,14 @@ public class EleveController {
                 }
 
                 noteDAOT.saveOrUpdate(note, (String) comboEvaluation.getValue(),MatiereNote,idprof,coeff,id);
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOverlayAddNote);
-                fadeOut.setFromValue(1);
-                fadeOut.setToValue(0);
-
-                fadeOut.setOnFinished(event -> formOverlayAddNote.setVisible(false));
-                fadeOut.play();
                 loadEleves();
             } catch (Exception ex){
                 ex.printStackTrace();
             }
         }
-        System.out.println("Toutes les notes sot Enregistrer");
+        Notification.showSuccess("Note de "+MatiereNote+ " ajouter avec succé!");
+        loadEleves();
+        onNote();
     }
     @FXML
     private void onCancelBTN() throws SQLException {
@@ -584,6 +572,7 @@ public class EleveController {
                     ecolageparmoiT = new EcolageparmoiT(selectedEleve.getIdeleve(), selectedEleve.getNummat(),
                             e.getIdecolage(),true,java.sql.Date.valueOf(txtDateEcolage.getValue()),e.getMoiseco());
                     ecolageDAOT.insertEcolageparmoiT(ecolageparmoiT);
+                    Notification.showSuccess("Ecolage de"+ selectedEleve.getNomeleve2()+ " ajouté");
                     FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOverlayAddEcolage);
                     fadeOut.setFromValue(1);
                     fadeOut.setToValue(0);
@@ -594,6 +583,8 @@ public class EleveController {
                     loadEcolage(selectedEleve.getIdeleve());
                 }
             }
+        } else {
+            Notification.showWarning("Aucun élève selectionné!");
         }
     }
     @FXML
@@ -667,13 +658,10 @@ public class EleveController {
             txtContactModif.setText(parentT.getContact());
             txtEmailModif.setText(parentT.getEmailparent());
         } else {
-            Alert.AlertType alertType = Alert.AlertType.WARNING;
-            Alert alert = new Alert(alertType);
-            alert.setTitle("Attention");
-            alert.setContentText("Aucun element selectionner");
-            alert.showAndWait();
+            Notification.showWarning("Aucun élève selectionné!");
         }
     }
+
     @FXML
     private void onAvertissement() throws SQLException {
         selectedEleve = eleves.getSelectionModel().getSelectedItem();
@@ -688,11 +676,7 @@ public class EleveController {
             lblNomAvertissement.setText(selectedEleve.getNomeleve());
             lblClasseAvertissement.setText(selectedEleve.getClasse());
         } else {
-            Alert.AlertType alertType = Alert.AlertType.WARNING;
-            Alert alert = new Alert(alertType);
-            alert.setTitle("Attention");
-            alert.setContentText("Aucun element selectionner");
-            alert.showAndWait();
+            Notification.showWarning("Aucun élève selectionné!");
         }
     }
     private void autoResizeColumn(TableColumn<?, ?> column) {
@@ -786,19 +770,11 @@ public class EleveController {
     }
     private void filterAttribuerNote() throws SQLException {
         if (comboAnneeNote.getValue() != null && comboClasseNote.getValue() != null) {
-            int idClasse = eleveDAO.getIdClass(comboClasseNote.getValue().toString());
-            List<Eleve> list = eleveDAO.getNumNom(idClasse,comboAnneeNote.getValue().toString());
+            List<Eleve> list = eleveDAO.getNumNom(comboClasseNote.getValue().toString(),comboAnneeNote.getValue().toString());
             ObservableList<Eleve> eleves = FXCollections.observableArrayList(list);
             attribuerNotes.setItems(eleves);
         } else {
             attribuerNotes.setItems(null);
-        }
-    }
-    private void filterEcolage() throws SQLException {
-        if(comboClasseEcolage.getValue() != null){
-            int id = eleveDAO.getIdClass(comboClasseEcolage.getValue().toString());
-            prix = classeDAO.getPrixEcolage(id);
-            lblPrixEcolage.setText(prix+" Ar");
         }
     }
     private void loadResultat(){
@@ -830,6 +806,8 @@ public class EleveController {
                 String annee = comboAnnee.getValue().toString();
                 lblRang.setText(noteDAOT.getRang(selectedEleve.getIdeleve(), selectedEleve.getIdclass(),selectedComboNote,annee)+"°/"+noteDAOT.getNbrEleve(selectedEleve.getIdclass(),selectedEleve.getAnneescolaire()));
             }
+        } else {
+            Notification.showWarning("Aucun élève selectionné!");
         }
     }
     private void loadEcolage(String id) throws SQLException {
@@ -842,36 +820,41 @@ public class EleveController {
     }
     private void loadComboData() throws SQLException {
         comboAnnee.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctAnnees()));
+        comboAnnee.getSelectionModel().select(0);
+        comboAnnee.setOnAction(event -> {
+            try {
+                loadEleves();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        comboClasse.setOnAction(event -> {
+            try {
+                loadEleves();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
         comboClasse.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
         comboClasse2.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
         comboClasseModif.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
         comboAnneeNote.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctAnnees()));
         comboClasseNote.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
         comboProf.setItems(FXCollections.observableArrayList(profDAO.getNomProf()));
-        comboClasseEcolage.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
         comboAnneeListe.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctAnnees()));
         comboClasseListe.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
         comboClasseR.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
     }
     private void loadEleves() throws SQLException {
-        if (comboAnnee.getValue() == null && comboClasse.getValue() == null){
-            allEleves = FXCollections.observableArrayList(eleveDAO.getEleves());
-            eleves.setItems(allEleves);
+        String annee = comboAnnee.getSelectionModel().getSelectedItem().toString();
+        String design = "";
+        if (comboClasse.getSelectionModel().getSelectedItem() == null) {
+            allEleves = FXCollections.observableArrayList(eleveDAO.getEleves(annee));
+        } else {
+            design = comboClasse.getSelectionModel().getSelectedItem().toString();
+            allEleves = FXCollections.observableArrayList(eleveDAO.filtreDeuxCombo(annee,design));
         }
-        if (comboAnnee.getValue() != null && comboClasse.getValue() != null){
-            int id = eleveDAO.getIdClass((String)  comboClasse.getValue());
-            allEleves = FXCollections.observableArrayList(eleveDAO.filtreDeuxCombo((String) comboAnnee.getValue(),id));
-            eleves.setItems(allEleves);
-        }
-        if (comboAnnee.getValue() != null && comboClasse.getValue() == null){
-            allEleves = FXCollections.observableArrayList(eleveDAO.filtreAnnee((String) comboAnnee.getValue()));
-            eleves.setItems(allEleves);
-        }
-        if (comboClasse.getValue() != null && comboAnnee.getValue() == null){
-            int id = eleveDAO.getIdClass((String)  comboClasse.getValue());
-            allEleves = FXCollections.observableArrayList(eleveDAO.filtreClasse(id));
-            eleves.setItems(allEleves);
-        }
+        eleves.setItems(allEleves);
         if (selectedEleve != null){
             loadAttitude(selectedEleve.getIdeleve());
         }
@@ -881,8 +864,7 @@ public class EleveController {
     }
     private void loadAttribuerNotes() throws SQLException {
         if (comboAnneeNote.getValue() != null && comboClasseNote.getValue() != null){
-            int idClasse = eleveDAO.getIdClass((String) comboClasseNote.getValue());
-            List<Eleve> list = eleveDAO.getNumNom(idClasse,(String) comboAnneeNote.getValue());
+            List<Eleve> list = eleveDAO.getNumNom(comboClasseNote.getValue().toString(),(String) comboAnneeNote.getValue());
             ObservableList<Eleve> eleves = FXCollections.observableArrayList(list);
             attribuerNotes.setItems(eleves);
         }
@@ -996,6 +978,7 @@ public class EleveController {
                 txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),
                 result);
         eleveDAO.insertEleve(eleve);
+        Notification.showSuccess("Elève ajouter!");
         handleCancel();
         loadEleves();
     }
@@ -1022,6 +1005,7 @@ public class EleveController {
             Eleve eleve = new Eleve(id,mat,idClass,selectedEleve.getIdparent(),txtNomR.getText(),txtPrenomR.getText(),txtAdresseR.getText(),
                     java.sql.Date.valueOf(txtdateNaissanceR.getValue()),(String) comboSexeR.getValue(),txtAnneeScolaireR.getText(),result);
             eleveDAO.insertEleve(eleve);
+            Notification.showSuccess("Ajout élève reussi!");
             loadEleves();
             FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOvelayAddReinscrit);
             fadeOut.setFromValue(1);
@@ -1031,6 +1015,8 @@ public class EleveController {
             fadeOut.play();
             comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
             comboClasse.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
+        } else {
+            Notification.showWarning("Aucun élève selectionner!");
         }
     }
     @FXML
@@ -1052,6 +1038,7 @@ public class EleveController {
         ParentT parentT = new ParentT(eleve.getIdparent(),txtNomPereModif.getText(),txtProfessionPereModif.getText(),txtNomMereModif.getText(),
                 txtProfessionMereModif.getText(),txtTuteurModif.getText(),txtTuteurProfessionModif.getText(),txtContactModif.getText(),txtEmailModif.getText());
         parentDAOT.updateParents(parentT);
+        Notification.showSuccess("Modification faites!");
         handleCancelUpdate();
         loadEleves();
     }
@@ -1104,11 +1091,7 @@ public class EleveController {
             lblNomAttitude.setText(selectedEleve.getNomeleve());
         }
         else {
-            Alert.AlertType alertType = Alert.AlertType.INFORMATION;
-            Alert alert = new Alert(alertType);
-            alert.setTitle("Attention");
-            alert.setContentText("Aucun element selectionner");
-            alert.showAndWait();
+            Notification.showWarning("Aucun élève selectionné!");
         }
     }
     @FXML
@@ -1159,11 +1142,7 @@ public class EleveController {
             txtEmailR.setText(parent.getEmailparent());
 
         } else {
-            Alert.AlertType alertType = Alert.AlertType.INFORMATION;
-            Alert alert = new Alert(alertType);
-            alert.setTitle("Attention");
-            alert.setContentText("Aucun element selectionner");
-            alert.showAndWait();
+            Notification.showWarning("Aucun élève selectionné!");
         }
     }
     @FXML
@@ -1178,14 +1157,13 @@ public class EleveController {
             fadeIn.play();
             lblNumEcolage.setText(selectedEleve.getNummat());
             lblNomEcolage.setText(selectedEleve.getNomeleve());
-            comboClasseEcolage.setValue(selectedEleve.getClasse());
+            comboClasseEcolage.setText(selectedEleve.getClasse());
             txtDateEcolage.setValue(LocalDate.now());
+            int id = eleveDAO.getIdClass(comboClasseEcolage.getText());
+            prix = classeDAO.getPrixEcolage(id);
+            lblPrixEcolage.setText(prix+" Ar");
         } else {
-            Alert.AlertType alertType = Alert.AlertType.INFORMATION;
-            Alert alert = new Alert(alertType);
-            alert.setTitle("Attention");
-            alert.setContentText("Aucun element selectionner");
-            alert.showAndWait();
+            Notification.showWarning("Aucun élève selectionné!");
         }
     }
     @FXML
@@ -1224,7 +1202,6 @@ public class EleveController {
     }
     @FXML
     private void onEnregistrerAttitude() throws SQLException{
-        //selectedEleve = eleves.getSelectionModel().getSelectedItem();
         if (selectedEleve != null && txtDate.getValue() != null) {
             attitudeT = new AttitudeT(selectedEleve.getIdeleve(), selectedEleve.getNummat(),(String) comboParticipation.getValue(),
                     (String) comboComportement.getValue(),java.sql.Date.valueOf(txtDate.getValue()),Integer.parseInt(txtRetard.getText()));
@@ -1233,11 +1210,7 @@ public class EleveController {
             onCancelButton();
             loadEleves();
         } else {
-            Alert.AlertType alertType = Alert.AlertType.INFORMATION;
-            Alert alert = new Alert(alertType);
-            alert.setTitle("Attention");
-            alert.setContentText("Veuillez remplir les champs");
-            alert.showAndWait();
+            Notification.showError("Veuillez-remplir les champs!");
         }
     }
     @FXML
@@ -1309,12 +1282,7 @@ public class EleveController {
                 document.add(new Paragraph("RASOLOFONDRADIMBY Andriantsoa").setBold().setTextAlignment(TextAlignment.RIGHT).setPaddingRight(15));
                 document.close();
 
-                Notifications.create()
-                        .title("Succès")
-                        .text("PDF généré avec succès sur le Bureau : " + filePath)
-                        .position(Pos.CENTER)
-                        .hideAfter(Duration.seconds(3))
-                        .showInformation();
+                Notification.showSuccess("PDF GENERE SUR LE BUREAU"+ filePath);
 
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);

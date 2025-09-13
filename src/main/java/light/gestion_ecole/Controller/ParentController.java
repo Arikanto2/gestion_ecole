@@ -138,11 +138,7 @@ public class ParentController {
                 }
             });
         } else {
-            Alert.AlertType alertType = Alert.AlertType.WARNING;
-            Alert alert = new Alert(alertType);
-            alert.setTitle("Attention");
-            alert.setContentText("Aucun element selectionner");
-            alert.showAndWait();
+            Notification.showWarning("Aucun parent sélectionné pour la suppression!");
         }
     }
     @FXML
@@ -163,11 +159,7 @@ public class ParentController {
             txtContact.setText(selected.getContact());
             txtEmail.setText(selected.getEmailparent());
         } else {
-            Alert.AlertType alertType = Alert.AlertType.WARNING;
-            Alert alert = new Alert(alertType);
-            alert.setTitle("Attention");
-            alert.setContentText("Aucun element selectionner");
-            alert.showAndWait();
+            Notification.showWarning("Aucun élement sélectionné pour la modification!");
         }
     }
     private void autoResizeColumn2(TableColumn<?, ?> column) {
@@ -230,11 +222,7 @@ public class ParentController {
             txtContact2.setText(selected.getContact());
             txtEmail2.setText(selected.getEmailparent());
         } else {
-            Alert.AlertType alertType = Alert.AlertType.INFORMATION;
-            Alert alert = new Alert(alertType);
-            alert.setTitle("Attention");
-            alert.setContentText("Aucun element selectionner");
-            alert.showAndWait();
+            Notification.showWarning("Aucun parent sélectionné pour l'ajout de l'élève!");
         }
     }
     @FXML
