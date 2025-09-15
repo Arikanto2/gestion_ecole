@@ -3,6 +3,7 @@ package light.gestion_ecole.DAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import light.gestion_ecole.Model.Professeur;
+import light.gestion_ecole.Model.QueryLogger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -46,12 +47,21 @@ public class ProfDAO {
             stmt.setString(4, p.getEmail());
             stmt.executeUpdate();
 
+            QueryLogger.append("INSERT INTO professeur (nomprof, contactprof, adresseprof, emailprof) VALUES ('"
+                    + p.getNom() + "', '"
+                    + p.getContact() + "', '"
+                    + p.getAdresse() + "', '"
+                    + p.getEmail() + "')");
+
 
             if (titulaire != null ) {
                 try (PreparedStatement upstmt = conn.prepareStatement(upsql)) {
                     upstmt.setString(1, p.getNom());
                     upstmt.setString(2, titulaire);
                     upstmt.executeUpdate();
+
+                    QueryLogger.append("UPDATE classe SET \"Titulaire\" = '" + p.getNom()
+                            + "' WHERE designation = '" + titulaire + "'");
                 }
             }
         }
@@ -71,6 +81,12 @@ public class ProfDAO {
           stmt.setInt(5, p.getIdprof());
           stmt.executeUpdate();
 
+            QueryLogger.append("UPDATE professeur SET nomprof = '" + p.getNom()
+                    + "', contactprof = '" + p.getContact()
+                    + "', adresseprof = '" + p.getAdresse()
+                    + "', emailprof = '" + p.getEmail()
+                    + "' WHERE idprof = " + p.getIdprof());
+
           if (titulaire != oldtitulaire ) {
               try (PreparedStatement upstmt = conn.prepareStatement(sql2);
                    PreparedStatement upstmt2 = conn.prepareStatement(sql3)) {
@@ -79,6 +95,10 @@ public class ProfDAO {
                   upstmt2.setString(1, oldtitulaire);
                   upstmt.executeUpdate();
                   upstmt2.executeUpdate();
+
+                  QueryLogger.append("UPDATE classe SET \"Titulaire\" = '" + p.getNom()
+                          + "' WHERE designation = '" + titulaire + "'");
+                  QueryLogger.append("UPDATE classe SET \"Titulaire\" = '' WHERE designation = '" + oldtitulaire + "'");
               }
           }
         }
@@ -90,6 +110,9 @@ public class ProfDAO {
         PreparedStatement stmt = conn.prepareStatement(sql)){
             stmt.setInt(1, idprof);
             stmt.executeUpdate();
+
+            QueryLogger.append("DELETE FROM professeur WHERE idprof = " + idprof);
+
         }
     }
 
