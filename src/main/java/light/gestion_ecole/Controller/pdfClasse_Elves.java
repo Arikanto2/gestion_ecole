@@ -119,8 +119,6 @@ public class pdfClasse_Elves {
 
                 String filePath = userDesktop + "/Classe_" + classeselected.getDesignation().trim() + ".pdf";
 
-
-
                 PdfWriter writer = new PdfWriter(filePath);
                 PdfDocument pdfDoc = new PdfDocument(writer);
                 Document document = new Document(pdfDoc);
@@ -132,6 +130,7 @@ public class pdfClasse_Elves {
                     Image logo = new Image(imageData);
                     logo.setHorizontalAlignment(HorizontalAlignment.CENTER);
                     document.add(logo);
+                    document.add(new Paragraph("\n"));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
