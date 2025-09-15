@@ -1,47 +1,43 @@
 package light.gestion_ecole.Model;
 
-
+import javafx.stage.FileChooser;
 import light.gestion_ecole.DAO.Database;
 
-import java.nio.file.*;
-import java.io.IOException;
+
+import java.io.*;
+
 
 public class ImportWatcher {
-    public static void startWatching() throws Exception {
-        Path mailbox = MailBoxConfig.getMailboxPath();
-        WatchService watchService = FileSystems.getDefault().newWatchService();
-        mailbox.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
 
-        System.out.println("👀 Surveillance du dossier : " + mailbox);
+    public static void importerFile() throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélection de fichier SQL");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("SQL", "*.sql"));
+        File file = fileChooser.showOpenDialog(null);
 
-        while (true) {
-            WatchKey key = watchService.take();
-            for (WatchEvent<?> event : key.pollEvents()) {
-                Path filename = (Path) event.context();
-                String owner = System.getProperty("user.name");
-                if (filename.toString().contains(owner)) {
-                    continue; // ignorer
-                }
-                if (filename.toString().endsWith(".sql")) {
-                    Path filePath = mailbox.resolve(filename);
-                    System.out.println("📥 Nouveau fichier détecté : " + filePath);
+        if (file != null) {
+            StringBuilder currentQuery = new StringBuilder();
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    line = line.trim();
+                    if (line.startsWith("--") || line.startsWith("/*") || line.isEmpty()) {
+                        continue;
+                    }
 
-
-                    try {
-                        String sql = Files.readString(filePath);
-
-                        // ⚠️ Exécuter sur la base locale
-                        Database.execute(sql);
-
-                        Files.move(filePath, mailbox.resolve("processed_" + filename));
-                        System.out.println("✅ Importé et déplacé : " + filename);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    currentQuery.append(line).append(" ");
+                    if (line.endsWith(";")) {
+                        String sql = currentQuery.toString().trim();
+                        Database.execute(sql.substring(0, sql.length() - 1)); // enlever le ;
+                        currentQuery.setLength(0);
                     }
                 }
             }
-            key.reset();
+            Notification.showSuccess("Base de données mise à jour !");
+        } else {
+            Notification.showWarning("Veuillez sélectionner un fichier.");
         }
     }
+
+
 }
