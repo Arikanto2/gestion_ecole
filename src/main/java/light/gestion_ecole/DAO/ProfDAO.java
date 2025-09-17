@@ -14,7 +14,8 @@ public class ProfDAO {
         List<Professeur> profs = new ArrayList<>();
         String sql = "SELECT p.idprof, p.nomprof,c.Designation, p.contactprof, p.adresseprof, p.emailprof " +
                 "From Professeur p " +
-                "LEFT JOIN classe c on p.nomprof = c.\"Titulaire\" " ;
+                "LEFT JOIN classe c on p.nomprof = c.\"Titulaire\" " +
+                "ORDER BY p.nomprof;";
 
         try (Connection conn = Database.connect()){
             Statement stmt = conn.createStatement();
