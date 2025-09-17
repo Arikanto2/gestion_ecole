@@ -29,7 +29,27 @@ public class Eleve {
     private Boolean examennational;
     private String handicap;
     private String listMoi;
+    private String avertissement;
 
+    public Eleve(String idEleve, String matricule,int idclass, int idparent,
+                 String nom, String prenom, String adresse, Date datenaiss, String sex,
+                 String annee_scolaire,String handicap,String avertir) {
+        this.ideleve = idEleve;
+        this.nummat = matricule;
+        //this.idattitude = idattitude;
+        this.idclass = idclass;
+        this.idparent = idparent;
+        this.nomeleve = nom;
+        this.prenomeleve = prenom;
+        this.adresseeleve = adresse;
+        this.datenaissance = datenaiss;
+        this.genreeleve = sex;
+        this.anneescolaire = annee_scolaire;
+        /*this.ispassant = ispassant;
+        this.examennational = examennational;*/
+        this.handicap = handicap;
+        this.avertissement = avertir;
+    }
     public Eleve(String idEleve, String matricule,int idclass, int idparent,
                  String nom, String prenom, String adresse, Date datenaiss, String sex,
                  String annee_scolaire,String handicap) {
@@ -232,5 +252,15 @@ public class Eleve {
     }
     public void setListMoi(String listMoi) {
         this.listMoi = listMoi;
+    }
+    public String getAvertissement(){
+        if (avertissement==null){
+            return "Aucun avertissement";
+        } else {
+            return avertissement;
+        }
+    }
+    public void setAvertissement(String avertissement) {
+        this.avertissement = avertissement;
     }
 }

@@ -63,7 +63,7 @@ public class EcolageparmoiT {
         if (this.ecolagemoi == null) {
             return "";
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.FRENCH);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
         return sdf.format(ecolagemoi);
     }
     public Date getecolagemoiAsDate() {
