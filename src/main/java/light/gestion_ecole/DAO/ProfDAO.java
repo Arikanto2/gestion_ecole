@@ -28,7 +28,6 @@ public class ProfDAO {
                         rs.getString("contactprof"),
                         rs.getString("adresseprof"),
                         rs.getString("emailprof")
-
                 ));
             }
         }catch (SQLException e){
