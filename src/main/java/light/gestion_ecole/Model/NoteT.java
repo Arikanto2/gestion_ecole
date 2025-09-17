@@ -1,6 +1,5 @@
 package light.gestion_ecole.Model;
 
-import java.util.Date;
 
 public class NoteT {
     private String ideleve;

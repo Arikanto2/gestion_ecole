@@ -7,11 +7,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import light.gestion_ecole.DAO.StatDAO;
-import light.gestion_ecole.Model.ExportService;
-import light.gestion_ecole.Model.ImportWatcher;
-import light.gestion_ecole.Model.QueryLogger;
+import light.gestion_ecole.DAO.UtilisateurDAO;
+import light.gestion_ecole.Model.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccueilController {
     @FXML private Label titreAnne;
@@ -51,24 +52,25 @@ public class AccueilController {
         });
         btnExport.setOnAction(e -> {
             try {
+                List<String> emailutilisateur = UtilisateurDAO.getEmailUtilisateur();
+                for(String email : emailutilisateur){
+                    ExportService.envoyerParEmail(email);
 
-                ExportService.exporterEtVider();
+                }
+                QueryLogger.clear();
+                Notification.showSuccess("Fichier de mise à jour envoyer aux autres utilisateurs.");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
         btnImport.setOnAction(e -> {
-
-            Thread t = new Thread(() -> {
-                try {
-                    ImportWatcher.startWatching();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
-            t.setDaemon(true);
-            t.start();
+            try {
+                ImportWatcher.importerFile();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
+
     }
     public void afficherMenu(Label menu) throws IOException {
         String view;

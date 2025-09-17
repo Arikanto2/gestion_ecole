@@ -35,7 +35,7 @@ public class LoginController {
     @FXML private ImageView toggleBtn;
     @FXML BorderPane log;
     @FXML Button valider;
-    public  static String nom;
+    public  static Utilisateur util;
 
 
     private boolean isPasswordVisible = false;
@@ -112,14 +112,13 @@ public class LoginController {
     }
 
     public void connecterVous() {
-        String mail1 = mail.getText();
+        String nom1 = mail.getText();
         String password = passwordField.getText();
-        Utilisateur util = new Utilisateur(mail1,password);
         try {
-            String isUtilexist = UtilisateurDAO.Connecter(util);
-            if (!isUtilexist.equals("")) {
+            Utilisateur isUtilexist = UtilisateurDAO.Connecter(password,nom1);
+            if (isUtilexist != null) {
 
-                nom = isUtilexist;
+                util = isUtilexist;
                 Stage stage = (Stage) valider.getScene().getWindow();
                 stage.close();
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/light/gestion_ecole/View/Main-View.fxml"));

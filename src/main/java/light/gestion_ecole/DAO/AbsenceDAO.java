@@ -71,9 +71,10 @@ public class AbsenceDAO {
                 QueryLogger.append("INSERT INTO pointage (ideleve,nummat,dateabsence,dateretour,motif) VALUES('"
                         + ab.getNumero() + "-" + anneescolaire.get(0) + "','"
                         + ab.getNumero() + "','"
-                        + ab.getDateAbsence() + "','"
-                        + (ab.getDateRetour() != null ? ab.getDateRetour() : "") + "','"
+                        + ab.getDateAbsence() + "',"
+                        + (ab.getDateRetour() != null ? "'" + ab.getDateRetour() + "'" : "NULL") + ",'"
                         + (ab.getMotif() != null ? ab.getMotif() : "") + "')");
+
             } else {
                 System.out.println("Erreur : aucune ligne insérée !");
             }
@@ -134,6 +135,12 @@ public class AbsenceDAO {
             int lignesAffectees = ps.executeUpdate();
             if (lignesAffectees > 0) {
                 System.out.println("Modification Réussie !");
+                QueryLogger.append("UPDATE pointage SET dateabsence = '" + ab.getDateAbsence() +
+                        "', dateretour = " + (ab.getDateRetour() != null ? "'" + ab.getDateRetour() + "'" : "NULL") +
+                        ", motif = '" + (ab.getMotif() != null ? ab.getMotif() : "") +
+                        "' WHERE idpointage = " + ab.getIdAbsence());
+
+
             } else {
                 System.out.println("Erreur : aucune ligne insérée !");
             }
@@ -147,6 +154,7 @@ public class AbsenceDAO {
             int lignesAffectees = ps.executeUpdate();
             if (lignesAffectees > 0) {
                 System.out.println("Supression effectué");
+                QueryLogger.append("DELETE FROM pointage WHERE idpointage = " + Abs);
             }
 
         } catch (SQLException e) {
