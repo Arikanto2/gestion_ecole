@@ -80,6 +80,7 @@ public class EleveController {
     @FXML private Label lblClasse;
     @FXML private Label lblAnneScolaire;
     @FXML private Label lblHandicap;
+    @FXML private Label lblAvertissement;
     //tuteur
     @FXML private Label lblNomPere;
     @FXML private Label lblProfessionPere;
@@ -474,6 +475,7 @@ public class EleveController {
                     lblClasse.setText(newSelection.getClasse());
                     lblAnneScolaire.setText(newSelection.getAnneescolaire());
                     lblHandicap.setText(newSelection.getHandicap());
+                    lblAvertissement.setText(newSelection.getAvertissement());
 
                     loadParent(newSelection.getIdparent());
                     loadAttitude(newSelection.getIdeleve());
@@ -549,7 +551,7 @@ public class EleveController {
         ecolages.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(moiEcolageColumn);
         autoResizeColumn2(dateEcolageColumn);
-        autoResizeColumn(statutPayerColumn);
+        //autoResizeColumn(statutPayerColumn);
 
         listages.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(idListe);
@@ -558,30 +560,40 @@ public class EleveController {
     }
     @FXML
     private void onSaveBTN() throws SQLException {
-        for (Eleve e : attribuerNotes.getItems()) {
-            try {
-                NoteT note = notesBuffer.get(e.getNummat());
-                if (note == null) continue;
-                int idprof = profDAO.getIdprof((String) comboProf.getValue());
-                if (comboCoef.getValue() != null){
-                    coeff = comboCoef.getValue();
-                } else {
-                    coeff =Double.parseDouble(txtSiCoef.getText());
-                }
-                String id = eleveDAO.getIdEleve(e.getNummat(),(String) comboAnneeNote.getValue());
-                if (comboMatiere.getValue() != null){
-                    MatiereNote = (String) comboMatiere.getValue();
-                } else {
-                    MatiereNote = txtSiMatiere.getText();
-                }
+        if ((comboCoef.getValue() != null || !txtSiCoef.getText().isEmpty()) && (comboMatiere.getValue() != null || !txtSiMatiere.getText().isEmpty()) && comboProf.getValue() != null ) {
+            for (Eleve e : attribuerNotes.getItems()) {
+                try {
+                    NoteT note = notesBuffer.get(e.getNummat());
+                    if (note == null) continue;
+                    int idprof = profDAO.getIdprof((String) comboProf.getValue());
+                    if (comboCoef.getValue() != null){
+                        coeff = comboCoef.getValue();
+                    } else {
+                        coeff =Double.parseDouble(txtSiCoef.getText());
+                    }
+                    String id = eleveDAO.getIdEleve(e.getNummat(),(String) comboAnneeNote.getValue());
+                    if (comboMatiere.getValue() != null){
+                        MatiereNote = (String) comboMatiere.getValue();
+                    } else {
+                        MatiereNote = txtSiMatiere.getText();
+                    }
 
-                noteDAOT.saveOrUpdate(note, (String) comboEvaluation.getValue(),MatiereNote,idprof,coeff,id);
-                loadEleves();
-            } catch (Exception ex){
-                ex.printStackTrace();
+                    noteDAOT.saveOrUpdate(note, (String) comboEvaluation.getValue(),MatiereNote,idprof,coeff,id);
+                    loadEleves();
+                } catch (Exception ex){
+                    throw new RuntimeException(ex);
+                }
+            }
+            Notification.showSuccess("Note de "+MatiereNote+ " ajouter avec succé!");
+        } else {
+            if (comboMatiere.getValue() == null || txtSiMatiere.getText().isEmpty()){
+                Notification.showWarning("Matiére ne doit pas être vide!");
+            } else if (comboCoef.getValue() == null || txtSiCoef.getText().isEmpty()) {
+                Notification.showWarning("La coefficient du matiere ne doit pas être vide!");
+            } else {
+                Notification.showWarning("Veuillez-remplir bien le champs manquant!");
             }
         }
-        Notification.showSuccess("Note de "+MatiereNote+ " ajouter avec succé!");
         loadEleves();
         onNote();
     }
@@ -609,25 +621,29 @@ public class EleveController {
     @FXML
     private void onEnregistrerEcolage() throws SQLException {
         ObservableList<EcolageparmoiT> data = attribuerEcolages.getItems();
-        if (selectedEleve != null){
+        if (selectedEleve != null && txtDateEcolage.getValue() != null){
             for (EcolageparmoiT e : data) {
                 if (e.isStatut() && !e.isDisabled()) {
                     ecolageparmoiT = new EcolageparmoiT(selectedEleve.getIdeleve(), selectedEleve.getNummat(),
                             e.getIdecolage(),true,java.sql.Date.valueOf(txtDateEcolage.getValue()),e.getMoiseco());
                     ecolageDAOT.insertEcolageparmoiT(ecolageparmoiT);
-                    Notification.showSuccess("Ecolage de"+ selectedEleve.getNomeleve2()+ " ajouté");
-                    FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOverlayAddEcolage);
-                    fadeOut.setFromValue(1);
-                    fadeOut.setToValue(0);
-
-                    fadeOut.setOnFinished(event -> formOverlayAddEcolage.setVisible(false));
-                    fadeOut.play();
-                    loadEleves();
-                    loadEcolage(selectedEleve.getIdeleve());
                 }
             }
+            Notification.showSuccess("Ecolage de "+ selectedEleve.getNomeleve2()+ " ajouté");
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOverlayAddEcolage);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+
+            fadeOut.setOnFinished(event -> formOverlayAddEcolage.setVisible(false));
+            fadeOut.play();
+            loadEleves();
+            loadEcolage(selectedEleve.getIdeleve());
         } else {
-            Notification.showWarning("Aucun élève selectionné!");
+            if (txtDateEcolage.getValue() == null) {
+                Notification.showWarning("Remplir la date d'ajout de l'ecolage!");
+            } else {
+                Notification.showWarning("Aucun élève selectionné!");
+            }
         }
     }
     @FXML
@@ -1001,35 +1017,42 @@ public class EleveController {
     // Bouton "Enregistrer"
     @FXML
     private void handleSave() throws SQLException {
-        ParentT parent = new ParentT(txtNomPere.getText(),txtProfessionPere.getText(),txtNomMere.getText(),
-                txtProfessionMere.getText(),txtTuteur.getText(),txtTuteurProfession.getText(),txtContact.getText(),txtEmail.getText());
-        parentDAOT.insertParents(parent);
-
-        int idClass = eleveDAO.getIdClass((String) comboClasse2.getValue());
-        int idPrt = parentDAOT.getIdParents(txtContact.getText());
-        List<CheckBox> checkBoxes = List.of(check1,check2,check3,check4);
-        List<String> checkString = new ArrayList<>();
-        for (CheckBox checkBox : checkBoxes) {
-            if (checkBox.isSelected()) {
-                checkString.add(checkBox.getText());
+        if (txtTuteur.getText() != null) {
+            ParentT parent = new ParentT(txtNomPere.getText(),txtProfessionPere.getText(),txtNomMere.getText(),
+                    txtProfessionMere.getText(),txtTuteur.getText(),txtTuteurProfession.getText(),txtContact.getText(),txtEmail.getText());
+            if (comboClasse2.getValue() != null && txtAnneeScolaire.getText() != null && txtNom.getText() != null && txtAdresse.getText() != null
+                    && txtdateNaissance.getValue() != null && comboSexe.getValue() != null) {
+                parentDAOT.insertParents(parent);
+                int idClass = eleveDAO.getIdClass((String) comboClasse2.getValue());
+                int idPrt = parentDAOT.getIdParents(txtContact.getText());
+                List<CheckBox> checkBoxes = List.of(check1,check2,check3,check4);
+                List<String> checkString = new ArrayList<>();
+                for (CheckBox checkBox : checkBoxes) {
+                    if (checkBox.isSelected()) {
+                        checkString.add(checkBox.getText());
+                    }
+                }
+                String result = String.join("-",checkString);
+                int nb = eleveDAO.nbrEleves()+1;
+                String matricule = "00"+ nb + getGenreeleve2();
+                String id = matricule+'-'+ txtAnneeScolaire.getText();
+                Eleve eleve = new Eleve(id,matricule,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
+                        txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),
+                        result);
+                eleveDAO.insertEleve(eleve);
+                Notification.showSuccess("Elève ajouter!");
+                handleCancel();
+            } else {
+                Notification.showWarning("Veuillez-remplir bien les champs de l'élève et les parents!");
             }
+        } else {
+            Notification.showWarning("Veuillez-remplir les formulaires du parent!");
         }
-        String result = String.join("-",checkString);
-        int nb = eleveDAO.nbrEleves()+1;
-        String matricule = "00"+ nb + getGenreeleve2();
-        String id = matricule+'-'+ txtAnneeScolaire.getText();
-        Eleve eleve = new Eleve(id,matricule,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
-                txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),
-                result);
-        eleveDAO.insertEleve(eleve);
-        Notification.showSuccess("Elève ajouter!");
-        handleCancel();
         loadEleves();
     }
     @FXML
     private void onSaveReinscrit() throws SQLException {
-        //selectedEleve = eleves.getSelectionModel().getSelectedItem();
-        if (selectedEleve != null) {
+        if (selectedEleve != null && comboClasseR.getValue() != null && !txtAnneeScolaireR.getText().isEmpty()) {
             ParentT parent = new ParentT(selectedEleve.getIdparent(),txtNomPereR.getText(),txtProfessionPereR.getText(),
                     txtNomMereR.getText(),txtProfessionMereR.getText(),txtTuteurR.getText(),txtTuteurProfessionR.getText(),
                     txtContactR.getText(),txtEmailR.getText());
@@ -1043,46 +1066,61 @@ public class EleveController {
                     checkString.add(checkBox.getText());
                 }
             }
-            String result = String.join("-",checkString);
-            String mat = selectedEleve.getNummat();
-            String id = mat+'-'+ txtAnneeScolaireR.getText();
-            Eleve eleve = new Eleve(id,mat,idClass,selectedEleve.getIdparent(),txtNomR.getText(),txtPrenomR.getText(),txtAdresseR.getText(),
-                    java.sql.Date.valueOf(txtdateNaissanceR.getValue()),(String) comboSexeR.getValue(),txtAnneeScolaireR.getText(),result);
-            eleveDAO.insertEleve(eleve);
-            Notification.showSuccess("Ajout élève reussi!");
-            loadEleves();
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOvelayAddReinscrit);
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
+            if (!Objects.equals(txtAnneeScolaireR.getText(), selectedEleve.getAnneescolaire())){
+                String result = String.join("-",checkString);
+                String mat = selectedEleve.getNummat();
+                String id = mat+'-'+ txtAnneeScolaireR.getText();
+                Eleve eleve = new Eleve(id,mat,idClass,selectedEleve.getIdparent(),txtNomR.getText(),txtPrenomR.getText(),txtAdresseR.getText(),
+                        java.sql.Date.valueOf(txtdateNaissanceR.getValue()),(String) comboSexeR.getValue(),txtAnneeScolaireR.getText(),result);
+                eleveDAO.insertEleve(eleve);
+                Notification.showSuccess("Ajout élève reussi!");
+                loadEleves();
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formOvelayAddReinscrit);
+                fadeOut.setFromValue(1);
+                fadeOut.setToValue(0);
 
-            fadeOut.setOnFinished(e -> formOvelayAddReinscrit.setVisible(false));
-            fadeOut.play();
+                fadeOut.setOnFinished(e -> formOvelayAddReinscrit.setVisible(false));
+                fadeOut.play();
+            } else {
+                Notification.showError("Verifie bien l'année scolaire que vous ajoute!");
+            }
             comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
             comboClasse.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
         } else {
-            Notification.showWarning("Aucun élève selectionner!");
+            if (comboClasseR.getValue() == null) {
+                Notification.showWarning("Selectionner la classe de l'élève!");
+            } else if (txtAnneeScolaireR.getText().isEmpty()) {
+                Notification.showWarning("L'année scolaire est requit!");
+            } else {
+                Notification.showWarning("Aucun élève selectionner!");
+            }
         }
     }
     @FXML
     private void handleSaveUpdate() throws SQLException {
-        Eleve eleve = eleves.getSelectionModel().getSelectedItem();
-        int idClass = eleveDAO.getIdClass((String) comboClasseModif.getValue());
-        List<CheckBox> checkBoxes = List.of(checkModif1,checkModif2,checkModif3,checkModif4);
-        List<String> checkString = new ArrayList<>();
-        for (CheckBox checkBox : checkBoxes) {
-            if (checkBox.isSelected()) {
-                checkString.add(checkBox.getText());
+        selectedEleve = eleves.getSelectionModel().getSelectedItem();
+        if (txtNomModif.getText() != null && txtPrenomModif.getText() != null && txtPrenomModif.getText() != null && txtAdresseModif != null
+        && txtdateNaissanceModif.getValue() != null && comboSexeModif.getValue() != null && txtAnneeScolaireModif.getText() != null && txtContactModif.getText() != null) {
+            int idClass = eleveDAO.getIdClass((String) comboClasseModif.getValue());
+            List<CheckBox> checkBoxes = List.of(checkModif1,checkModif2,checkModif3,checkModif4);
+            List<String> checkString = new ArrayList<>();
+            for (CheckBox checkBox : checkBoxes) {
+                if (checkBox.isSelected()) {
+                    checkString.add(checkBox.getText());
+                }
             }
+            String result = String.join("-",checkString);
+            Eleve eleve1 = new Eleve(selectedEleve.getIdeleve(),selectedEleve.getNummat(),idClass,selectedEleve.getIdparent(),txtNomModif.getText(),
+                    txtPrenomModif.getText(),txtAdresseModif.getText(),java.sql.Date.valueOf(txtdateNaissanceModif.getValue()),
+                    (String) comboSexeModif.getValue(),txtAnneeScolaireModif.getText(),result);
+            eleveDAO.updateEleve(eleve1);
+            ParentT parentT = new ParentT(selectedEleve.getIdparent(),txtNomPereModif.getText(),txtProfessionPereModif.getText(),txtNomMereModif.getText(),
+                    txtProfessionMereModif.getText(),txtTuteurModif.getText(),txtTuteurProfessionModif.getText(),txtContactModif.getText(),txtEmailModif.getText());
+            parentDAOT.updateParents(parentT);
+            Notification.showSuccess("Modification faites!");
+        } else {
+            Notification.showWarning("Veuillez-remplir bien les champs à modifié!");
         }
-        String result = String.join("-",checkString);
-        Eleve eleve1 = new Eleve(eleve.getIdeleve(),eleve.getNummat(),idClass,eleve.getIdparent(),txtNomModif.getText(),
-                txtPrenomModif.getText(),txtAdresseModif.getText(),java.sql.Date.valueOf(txtdateNaissanceModif.getValue()),
-                (String) comboSexeModif.getValue(),txtAnneeScolaireModif.getText(),result);
-        eleveDAO.updateEleve(eleve1);
-        ParentT parentT = new ParentT(eleve.getIdparent(),txtNomPereModif.getText(),txtProfessionPereModif.getText(),txtNomMereModif.getText(),
-                txtProfessionMereModif.getText(),txtTuteurModif.getText(),txtTuteurProfessionModif.getText(),txtContactModif.getText(),txtEmailModif.getText());
-        parentDAOT.updateParents(parentT);
-        Notification.showSuccess("Modification faites!");
         handleCancelUpdate();
         loadEleves();
     }
@@ -1246,7 +1284,7 @@ public class EleveController {
     }
     @FXML
     private void onEnregistrerAttitude() throws SQLException{
-        if (selectedEleve != null && txtDate.getValue() != null) {
+        if (selectedEleve != null && txtDate.getValue() != null && comboParticipation.getValue() != null && comboComportement.getValue() != null) {
             attitudeT = new AttitudeT(selectedEleve.getIdeleve(), selectedEleve.getNummat(),(String) comboParticipation.getValue(),
                     (String) comboComportement.getValue(),java.sql.Date.valueOf(txtDate.getValue()),Integer.parseInt(txtRetard.getText()));
             attitudeDAOT.InsertAttitude(attitudeT);
@@ -1259,20 +1297,27 @@ public class EleveController {
     }
     @FXML
     private void onSaveAvertissement() throws SQLException{
-        if (selectedEleve != null){
+        if (selectedEleve != null && comboAvertissement.getValue() != null){
             try {
                 eleveDAO.giveAvertissement(selectedEleve.getIdeleve(),(String) comboAvertissement.getValue());
+                Notification.showSuccess(comboAvertissement.getValue()+" pour"+ selectedEleve.getNomeleve()+" matricule :"+ selectedEleve.getNummat());
                 btnAnnulerAvertissement();
                 loadEleves();
             } catch (SQLException ex) {
                 ex.printStackTrace();
+            }
+        } else {
+            if (comboAvertissement.getValue() == null){
+                Notification.showWarning("Veuillez-selectionner l'avertissement a donné!");
+            } else {
+                Notification.showWarning("Aucun élève selectionné!");
             }
         }
     }
 
     @FXML
     private void onPdf() throws SQLException {
-        if (selectedEleve != null) {
+        if (selectedEleve != null && noteDAOT.getTotalCoef(selectedEleve.getIdeleve(),comboNote.getValue().toString()) != 0.0) {
             try {
                 String userDesktop = System.getProperty("user.home") + "/Desktop/Listes_eleves/Bulletin";
                 File dossier = new File(userDesktop);
@@ -1350,7 +1395,7 @@ public class EleveController {
                     table.addCell(new Cell().add(new Paragraph(note.getMatiere())).setBackgroundColor(bg));
                     table.addCell(new Cell().add(new Paragraph(String.valueOf(note.getCoefficient()))).setBackgroundColor(bg).setTextAlignment(TextAlignment.CENTER));
                     table.addCell(new Cell().add(new Paragraph(String.valueOf(note.getNote()))).setBackgroundColor(bg).setTextAlignment(TextAlignment.CENTER));
-                    table.addCell(new Cell().add(new Paragraph(note.getCommentaire())).setBackgroundColor(bg));
+                    table.addCell(new Cell().add(new Paragraph(note.getCommentaire())).setBackgroundColor(bg).setTextAlignment(TextAlignment.CENTER));
                     alternate = !alternate;
                 }
                 document.add(table);
@@ -1378,6 +1423,12 @@ public class EleveController {
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
+            }
+        } else {
+            if (selectedEleve == null) {
+                Notification.showWarning("Aucun élève selectionné!");
+            } else {
+                Notification.showError("Aucun notes trouvé!");
             }
         }
     }

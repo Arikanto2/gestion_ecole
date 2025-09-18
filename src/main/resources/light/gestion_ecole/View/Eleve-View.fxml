@@ -23,7 +23,7 @@
         </HBox>
     </top>
     <center>
-        <StackPane fx:id="contentArea">
+        <StackPane>
         <BorderPane.margin>
                 <Insets left="25" top="20" right="20"/>
             </BorderPane.margin>
@@ -54,7 +54,7 @@
                     <ScrollPane fitToWidth="true">
                         <VBox spacing="15">
 
-                            <TitledPane text="Informations Générales" expanded="true">
+                            <TitledPane text="Informations Générales">
                                 <GridPane hgap="10" vgap="10">
                                     <Label text="Classe:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                                     <ComboBox fx:id="comboClasse2" promptText="Choisir une classe" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
@@ -91,7 +91,7 @@
                             </TitledPane>
 
                             <!-- Section Parents -->
-                            <TitledPane text="Informations Parents" expanded="true">
+                            <TitledPane text="Informations Parents">
                                 <GridPane hgap="10" vgap="10">
                                     <Label text="Père:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                                     <TextField fx:id="txtNomPere" promptText="Nom du père" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
@@ -446,7 +446,7 @@
 
                 <VBox alignment="CENTER" spacing="5"
                       prefWidth="650" prefHeight="291"
-                      style="-fx-background-color: white; -fx-padding:5;"
+                      style="-fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff); -fx-padding:5;"
                       AnchorPane.topAnchor="50" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50">
                     <Label text="AVERTISSEMENT" styleClass="labelEntete"/>
                     <GridPane hgap="10" vgap="10" styleClass="detailsPane">
@@ -591,6 +591,8 @@
                             <Label fx:id="lblClasse" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
                             <Label text="Annee Scolaire" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
                             <Label fx:id="lblAnneScolaire" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+                            <Label text="Avertissement:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+                            <Label fx:id="lblAvertissement" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
                         </GridPane>
                     </ScrollPane>
                 </Tab>

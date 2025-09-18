@@ -199,6 +199,7 @@ public class classecontroller {
                 txtPrix.setText(String.valueOf(classeAModifier.getPrixEcolage()));
                 comboprof.setValue(classeAModifier.getTitulaire());
                 txtID.setEditable(false);
+                designation.setText(classeAModifier.getDesignation().trim());
             }
 
             Stage stage = new Stage();

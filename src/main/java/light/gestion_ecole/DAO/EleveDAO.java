@@ -12,7 +12,7 @@ public class EleveDAO {
     public List<Eleve> getEleves(String annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
         String sql = "SELECT ideleve, nummat, idclass, idparent, (nomeleve ||' ' || prenomeleve) as nomeleve, prenomeleve, adresseeleve," +
-                "datenaiss, genre, anneescolaire, handicap FROM eleve WHERE anneescolaire = ? ORDER BY nummat";
+                "datenaiss, genre, anneescolaire, handicap,avertissement FROM eleve WHERE anneescolaire = ? ORDER BY nummat";
 
         try (Connection conn  = Database.connect();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -23,7 +23,7 @@ public class EleveDAO {
                         ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
                         rs.getString("prenomeleve"),rs.getString("adresseeleve"),
                         rs.getDate("datenaiss"),rs.getString("genre"),
-                        rs.getString("anneescolaire"),rs.getString("handicap")));
+                        rs.getString("anneescolaire"),rs.getString("handicap"),rs.getString("avertissement")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -103,7 +103,7 @@ public class EleveDAO {
     public List<Eleve> filtreDeuxCombo(String annee,String classe) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
         String sql = "SELECT e.ideleve, e.nummat, e.idclass, e.idparent, (e.nomeleve ||' ' || e.prenomeleve) as nomeleve, e.prenomeleve, e.adresseeleve," +
-                "e.datenaiss, e.genre, e.anneescolaire, e.handicap from ELEVE e JOIN CLASSE c ON e.idclass = c.idclass where anneescolaire = ? AND c.designation = ? ORDER BY nummat";
+                "e.datenaiss, e.genre, e.anneescolaire, e.handicap,e.avertissement from ELEVE e JOIN CLASSE c ON e.idclass = c.idclass where anneescolaire = ? AND c.designation = ? ORDER BY nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, annee);
             stmt.setString(2, classe);
@@ -113,7 +113,7 @@ public class EleveDAO {
                         ,rs.getInt("idclass"), rs.getInt("idparent"),rs.getString("nomeleve"),
                         rs.getString("prenomeleve"),rs.getString("adresseeleve"),
                         rs.getDate("datenaiss"),rs.getString("genre"),
-                        rs.getString("anneescolaire"),rs.getString("handicap")));
+                        rs.getString("anneescolaire"),rs.getString("handicap"),rs.getString("avertissement")));
             }
         }
         return eleves;

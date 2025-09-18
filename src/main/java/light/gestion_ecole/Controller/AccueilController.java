@@ -21,6 +21,7 @@ public class AccueilController {
     @FXML private BorderPane accueilview;
     @FXML private Button btnImport;
     @FXML private Button btnExport;
+    @FXML private Label ajoutEleve;
 
     String annescolaire;
     @FXML void initialize(){
@@ -40,6 +41,14 @@ public class AccueilController {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+        });
+        ajoutEleve.setOnMouseClicked(e->{
+           try {
+               FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/Eleve-View.fxml"));
+               Node node = loader.load();
+           } catch (IOException ex) {
+               throw new RuntimeException(ex);
+           }
         });
         btnExport.setOnAction(e -> {
             try {
@@ -76,8 +85,6 @@ public class AccueilController {
         Node node = loader.load();
         accueilview.getChildren().clear();
         accueilview.setCenter(node);
-
-
     }
 
 }

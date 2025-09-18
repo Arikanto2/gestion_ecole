@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import light.gestion_ecole.Model.Classe;
+import light.gestion_ecole.Model.QueryLogger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -52,6 +53,12 @@ public class ClasseDAO {
             ps.setString(2, c.getProf());
             ps.setDouble(3, c.getPrixEcolage());
             ps.executeUpdate();
+
+            QueryLogger.append("INSERT INTO classe (designation, \"Titulaire\", prixecolage) VALUES ('"
+                    + c.getDesignation() + "', '"
+                    + c.getProf() + "', "
+                    + c.getPrixEcolage() + ")");
+
         }
     }
 
@@ -64,6 +71,11 @@ public class ClasseDAO {
             ps.setDouble(3, c.getPrixEcolage());
             ps.setInt(4, c.getIdClasse());
             ps.executeUpdate();
+
+            QueryLogger.append("UPDATE classe SET designation = '" + c.getDesignation()
+                    + "', \"Titulaire\" = '" + c.getProf()
+                    + "', prixecolage = " + c.getPrixEcolage()
+                    + " WHERE idclass = " + c.getIdClasse());
         }
     }
 
@@ -73,6 +85,8 @@ public class ClasseDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idClasse);
             ps.executeUpdate();
+
+            QueryLogger.append("DELETE FROM classe WHERE idclass = " + idClasse);
         }
     }
 
