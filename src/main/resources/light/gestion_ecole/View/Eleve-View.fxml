@@ -641,7 +641,7 @@
                     </HBox>
                 </Tab>
 
-                <!-- Onglet Notes -->
+                <!-- Onglet Notesfr -->
                 <Tab text="Notes">
                     <VBox styleClass="detailsPane">
                         <HBox alignment="CENTER">
