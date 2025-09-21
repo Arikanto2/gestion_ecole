@@ -8,31 +8,39 @@
       fx:controller="light.gestion_ecole.Controller.Rang_classeController"
       spacing="10"
       prefHeight="400.0" prefWidth="600.0">
-    <padding>
-        <Insets top="10" right="10" bottom="10" left="10"/>
-    </padding>
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Classe de:"/>
-        <Label  fx:id="txtClasse" text="-" style="-fx-font-weight: bold;"/>
-    </HBox>
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Titulaire :"/>
-        <Label  fx:id="txtprof" text="-" style="-fx-font-weight: bold;"/>
-    </HBox>
-    <HBox spacing="20" alignment="CENTER_LEFT">
-        <ComboBox fx:id="evaluation" promptText="Type évaluation" />
+    <StackPane alignment="BASELINE_CENTER">
+        <VBox style="-fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff);">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Classe de:"/>
+                <Label  fx:id="txtClasse" text="-" style="-fx-font-weight: bold;"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Titulaire :"/>
+                <Label  fx:id="txtprof" text="-" style="-fx-font-weight: bold;"/>
+            </HBox>
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <ComboBox fx:id="evaluation" promptText="Type évaluation" />
 
-        <Region HBox.hgrow="ALWAYS"/>
-
-        <Label text="Effectifs :" />
-        <Label fx:id="txteleves" text="0" style="-fx-font-weight: bold;"/>
-    </HBox>
-    <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="rang" text="Rang" />
-            <TableColumn fx:id="rnom" text="Nom" />
-            <TableColumn fx:id="rprenom" text="prenoms" />
-            <TableColumn fx:id="moyenne" text="moyenne"/>
-        </columns>
-    </TableView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <VBox spacing="10">
+                    <Button fx:id="fermer" text="Fermer" styleClass="btnAnnulerT"/>
+                    <HBox spacing="8">
+                        <Label text="Effectifs :" />
+                        <Label fx:id="txteleves" text="0" style="-fx-font-weight: bold;"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="rang" text="Rang" />
+                    <TableColumn fx:id="rnom" text="Nom"/>
+                    <TableColumn fx:id="rprenom" text="prenoms"/>
+                    <TableColumn fx:id="moyenne" text="moyenne"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </StackPane>
 </VBox>

@@ -8,6 +8,7 @@ import light.gestion_ecole.Model.QueryLogger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ProfDAO {
     public List<Professeur> getProfesseurs() throws SQLException {
@@ -87,7 +88,7 @@ public class ProfDAO {
                     + "', emailprof = '" + p.getEmail()
                     + "' WHERE idprof = " + p.getIdprof());
 
-          if (titulaire != oldtitulaire ) {
+          if (!Objects.equals(titulaire, oldtitulaire)) {
               try (PreparedStatement upstmt = conn.prepareStatement(sql2);
                    PreparedStatement upstmt2 = conn.prepareStatement(sql3)) {
                   upstmt.setString(1, p.getNom());

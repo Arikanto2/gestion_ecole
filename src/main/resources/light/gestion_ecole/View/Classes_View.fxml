@@ -1,47 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="light.gestion_ecole.Controller.classecontroller"
-      spacing="10"
-      prefHeight="400.0" prefWidth="600.0">
-    <padding>
-        <Insets top="10" right="10" bottom="10" left="10"/>
-    </padding>
 
-    <HBox alignment="CENTER">
-        <VBox.margin>
-            <Insets right="150" left="150"/>
-        </VBox.margin>
-        <HBox spacing="10" alignment="CENTER_RIGHT">
-            <ComboBox fx:id="anneeScolaire" promptText="Annéescolaire" id="AnneeClasse"/>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="light.gestion_ecole.Controller.classecontroller">
+
+    <!-- === Contenu principal (tableau + boutons) === -->
+    <VBox spacing="10" prefHeight="400.0" prefWidth="600.0">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <HBox alignment="CENTER">
+            <VBox.margin>
+                <Insets right="150" left="150"/>
+            </VBox.margin>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <ComboBox fx:id="anneeScolaire" promptText="Annéescolaire" id="AnneeClasse"/>
+            </HBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Label text="Recherche :" styleClass="ttxt"/>
+                <TextField fx:id="searchField" promptText="Tapez ici..."/>
+            </HBox>
         </HBox>
-        <Region HBox.hgrow="ALWAYS"/>
-        <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Label text="Recherche :" styleClass="ttxt"/>
-            <TextField fx:id="searchField" promptText="Tapez ici..."/>
+
+        <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+            <VBox.margin>
+                <Insets right="150" left="150"/>
+            </VBox.margin>
+            <columns>
+                <TableColumn fx:id="Designation" text="Classe" prefWidth="200"/>
+                <TableColumn fx:id="nbr_eleves" text="Effectifs" prefWidth="200"/>
+                <TableColumn fx:id="Ecolage" text="Ecolage" prefWidth="200"/>
+                <TableColumn fx:id="Titulaire" text="Titulaire" prefWidth="250"/>
+            </columns>
+        </TableView>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="btnAjouter" text="Ajouter" id="btnAjouterT" />
+            <Button fx:id="btnModifier" text="Modifier" id="btnModifierT"/>
+            <Button fx:id="btnSupprimer" text="Supprimer" id="btnSupprimerT"/>
         </HBox>
+    </VBox>
 
+    <!-- === Overlay Formulaire Classe === -->
+    <AnchorPane fx:id="formOverlayClasse" visible="false" opacity="0"
+                style="-fx-background-color: rgba(0,0,0,0.5);">
+        <VBox alignment="CENTER" spacing="5"
+              prefWidth="120" prefHeight="291"
+              style="-fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff); -fx-padding:5;"
+              AnchorPane.topAnchor="150" AnchorPane.leftAnchor="370" AnchorPane.rightAnchor="370">
 
-    </HBox>
-    <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
-        <VBox.margin>
-            <Insets right="150" left="150"/>
-        </VBox.margin>
-        <columns>
-            <TableColumn fx:id="Designation" text="Classe"/>
-            <TableColumn fx:id="nbr_eleves" text="Effectifs"/>
-            <TableColumn fx:id="Ecolage" text="Ecolage" />
-            <TableColumn fx:id="Titulaire" text="Titulaire"/>
-        </columns>
-    </TableView>
+            <Label fx:id="lblTitreClasse" text="Ajouter une classe" styleClass="labelEntete"
+                   style="-fx-font-size: 20; -fx-font-weight: bold;"/>
 
-    <HBox spacing="10" alignment="CENTER">
-        <Button fx:id="btnAjouter" text="Ajouter" id="btnAjouterT" />
-        <Button fx:id="btnModifier" text="Modifier" id="btnModifierT"/>
-        <Button fx:id="btnSupprimer" text="Supprimer" id="btnSupprimerT"/>
-    </HBox>
-</VBox>
+            <GridPane hgap="10" vgap="10">
+                <Label text="ID:" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+                <TextField fx:id="txtID" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
+
+                <Label text="Désignation:" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+                <TextField fx:id="textFielDesignation" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
+
+                <Label text="Prix écolage:" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+                <TextField fx:id="txtPrix" GridPane.rowIndex="2" GridPane.columnIndex="4"/>
+
+                <Label text="Titulaire:" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
+                <ComboBox fx:id="comboprof" GridPane.rowIndex="3" GridPane.columnIndex="4"/>
+
+                <Label text="  " GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <Label text="  " GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                <Label text="  " GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+            </GridPane>
+
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="Enregistrer" fx:id="btnEnregistrer" styleClass="btnEnregistrerT"/>
+                <Button text="Annuler" fx:id="btnAnnuler" styleClass="btnAnnulerT"/>
+            </HBox>
+        </VBox>
+    </AnchorPane>
+
+    <!-- === Overlay Liste élèves === -->
+    <AnchorPane fx:id="overlayListeEleves" visible="false" opacity="0"
+                style="-fx-background-color: rgba(0,0,0,0.5);">
+        <VBox alignment="CENTER" spacing="5"
+              prefWidth="120" prefHeight="291"
+              style="-fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff); -fx-padding:5;"
+              AnchorPane.topAnchor="150" AnchorPane.leftAnchor="370" AnchorPane.rightAnchor="370">
+            <TableView fx:id="tableListeEleves" VBox.vgrow="ALWAYS"/>
+            <Button text="Fermer" fx:id="btnFermerListeEleves" styleClass="btnAnnulerT"/>
+        </VBox>
+    </AnchorPane>
+
+    <!-- === Overlay Rang élèves === -->
+    <AnchorPane fx:id="overlayRangEleves" visible="false" opacity="0"
+                style="-fx-background-color: rgba(0,0,0,0.5);">
+        <VBox alignment="CENTER" spacing="5"
+              prefWidth="120" prefHeight="291"
+              style="-fx-background-color: linear-gradient(to right,#80d4ff,#e6f7ff); -fx-padding:5;"
+              AnchorPane.topAnchor="150" AnchorPane.leftAnchor="370" AnchorPane.rightAnchor="370">
+            <Label text="Rang des élèves" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <TableView fx:id="tableRangEleves" VBox.vgrow="ALWAYS"/>
+            <Button text="Fermer" fx:id="btnFermerRangEleves" styleClass="btnAnnulerT"/>
+        </VBox>
+    </AnchorPane>
+</StackPane>

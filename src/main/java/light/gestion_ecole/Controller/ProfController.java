@@ -5,21 +5,15 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
+import javafx.scene.layout.AnchorPane;
 import light.gestion_ecole.DAO.ClasseDAO;
 import light.gestion_ecole.DAO.ProfDAO;
-import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.Notification;
 import light.gestion_ecole.Model.Professeur;
 
-import java.io.Console;
 import java.sql.SQLException;
-
 
 public class ProfController {
     @FXML private TableView<Professeur> tableView;
@@ -35,23 +29,31 @@ public class ProfController {
     @FXML private Button btnModifier;
     @FXML private Button btnSupprimer;
 
-    private ProfDAO profDAO = new ProfDAO();
+    // === Champs overlay (formulaire Prof) ===
+    @FXML private AnchorPane formOverlayProf;
+    @FXML private Label lblTitreProf;
+    @FXML private TextField txtIdProf, txtNomProf, txtContactProf, txtAdresseProf, txtEmailProf;
+    @FXML private ComboBox<String> comboTitulaire;
+    @FXML private Button btnEnregistrerProf, btnAnnulerProf;
 
-    @FXML public void initialize() throws SQLException {
+    private ProfDAO profDAO = new ProfDAO();
+    private String oldTitulaire;
+
+    @FXML
+    public void initialize() throws SQLException {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         Nom.setCellValueFactory(cell -> cell.getValue().nomProperty());
         Titulaire.setCellValueFactory(cell -> cell.getValue().titulaireProperty());
         Contact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         Adresse.setCellValueFactory(new PropertyValueFactory<>("adresse"));
         Email.setCellValueFactory(new PropertyValueFactory<>("email"));
-        
+
         loadprofs();
 
-        btnAjouter.setOnAction(e -> {ouvrirform(null);});
-
-        btnModifier.setOnAction(e->{
+        btnAjouter.setOnAction(e -> ouvrirform(null));
+        btnModifier.setOnAction(e -> {
             Professeur selected = tableView.getSelectionModel().getSelectedItem();
-            if (selected!=null) ouvrirform(selected);
+            if (selected != null) ouvrirform(selected);
             else Notification.showWarning("Sélectionnez un professeur à modifier !");
         });
 
@@ -83,13 +85,16 @@ public class ProfController {
                 Notification.showWarning("Sélectionnez un professeur à supprimer !");
             }
         });
+
+        // Bouton Annuler dans l’overlay
+        btnAnnulerProf.setOnAction(e -> fermerOverlay());
     }
-    
+
     private void loadprofs() throws SQLException {
         ObservableList<Professeur> list = FXCollections.observableArrayList(profDAO.getProfesseurs());
-    
+
         FilteredList<Professeur> filteredProfs = new FilteredList<>(list, p -> true);
-        
+
         searchField.textProperty().addListener((obs, oldVal, newVal) -> {
             filteredProfs.setPredicate(professeur -> {
                 if (newVal == null || newVal.isEmpty()) {
@@ -101,16 +106,8 @@ public class ProfController {
                 String titulaire = professeur.getTitulaire() == null ? "" : professeur.getTitulaire().toLowerCase();
                 String email = professeur.getEmail() == null ? "" : professeur.getEmail().toLowerCase();
 
-                if (nom.contains(lowerCase)) {
-                    return true;
-                } else if (titulaire.contains(lowerCase)) {
-                    return true;
-                } else if (email.contains(lowerCase)) {
-                    return true;
-                }
-                return false;
+                return nom.contains(lowerCase) || titulaire.contains(lowerCase) || email.contains(lowerCase);
             });
-
         });
 
         SortedList<Professeur> sortedList = new SortedList<>(filteredProfs);
@@ -119,70 +116,58 @@ public class ProfController {
     }
 
     private void ouvrirform(Professeur professeurmodifier) {
-       try {
-           FXMLLoader loader = new FXMLLoader(getClass().getResource("/light/gestion_ecole/View/ajout_modif_profs.fxml"));
-           Parent root = loader.load();
+        try {
+            // Charger les classes dans la combo
+            ClasseDAO classeDAO = new ClasseDAO();
+            ObservableList<String> classes = classeDAO.getdesignationclasse();
+            classes.add(0, "");
+            comboTitulaire.setPromptText("Sélectionner une classe...");
+            comboTitulaire.setItems(classes);
 
-           TextField txtID = (TextField) root.lookup("#txtIdProf");
-           TextField Nom = (TextField) root.lookup("#txtNomProf");
-           TextField Contact = (TextField) root.lookup("#txtContactProf");
-           TextField Adresse = (TextField) root.lookup("#txtAdresseProf");
-           TextField Email = (TextField) root.lookup("#txtEmailProf");
-           ComboBox<String> comboTitulaire = (ComboBox<String>) root.lookup("#comboTitulaire");
+            if (professeurmodifier == null) {
+                lblTitreProf.setText("Ajouter un professeur");
+                txtIdProf.clear();
+                txtNomProf.clear();
+                txtContactProf.clear();
+                txtAdresseProf.clear();
+                txtEmailProf.clear();
+                comboTitulaire.setValue("");
+                txtIdProf.setDisable(true);
+                oldTitulaire = null;
+            } else {
+                lblTitreProf.setText("Modifier un professeur");
+                txtIdProf.setText(String.valueOf(professeurmodifier.getIdprof()));
+                txtNomProf.setText(professeurmodifier.getNom());
+                txtContactProf.setText(professeurmodifier.getContact());
+                txtAdresseProf.setText(professeurmodifier.getAdresse());
+                txtEmailProf.setText(professeurmodifier.getEmail());
+                comboTitulaire.setValue(professeurmodifier.getTitulaire());
+                txtIdProf.setDisable(true);
+                oldTitulaire = professeurmodifier.getTitulaire();
+            }
 
-           ClasseDAO classeDAO = new ClasseDAO();
-           ObservableList<String> classes = classeDAO.getdesignationclasse();
-           classes.add(0, "");
-           comboTitulaire.setPromptText("Sélectionner une classe...");
-           comboTitulaire.setItems(classes);
+            // Afficher l’overlay
+            formOverlayProf.setVisible(true);
+            formOverlayProf.setOpacity(1);
 
-           Button btnEnregistrer = (Button) root.lookup("#btnEnregistrerProf");
-           Button btnAnnuler = (Button) root.lookup("#btnAnnulerProf");
-
-           if (professeurmodifier == null){
-               txtID.setDisable(true);
-           }
-
-           if (professeurmodifier != null){
-               txtID.setText(String.valueOf(professeurmodifier.getIdprof()));
-               Nom.setText(String.valueOf(professeurmodifier.getNom()));
-               Contact.setText(String.valueOf(professeurmodifier.getContact()));
-               Adresse.setText(String.valueOf(professeurmodifier.getAdresse()));
-               Email.setText(String.valueOf(professeurmodifier.getEmail()));
-               comboTitulaire.setValue(professeurmodifier.getTitulaire());
-               txtID.setEditable(false);
-           }
-
-           String oldTitulaire = comboTitulaire.getValue();
-
-           Stage stage = new Stage();
-           Main.setStageIcon(stage);
-           stage.setTitle(professeurmodifier == null ? "Ajouter un professeur" : "Modifier un professeur" );
-           Scene scene = new Scene(root);
-           stage.setScene(scene);
-
-           btnAnnuler.setOnAction(e -> stage.close());
-
-           btnEnregistrer.setOnAction(e -> {
-               try{
-                    String nom = Nom.getText();
-                    String contact = Contact.getText();
-                    String adresse = Adresse.getText();
-                    String email = Email.getText();
+            btnEnregistrerProf.setOnAction(e -> {
+                try {
+                    String nom = txtNomProf.getText();
+                    String contact = txtContactProf.getText();
+                    String adresse = txtAdresseProf.getText();
+                    String email = txtEmailProf.getText();
                     String titulaire = comboTitulaire.getValue();
 
-                    if (nom == null || contact == null || adresse == null || email == null ) {
+                    if (nom.isEmpty() || contact.isEmpty() || adresse.isEmpty() || email.isEmpty()) {
                         Notification.showWarning("Veuillez remplir tous les champs.");
                         return;
                     }
 
-                    if (professeurmodifier == null){
-                        int idprofs = 0;
-                        Professeur newprof = new Professeur(idprofs,nom,contact,adresse,email);
-                        profDAO.ajoutProf(newprof,titulaire);
-                    }else{
-                        String idprof = txtID.getText();
-                        int idprofs = Integer.parseInt(idprof);
+                    if (professeurmodifier == null) {
+                        Professeur newprof = new Professeur(0, nom, contact, adresse, email);
+                        profDAO.ajoutProf(newprof, titulaire);
+                    } else {
+                        int idprofs = Integer.parseInt(txtIdProf.getText());
                         professeurmodifier.setIdprof(idprofs);
                         professeurmodifier.setNom(nom);
                         professeurmodifier.setContact(contact);
@@ -191,19 +176,21 @@ public class ProfController {
                         profDAO.modifieProf(professeurmodifier, titulaire, oldTitulaire);
                     }
                     loadprofs();
-                    stage.close();
-               }
-               catch (Exception ex) {
-                   ex.printStackTrace();
-                   Notification.showError("Erreur : " + ex.getMessage());
-               }
-           });
-           stage.setResizable(false);
-           stage.setMaximized(false);
-           stage.showAndWait();
+                    fermerOverlay();
 
-       }catch (Exception ex) {
-           ex.printStackTrace();
-       }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Notification.showError("Erreur : " + ex.getMessage());
+                }
+            });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void fermerOverlay() {
+        formOverlayProf.setVisible(false);
+        formOverlayProf.setOpacity(0);
     }
 }

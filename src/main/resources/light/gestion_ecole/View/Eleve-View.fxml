@@ -435,7 +435,7 @@
                             <columns>
                                 <TableColumn fx:id="idListe" text="#"/>
                                 <TableColumn fx:id="nomListe" text="Nom et prenoms"/>
-                                <TableColumn fx:id="ecoListe" text="Mois non-payer"/>
+                                <TableColumn fx:id="ecoListe" text="Mois non-payé"/>
                             </columns>
                         </TableView>
                     </ScrollPane>
@@ -641,7 +641,7 @@
                     </HBox>
                 </Tab>
 
-                <!-- Onglet Notesfr -->
+                <!-- Onglet Notes -->
                 <Tab text="Notes">
                     <VBox styleClass="detailsPane">
                         <HBox alignment="CENTER">
@@ -686,6 +686,8 @@
                         </GridPane>
                     </VBox>
                 </Tab>
+
+                <!-- Onglet ecolage-->
                 <Tab text="Ecolage">
                     <HBox alignment="CENTER" spacing="15">
                         <TableView fx:id="ecolages" styleClass="table-view">

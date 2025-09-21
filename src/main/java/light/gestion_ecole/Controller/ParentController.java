@@ -193,13 +193,16 @@ public class ParentController {
     @FXML
     private void handleSubmit() throws SQLException {
         ParentT selected =  tableParent.getSelectionModel().getSelectedItem();
-        ParentT parent = new ParentT(selected.getIdparent(),txtNomPere.getText(),txtProfessionPere.getText(),txtNomMere.getText(),
-                txtProfessionMere.getText(),txtTuteur.getText(),txtProfessionTuteur.getText(),txtContact.getText(),txtEmail.getText());
-        try {
-            parentDAOT.updateParents(parent);
-            handleCancel();
-        } catch (SQLException ex) {
-            throw new SQLException(ex);
+        if (selected != null) {
+            ParentT parent = new ParentT(selected.getIdparent(),txtNomPere.getText(),txtProfessionPere.getText(),txtNomMere.getText(),
+                    txtProfessionMere.getText(),txtTuteur.getText(),txtProfessionTuteur.getText(),txtContact.getText(),txtEmail.getText());
+            try {
+                parentDAOT.updateParents(parent);
+                Notification.showSuccess("Modification réussi!");
+                handleCancel();
+            } catch (SQLException ex) {
+                throw new SQLException(ex);
+            }
         }
     }
 
@@ -229,23 +232,28 @@ public class ParentController {
     private void handleSave() throws SQLException {
         int idClass = eleveDAO.getIdClass((String) comboClasse2.getValue());
         ParentT selected =tableParent.getSelectionModel().getSelectedItem();
-        int idPrt = selected.getIdparent();
-        int nb = eleveDAO.nbrEleves()+1;
-        List<CheckBox> checkBoxes = List.of(check1,check2,check3,check4);
-        List<String> checkString = new ArrayList<>();
-        for (CheckBox checkBox : checkBoxes) {
-            if (checkBox.isSelected()) {
-                checkString.add(checkBox.getText());
+        if (selected != null) {
+            int idPrt = selected.getIdparent();
+            int nb = eleveDAO.nbrEleves()+1;
+            List<CheckBox> checkBoxes = List.of(check1,check2,check3,check4);
+            List<String> checkString = new ArrayList<>();
+            for (CheckBox checkBox : checkBoxes) {
+                if (checkBox.isSelected()) {
+                    checkString.add(checkBox.getText());
+                }
             }
+            String result = String.join("-",checkString);
+            String matricule = "00"+ nb + getGenreeleve2();
+            String id = matricule+'-'+ txtAnneeScolaire.getText();
+            Eleve eleve = new Eleve(id,matricule,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
+                    txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),
+                    result);
+            eleveDAO.insertEleve(eleve);
+            Notification.showSuccess("Eleve ajouté, porté le numero matricule:" + id);
+            handleCancel();
+        } else {
+            Notification.showWarning("Aucun selection");
         }
-        String result = String.join("-",checkString);
-        String matricule = "00"+ nb + getGenreeleve2();
-        String id = matricule+'-'+ txtAnneeScolaire.getText();
-        Eleve eleve = new Eleve(id,matricule,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
-                txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),
-                result);
-        eleveDAO.insertEleve(eleve);
-        handleCancel();
     }
     public String getGenreeleve2() {
         if (Objects.equals((String) comboSexe.getValue(), "Garçon"))
