@@ -110,10 +110,10 @@ public class NoteDAOT {
         return  nbrEleve;
     }
     public NoteT getOrCreateNoteForEleve(Eleve e,String typeevaluation,String mat) {
-        String sql = "SELECT * FROM ENSEIGNER WHERE nummat = ? AND typeevaluation = ? AND matiere = ?";
+        String sql = "SELECT * FROM ENSEIGNER WHERE ideleve = ? AND typeevaluation = ? AND matiere = ?";
         try (Connection conn = Database.connect();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, e.getNummat());
+            stmt.setString(1, e.getIdeleve());
             stmt.setString(2, typeevaluation);
             stmt.setString(3, mat);
             ResultSet rs = stmt.executeQuery();
@@ -132,11 +132,11 @@ public class NoteDAOT {
     }
 
     public void saveOrUpdate(NoteT note, String typeevaluation, String mat, int idprof, Double coeff, String id) throws SQLException {
-        String check = "SELECT 1 FROM ENSEIGNER WHERE nummat = ? AND typeevaluation = ? AND matiere = ?";
+        String check = "SELECT 1 FROM ENSEIGNER WHERE ideleve = ? AND typeevaluation = ? AND matiere = ?";
         try (Connection conn = Database.connect();
              PreparedStatement stmt = conn.prepareStatement(check)) {
 
-            stmt.setString(1, note.getNumnat());
+            stmt.setString(1, note.getIdeleve());
             stmt.setString(2, typeevaluation);
             stmt.setString(3, mat);
             ResultSet rs = stmt.executeQuery();
@@ -147,11 +147,11 @@ public class NoteDAOT {
 
             if (rs.next()) {
                 // UPDATE
-                String sql = "UPDATE ENSEIGNER SET note = ?, commentaire = ? WHERE nummat = ? AND typeevaluation = ? AND matiere = ?";
+                String sql = "UPDATE ENSEIGNER SET note = ?, commentaire = ? WHERE ideleve = ? AND typeevaluation = ? AND matiere = ?";
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
                     ps.setDouble(1, note.getNote());
                     ps.setString(2, commentaire);
-                    ps.setString(3, note.getNumnat());
+                    ps.setString(3, note.getIdeleve());
                     ps.setString(4, typeevaluation);
                     ps.setString(5, mat);
                     ps.executeUpdate();
@@ -194,7 +194,7 @@ public class NoteDAOT {
         String sql = "SELECT c.rang, c.nomeleve, c.prenomeleve, c.moyenne FROM " +
                 "(" +
                 "SELECT e.ideleve, e.nomeleve,e.prenomeleve, " +
-                "SUM(en.note * en.coefficient) / SUM(en.coefficient) As moyenne, " +
+                "SUM(en.note) / SUM(en.coefficient) As moyenne, " +
                 "RANK() OVER( " +
                 " PARTITION BY en.typeevaluation, e.idclass " +
                 " ORDER BY SUM(en.note * en.coefficient) / SUM(en.coefficient) DESC " +

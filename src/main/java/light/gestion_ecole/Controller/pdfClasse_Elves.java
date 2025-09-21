@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import light.gestion_ecole.DAO.EleveDAO;
 import light.gestion_ecole.Main;
@@ -32,6 +33,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import static light.gestion_ecole.Controller.classecontroller.fermerOverlay;
+
 public class pdfClasse_Elves {
     @FXML private Label lblClasse;
     @FXML private Label lbleleves;
@@ -47,6 +50,13 @@ public class pdfClasse_Elves {
 
     private Classe classeselected;
     private EleveDAO eleveDAO = new EleveDAO();
+
+    private AnchorPane overlayParent;
+
+    public void setOverlayParent(AnchorPane overlayParent) {
+        this.overlayParent = overlayParent;
+    }
+
 
     public void setClasse (Classe classe, String st){
         this.classeselected = classe;
@@ -70,7 +80,17 @@ public class pdfClasse_Elves {
         nom.prefWidthProperty().bind(tableView.widthProperty().multiply(0.33));
         prenom.prefWidthProperty().bind(tableView.widthProperty().multiply(0.33));
 
-        fermer.setOnAction(e -> ((Stage) fermer.getScene().getWindow()).close());
+        fermer.setOnAction(e -> {
+            if (overlayParent != null) {
+                overlayParent.setVisible(false);
+                overlayParent.setOpacity(0);
+            }
+        });
+        tableView.getColumns().forEach(col -> {
+            col.setReorderable(false);
+            col.setResizable(false);
+        });
+
         btnpdf.setOnAction(e -> exporterPDF());
         afficherStatClasse.setOnMouseClicked(e -> {
             StatistiqueParClasseController.classe = classeselected;

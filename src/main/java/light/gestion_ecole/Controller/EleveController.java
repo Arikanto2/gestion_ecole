@@ -654,6 +654,7 @@ public class EleveController {
         fadeIn.setToValue(1);
         fadeIn.play();
         loadEcolageNonPayer();
+        comboAnneeListe.setValue(comboAnnee.getValue());
     }
     private void calculerTotal() {
         int nbSelection = 0;
@@ -1185,6 +1186,7 @@ public class EleveController {
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
         fadeIn.play();
+        comboAnneeNote.setValue(comboAnnee.getValue());
     }
     @FXML
     private void onReinscrit() throws SQLException{
