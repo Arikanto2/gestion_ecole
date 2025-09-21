@@ -60,6 +60,7 @@ public class classecontroller {
         anneeScolaire.setOnAction(event -> {
             try {
                 loadclasse();
+                StatistiqueParClasseController.anneescolaire = anneeScolaire.getSelectionModel().getSelectedItem().toString();
             } catch (SQLException e) {
                 e.printStackTrace();
                 Notification.showError("Erreur lors du chargement des classes : " + e.getMessage());

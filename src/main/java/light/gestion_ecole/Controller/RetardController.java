@@ -8,7 +8,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import light.gestion_ecole.DAO.RetardDAO;
+import light.gestion_ecole.Model.Notification;
 import light.gestion_ecole.Model.Retard;
+import org.controlsfx.control.Notifications;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -21,6 +23,7 @@ public class RetardController {
     @FXML private TableColumn<Retard, String> nomEleve;
     @FXML private TableColumn<Retard, String> nbRetard;
     @FXML private TableColumn<Retard, HBox> Action;
+
     @FXML
     void initialize() throws SQLException {
         List<Retard> retards = RetardDAO.getAbsences();
@@ -46,18 +49,37 @@ public class RetardController {
             @Override
             protected void updateItem(Retard retard, boolean empty) {
                 super.updateItem(retard, empty);
-                if (retard != null) {
-                    setStyle(retard.getNbRetards() >= 6 ? "-fx-background-color: #fa6d6d;" : "");
+
+                if (empty || retard == null) {
+                    setStyle("");
+                } else {
+                    if (retard.getNbRetards() >= 6) {
+                        setStyle("-fx-background-color: #fa6d6d;");
+                    } else {
+                        setStyle("");
+                    }
+
                     retard.getAjout().setOnAction(e -> {
                         retard.setNbRetards(retard.getNbRetards() + 1);
-                        try { new RetardDAO().ajout(retard.getNumero(), 1); } catch (SQLException ex) { ex.printStackTrace(); }
+                        try {
+                            new RetardDAO().ajout(retard.getNumero(), 1);
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                         ret.refresh();
                     });
+
                     retard.getDiminuer().setOnAction(e -> {
                         if (retard.getNbRetards() > 0) {
                             retard.setNbRetards(retard.getNbRetards() - 1);
-                            try { new RetardDAO().ajout(retard.getNumero(), -1); } catch (SQLException ex) { ex.printStackTrace(); }
+                            try {
+                                new RetardDAO().ajout(retard.getNumero(), -1);
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
                             ret.refresh();
+                        }else {
+                            Notification.showError("Le retard ne peut plus être diminué !");
                         }
                     });
                 }
@@ -68,11 +90,9 @@ public class RetardController {
             filteredData.setPredicate(retard -> {
                 if (newText == null || newText.isEmpty()) return true;
                 String lower = newText.toLowerCase();
-                return retard.getNom_Prenom().toLowerCase().contains(lower) ||
-                        retard.getNumero().toLowerCase().contains(lower);
+                return retard.getNom_Prenom().toLowerCase().contains(lower)
+                        || retard.getNumero().toLowerCase().contains(lower);
             });
         });
     }
-
-
 }
