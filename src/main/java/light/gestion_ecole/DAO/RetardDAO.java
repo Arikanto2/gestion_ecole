@@ -2,6 +2,7 @@ package light.gestion_ecole.DAO;
 
 
 import light.gestion_ecole.Model.AttitudeT;
+import light.gestion_ecole.Model.QueryLogger;
 import light.gestion_ecole.Model.Retard;
 
 import java.sql.Connection;
@@ -9,9 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class RetardDAO {
@@ -20,7 +19,7 @@ public class RetardDAO {
         List<Retard> retards = new ArrayList<>();
         String sql = "SELECT e.nummat, e.nomeleve, e.prenomeleve, SUM(a.retard) as NBR " +
                 "FROM eleve e " +
-                "LEFT JOIN attitude a ON e.nummat = a.nummat " +
+                "LEFT JOIN attitude a ON e.ideleve = a.ideleve " +
                 "WHERE e.anneescolaire = ? " +
                 "GROUP BY e.nummat, e.nomeleve, e.prenomeleve " +
                 "ORDER BY e.nummat";
@@ -78,6 +77,8 @@ public class RetardDAO {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+            QueryLogger.append("UPDATE attitude SET retard = retard + " + a +
+                    " WHERE idattitude = " + idattitude);
         }else {
             AttitudeT at = new AttitudeT();
             at.setNummat(nummat);
@@ -90,6 +91,9 @@ public class RetardDAO {
             at.setParticipation("");
             AttitudeDAOT DAO = new AttitudeDAOT();
             DAO.InsertAttitude(at);
+            QueryLogger.append("INSERT INTO attitude (ideleve, nummat, retard, dateattitude, comportement, participation) VALUES (" +
+                    "'" + at.getIdeleve() + "', '" + at.getNummat() + "', " + at.getRetard() + ", '" +
+                    at.getDateattitude() + "', '" + at.getComportement() + "', '" + at.getParticipation() + "')");
         }
 
 

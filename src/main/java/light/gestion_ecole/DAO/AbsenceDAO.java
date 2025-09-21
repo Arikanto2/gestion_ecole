@@ -146,6 +146,7 @@ public class AbsenceDAO {
             }
         }
     }
+
     public static void supprimerAbsence(int Abs) {
         String sql = "DELETE FROM pointage WHERE idpointage = ?";
         try (Connection conn = Database.connect();

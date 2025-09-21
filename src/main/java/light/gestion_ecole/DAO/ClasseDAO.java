@@ -50,15 +50,17 @@ public class ClasseDAO {
         try (Connection conn = Database.connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, c.getDesignation());
-            ps.setString(2, c.getProf());
+            if (c.getProf() != null) ps.setString(2, c.getProf());
+            else ps.setNull(2, Types.VARCHAR);
             ps.setDouble(3, c.getPrixEcolage());
             ps.executeUpdate();
 
-            QueryLogger.append("INSERT INTO classe (designation, \"Titulaire\", prixecolage) VALUES ('"
-                    + c.getDesignation() + "', '"
-                    + c.getProf() + "', "
-                    + c.getPrixEcolage() + ")");
+            String profValue = (c.getProf() != null) ? ("'" + c.getProf() + "'") : "NULL";
 
+            QueryLogger.append("INSERT INTO classe (designation, \"Titulaire\", prixecolage) VALUES ('"
+                    + c.getDesignation() + "', "
+                    + profValue + ", "
+                    + c.getPrixEcolage() + ")");
         }
     }
 
@@ -67,17 +69,21 @@ public class ClasseDAO {
         try (Connection conn = Database.connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, c.getDesignation());
-            ps.setString(2, c.getProf());
+            if (c.getProf() != null) ps.setString(2, c.getProf());
+            else ps.setNull(2, Types.VARCHAR);
             ps.setDouble(3, c.getPrixEcolage());
             ps.setInt(4, c.getIdClasse());
             ps.executeUpdate();
 
+            String profValue = (c.getProf() != null) ? ("'" + c.getProf() + "'") : "NULL";
+
             QueryLogger.append("UPDATE classe SET designation = '" + c.getDesignation()
-                    + "', \"Titulaire\" = '" + c.getProf()
-                    + "', prixecolage = " + c.getPrixEcolage()
+                    + "', \"Titulaire\" = " + profValue
+                    + ", prixecolage = " + c.getPrixEcolage()
                     + " WHERE idclass = " + c.getIdClasse());
         }
     }
+
 
     public void supprimerClasse(int idClasse) throws SQLException {
         String sql = "DELETE FROM classe WHERE idclass = ?";

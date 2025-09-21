@@ -131,11 +131,9 @@ public class AbsenceController {
         List<Absence> absences = absence.getAbsence(resultat);
 
         masterData.setAll(absences);
+        nbAbs.setText(String.valueOf(masterData.size()));
 
-        if (resultat != null) {
-            int nb = StatDAO.getScoreAbsenceParClasse(resultat.getIdClasse());
-            nbAbs.setText(String.valueOf(nb));
-        }
+
     }
 
     private void ouvrirFenetreAbsence(Absence absence) {

@@ -27,12 +27,13 @@ public class StatistiqueParClasseController {
     @FXML StackPane MGClasse;
     @FXML StackPane Assi;
     static Classe classe;
+    static String anneescolaire;
     @FXML  public void initialize() throws SQLException {
         afficheStatClasse(classe);
     }
     public  void afficheStatClasse(Classe classe) throws SQLException {
-        int[] nb = StatDAO.getNBrenvoyéHandic(classe.getIdClasse());
-        int nbmv = StatDAO.getNBmauvais(classe.getIdClasse());
+        int[] nb = StatDAO.getNBrenvoyéHandic(classe.getIdClasse(),anneescolaire);
+        int nbmv = StatDAO.getNBmauvais(classe.getIdClasse(),anneescolaire);
         designClasse.setText(classe.getDesignation());
         designClasse.setStyle("-fx-text-fill: #730505;");
         nbEleve.setText(classe.getNbrEleves() + " élèves");
@@ -42,9 +43,9 @@ public class StatistiqueParClasseController {
         if (nb[1] != 0 ) {
             nbhandicapé.setText(String.valueOf(nb[1]));
         }
-        MGclasse.setText(StatDAO.getMGclasse(classe.getIdClasse()) + "/20");
-        nbretard.setText(String.valueOf(StatDAO.getRetardsParClasse(classe.getIdClasse())));
-        absence.setText(String.valueOf(StatDAO.getScoreAbsenceParClasse(classe.getIdClasse())));
+        MGclasse.setText(StatDAO.getMGclasse(classe.getIdClasse(), anneescolaire) + "/20");
+        nbretard.setText(String.valueOf(StatDAO.getRetardsParClasse(classe.getIdClasse(),anneescolaire)));
+        absence.setText(String.valueOf(StatDAO.getScoreAbsenceParClasse(classe.getIdClasse(),anneescolaire)));
 
         if(nbmv != 0){
             Mauvais.setText(String.valueOf(nbmv));
@@ -53,7 +54,7 @@ public class StatistiqueParClasseController {
         afficheAssui(classe);
     }
     public void affichMG(int idclasse){
-        double[] moyenne = StatDAO.getMGParTrimestreTri(idclasse);
+        double[] moyenne = StatDAO.getMGParTrimestreTri(idclasse, anneescolaire);
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Trimestre");
         NumberAxis yAxis = new NumberAxis();
@@ -89,16 +90,16 @@ public class StatistiqueParClasseController {
     }
     public void afficheAssui(Classe classe){
         double nbElve = classe.getNbrEleves();
-        int nbAbsence = StatDAO.getScoreAbsenceParClasse(classe.getIdClasse());
+        int nbAbsence = StatDAO.getScoreAbsenceParClasse(classe.getIdClasse(),anneescolaire);
         int nbExcellenteComp = 0;
         int nbExcellentPa = 0;
         int nbCorrect = 0;
         int nbMoyenne = 0;
         int nbJamais = 0;
         int nbMauvais = 0;
-        int nbretard = StatDAO.getRetardsParClasse(classe.getIdClasse());
-        int[] comportement = StatDAO.getComportementGlobalClasse(classe.getIdClasse());
-        int[] participation =  StatDAO.getParticipationGlobalClasse(classe.getIdClasse());
+        int nbretard = StatDAO.getRetardsParClasse(classe.getIdClasse(),anneescolaire);
+        int[] comportement = StatDAO.getComportementGlobalClasse(classe.getIdClasse(),anneescolaire);
+        int[] participation =  StatDAO.getParticipationGlobalClasse(classe.getIdClasse(),anneescolaire);
         nbExcellenteComp = comportement[0];
         nbCorrect = comportement[1];
         nbMauvais = comportement[2];
