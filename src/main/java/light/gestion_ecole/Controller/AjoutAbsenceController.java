@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import light.gestion_ecole.DAO.AbsenceDAO;
 import light.gestion_ecole.Model.Absence;
+import light.gestion_ecole.Model.Notification;
 import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
@@ -82,7 +83,7 @@ public class AjoutAbsenceController {
                         try {
                             AbsenceDAO DAO = new AbsenceDAO();
                             DAO.supprimerAbsence(absence.getIdAbsence());
-                            showSuccess("Suppression effectué!");
+                            Notification.showSuccess("Suppression effectué!");
                             closeWindow();
                             if (absenceController != null) {
                                 String classe = absenceController.comboClasse.getSelectionModel()
@@ -108,19 +109,19 @@ public class AjoutAbsenceController {
         String motifAbsent = motifAbs.getText();
 
         if (numero.isEmpty()) {
-            showWarning("Le numéro matricule est obligatoire !");
+            Notification.showWarning("Le numéro matricule est obligatoire !");
             return;
         }
         if (dateAbsDate == null) {
-            showWarning("La date d'absence est obligatoire !");
+            Notification.showWarning("La date d'absence est obligatoire !");
             return;
         }
         if (!AbsenceDAO.isMatExiste(numero)) {
-            showWarning("Le numéro matricule de l'élève n'existe pas ou L'élève est encore absent(e)!");
+            Notification.showWarning("Le numéro matricule de l'élève n'existe pas ou L'élève est encore absent(e)!");
             return;
         }
         if (dateRetDate != null && dateRetDate.isBefore(dateAbsDate)) {
-            showWarning("La date de retour doit être postérieure à la date d'absence !");
+            Notification.showWarning("La date de retour doit être postérieure à la date d'absence !");
             return;
         }
 
@@ -136,7 +137,7 @@ public class AjoutAbsenceController {
             String classe = absenceController.comboClasse.getSelectionModel().getSelectedItem().toString();
             absenceController.afficheAbs(classe);
         }
-        showSuccess("L'absence de l'élève a été ajoutée avec succès.");
+        Notification.showSuccess("L'absence de l'élève a été ajoutée avec succès.");
 
     }
 
@@ -147,16 +148,16 @@ public class AjoutAbsenceController {
         String motifAbsent = motifAbs.getText();
 
         if (numero.isEmpty()) {
-            showWarning( "Le numéro matricule est obligatoire !");
+            Notification.showWarning( "Le numéro matricule est obligatoire !");
             return;
         }
         if (dateAbsDate == null) {
-            showWarning("La date d'absence est obligatoire.");
+            Notification.showWarning("La date d'absence est obligatoire.");
             return;
         }
 
         if (dateRetDate != null && dateRetDate.isBefore(dateAbsDate)) {
-            showWarning("La date de retour doit être postérieure à la date d'absence.");
+            Notification.showWarning("La date de retour doit être postérieure à la date d'absence.");
             return;
         }
 
@@ -173,7 +174,7 @@ public class AjoutAbsenceController {
             String classe = absenceController.comboClasse.getSelectionModel().getSelectedItem().toString();
             absenceController.afficheAbs(classe);
         }
-        showSuccess("L'absence de l'élève a été modifiée avec succès.");
+        Notification.showSuccess("L'absence de l'élève a été modifiée avec succès.");
 
     }
 

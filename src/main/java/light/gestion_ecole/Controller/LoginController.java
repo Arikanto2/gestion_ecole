@@ -132,6 +132,7 @@ public class LoginController {
                 mainStage.setMaximized(true);
                 mainStage.show();
                 Main.setStageIcon(mainStage);
+                Notification.mainStage = mainStage;
                 Notification.showSuccess("Connexion réussi!");
 
 

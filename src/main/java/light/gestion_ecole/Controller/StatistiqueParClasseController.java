@@ -142,6 +142,7 @@ public class StatistiqueParClasseController {
         root1.setStyle("-fx-padding: 15px; -fx-background-color: #edf4f5; ");
         Assi.getChildren().add(root1);
         Assi.setMargin(root1, new Insets(10, 10, 10, 10));
+        System.out.println(anneescolaire);
     }
 
 }
