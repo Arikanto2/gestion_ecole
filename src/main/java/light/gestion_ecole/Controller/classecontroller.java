@@ -50,6 +50,7 @@ public class classecontroller {
     public void initialize() throws SQLException {
         anneeScolaire.getItems().addAll(StatDAO.getAnnescolaire());
         anneeScolaire.getSelectionModel().select(0);
+        StatistiqueParClasseController.anneescolaire = anneeScolaire.getItems().get(0).toString();
         loadclasse();
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         Designation.setCellValueFactory(cell -> cell.getValue().designationProperty());

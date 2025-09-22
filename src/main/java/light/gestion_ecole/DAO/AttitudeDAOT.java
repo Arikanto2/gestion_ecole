@@ -1,6 +1,7 @@
 package light.gestion_ecole.DAO;
 
 import light.gestion_ecole.Model.AttitudeT;
+import light.gestion_ecole.Model.QueryLogger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,7 +34,19 @@ public class AttitudeDAOT {
             stmt.setString(4, attitudeT.getComportement());
             stmt.setString(5, attitudeT.getParticipation());
             stmt.setInt(6,attitudeT.getRetard());
-            stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
+
+            if (rows > 0) {
+                QueryLogger.append("-- Insertion Attitude\n" +
+                        "INSERT INTO ATTITUDE (ideleve, nummat, dateattitude, comportement, participation, retard) VALUES (" +
+                        "'" + attitudeT.getIdeleve() + "', " +
+                        "'" + attitudeT.getNummat() + "', " +
+                        "'" + attitudeT.getDateattitudeAsDate() + "', " +
+                        "'" + attitudeT.getComportement() + "', " +
+                        "'" + attitudeT.getParticipation() + "', " +
+                        attitudeT.getRetard() +
+                        ");\n");
+            }
         }
     }
 }

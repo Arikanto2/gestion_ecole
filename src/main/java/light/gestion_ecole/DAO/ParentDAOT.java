@@ -1,6 +1,7 @@
 package light.gestion_ecole.DAO;
 
 import light.gestion_ecole.Model.ParentT;
+import light.gestion_ecole.Model.QueryLogger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -37,7 +38,19 @@ public class ParentDAOT {
             pstmt.setString(6, parentT.getProfessiontuteur());
             pstmt.setString(7, parentT.getContact());
             pstmt.setString(8, parentT.getEmailparent());
-            pstmt.executeUpdate();
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                QueryLogger.append("INSERT INTO PARENT (nompere, professionpere, nommere, professionmere, tuteur, professiontuteur, contact, emailparent) VALUES (" +
+                        "'" + parentT.getNompere() + "', " +
+                        "'" + parentT.getProfessionpere() + "', " +
+                        "'" + parentT.getNommere() + "', " +
+                        "'" + parentT.getProfessionmere() + "', " +
+                        "'" + parentT.getTuteur() + "', " +
+                        "'" + parentT.getProfessiontuteur() + "', " +
+                        "'" + parentT.getContact() + "', " +
+                        "'" + parentT.getEmailparent() + "'" +
+                        ");");
+            }
         }
     }
     public int getIdParents(String contact) throws SQLException {
@@ -74,7 +87,10 @@ public class ParentDAOT {
         try (Connection conn = Database.connect();
         PreparedStatement pstmt = conn.prepareStatement(query)){
             pstmt.setInt(1, id);
-            pstmt.executeUpdate();
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                QueryLogger.append("DELETE FROM PARENT WHERE idparent = " + id + ";");
+            }
         }
     }
     public void updateParents(ParentT parentT) throws SQLException {
@@ -91,7 +107,18 @@ public class ParentDAOT {
             pstmt.setString(7, parentT.getContact());
             pstmt.setString(8, parentT.getEmailparent());
             pstmt.setInt(9, parentT.getIdparent());
-            pstmt.executeUpdate();
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                QueryLogger.append("UPDATE PARENT SET nompere = '" + parentT.getNompere() +
+                        "', professionpere = '" + parentT.getProfessionpere() +
+                        "', nommere = '" + parentT.getNommere() +
+                        "', professionmere = '" + parentT.getProfessionmere() +
+                        "', tuteur = '" + parentT.getTuteur() +
+                        "', professiontuteur = '" + parentT.getProfessiontuteur() +
+                        "', contact = '" + parentT.getContact() +
+                        "', emailparent = '" + parentT.getEmailparent() +
+                        "' WHERE idparent = " + parentT.getIdparent() + ";");
+            }
         }
     }
 }

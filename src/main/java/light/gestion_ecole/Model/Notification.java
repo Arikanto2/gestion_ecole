@@ -4,10 +4,13 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
+
 public class Notification {
+    public static Stage mainStage;
 
     private static void showNotification(String title, String message, String backgroundColor, String textColor) {
         Label titleLabel = new Label(title);
@@ -27,9 +30,10 @@ public class Notification {
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10,0,0,2);"
         );
 
+
         Platform.runLater(() -> {
             Notifications.create()
-                    .owner(null)
+                    .owner(mainStage)
                     .graphic(notifContent)
                     .hideAfter(Duration.seconds(4))
                     .position(Pos.BOTTOM_RIGHT)

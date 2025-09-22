@@ -2,6 +2,7 @@ package light.gestion_ecole.DAO;
 
 import light.gestion_ecole.Model.Eleve;
 import light.gestion_ecole.Model.NoteT;
+import light.gestion_ecole.Model.QueryLogger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -154,7 +155,16 @@ public class NoteDAOT {
                     ps.setString(3, note.getNumnat());
                     ps.setString(4, typeevaluation);
                     ps.setString(5, mat);
-                    ps.executeUpdate();
+                    int rows = ps.executeUpdate();
+                    if (rows > 0) {
+                        QueryLogger.append(
+                                "UPDATE ENSEIGNER SET note = " + note.getNote() +
+                                        ", commentaire = " + (commentaire == null ? "NULL" : "'" + commentaire + "'") +
+                                        " WHERE nummat = '" + note.getNumnat() +
+                                        "' AND typeevaluation = '" + typeevaluation +
+                                        "' AND matiere = '" + mat + "';"
+                        );
+                    }
                 }
             } else {
                 // INSERT
@@ -169,6 +179,21 @@ public class NoteDAOT {
                     ps.setString(7, typeevaluation);
                     ps.setString(8, mat);
                     ps.executeUpdate();
+                    int rows = ps.executeUpdate();
+                    if (rows > 0) {
+                        QueryLogger.append(
+                                "INSERT INTO ENSEIGNER (ideleve, nummat, idprof, coefficient, note, commentaire, typeevaluation, matiere) VALUES (" +
+                                        "'" + id + "', " +
+                                        "'" + note.getNumnat() + "', " +
+                                        idprof + ", " +
+                                        coeff + ", " +
+                                        (note.getNote() != null ? note.getNote() : 0.0) + ", " +
+                                        (commentaire == null ? "NULL" : "'" + commentaire + "'") + ", " +
+                                        "'" + typeevaluation + "', " +
+                                        "'" + mat + "'" +
+                                        ");"
+                        );
+                    }
                 }
             }
         }
