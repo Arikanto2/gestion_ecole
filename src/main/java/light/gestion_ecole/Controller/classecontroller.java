@@ -242,21 +242,7 @@ public class classecontroller {
             }
         });
     }
-    private void autoResizeColumn2(TableColumn<?, ?> column) {
-        Text t = new Text(column.getText());
-        double max = t.getLayoutBounds().getWidth();
 
-        for (int i = 0; i < tableView.getItems().size(); i++) {
-            if (column.getCellData(i) != null){
-                t = new Text(column.getCellData(i).toString());
-                double calcWidth = t.getLayoutBounds().getWidth();
-                if (calcWidth > max) {
-                    max = calcWidth;
-                }
-            }
-        }
-        column.setPrefWidth(max + 70);
-    }
     public static void fermerOverlay(AnchorPane overlay) {
         if (overlay != null){
             overlay.setVisible(false);
@@ -275,8 +261,8 @@ public class classecontroller {
 
             overlayListeEleves.getChildren().clear();
             overlayListeEleves.getChildren().add(root);
-            AnchorPane.setTopAnchor(root, 150.0);
-            AnchorPane.setBottomAnchor(root, 150.0);
+            AnchorPane.setTopAnchor(root, 50.0);
+            AnchorPane.setBottomAnchor(root, 50.0);
             AnchorPane.setLeftAnchor(root, 150.0);
             AnchorPane.setRightAnchor(root, 150.0);
 
