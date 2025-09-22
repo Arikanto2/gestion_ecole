@@ -8,6 +8,7 @@ import light.gestion_ecole.Model.QueryLogger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ProfDAO {
 
@@ -73,42 +74,35 @@ public class ProfDAO {
         String sql2 = "UPDATE classe SET \"Titulaire\" = ? WHERE designation = ?";
         String sql3 = "UPDATE classe SET \"Titulaire\" = '' WHERE designation = ?";
 
-        try (Connection conn = Database.connect();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try(Connection conn = Database.connect();
+        PreparedStatement stmt = conn.prepareStatement(sql)){
+          stmt.setString(1, p.getNom());
+          stmt.setString(2, p.getContact());
+          stmt.setString(3, p.getAdresse());
+          stmt.setString(4, p.getEmail());
+          stmt.setInt(5, p.getIdprof());
+          stmt.executeUpdate();
 
-            stmt.setString(1, p.getNom());
-            stmt.setString(2, p.getContact());
-            stmt.setString(3, p.getAdresse());
-            stmt.setString(4, p.getEmail());
-            stmt.setInt(5, p.getIdprof());
-            stmt.executeUpdate();
+            QueryLogger.append("UPDATE professeur SET nomprof = '" + p.getNom()
+                    + "', contactprof = '" + p.getContact()
+                    + "', adresseprof = '" + p.getAdresse()
+                    + "', emailprof = '" + p.getEmail()
+                    + "' WHERE idprof = " + p.getIdprof());
 
-            QueryLogger.append("UPDATE professeur SET nomprof = " + toSQLString(p.getNom()) +
-                    ", contactprof = " + toSQLString(p.getContact()) +
-                    ", adresseprof = " + toSQLString(p.getAdresse()) +
-                    ", emailprof = " + toSQLString(p.getEmail()) +
-                    " WHERE idprof = " + p.getIdprof());
+          if (!Objects.equals(titulaire, oldtitulaire)) {
+              try (PreparedStatement upstmt = conn.prepareStatement(sql2);
+                   PreparedStatement upstmt2 = conn.prepareStatement(sql3)) {
+                  upstmt.setString(1, p.getNom());
+                  upstmt.setString(2, titulaire);
+                  upstmt2.setString(1, oldtitulaire);
+                  upstmt.executeUpdate();
+                  upstmt2.executeUpdate();
 
-            if (!titulaire.equals(oldtitulaire)) {
-                try (PreparedStatement upstmt = conn.prepareStatement(sql2);
-                     PreparedStatement upstmt2 = conn.prepareStatement(sql3)) {
-
-                    if (titulaire != null && !titulaire.isEmpty()) {
-                        upstmt.setString(1, p.getNom());
-                        upstmt.setString(2, titulaire);
-                        upstmt.executeUpdate();
-                        QueryLogger.append("UPDATE classe SET \"Titulaire\" = " + toSQLString(p.getNom()) +
-                                " WHERE designation = " + toSQLString(titulaire));
-                    }
-
-                    if (oldtitulaire != null && !oldtitulaire.isEmpty()) {
-                        upstmt2.setString(1, oldtitulaire);
-                        upstmt2.executeUpdate();
-                        QueryLogger.append("UPDATE classe SET \"Titulaire\" = '' WHERE designation = " +
-                                toSQLString(oldtitulaire));
-                    }
-                }
-            }
+                  QueryLogger.append("UPDATE classe SET \"Titulaire\" = '" + p.getNom()
+                          + "' WHERE designation = '" + titulaire + "'");
+                  QueryLogger.append("UPDATE classe SET \"Titulaire\" = '' WHERE designation = '" + oldtitulaire + "'");
+              }
+          }
         }
     }
 
