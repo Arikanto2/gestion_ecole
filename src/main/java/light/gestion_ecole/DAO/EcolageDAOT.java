@@ -3,6 +3,7 @@ package light.gestion_ecole.DAO;
 import javafx.scene.chart.PieChart;
 import light.gestion_ecole.Model.EcolageparmoiT;
 import light.gestion_ecole.Model.Eleve;
+import light.gestion_ecole.Model.QueryLogger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,42 +28,77 @@ public class EcolageDAOT {
         }
         return ecolages;
     }
-    public void insertEcolageparmoiT(EcolageparmoiT e){
+    public void insertEcolageparmoiT(EcolageparmoiT e) {
         int id = selectIdeco(e.getMoiseco());
         String val = selectMoiseco(id);
+
         if (Objects.equals(e.getMoiseco(), val)) {
             String sql1 = "INSERT INTO PAYER (ideleve, nummat, idecolage, statut, ecolagemoi) VALUES (?, ?, ?, ?, ?)";
             try (Connection conn = Database.connect();
                  PreparedStatement stmt1 = conn.prepareStatement(sql1)) {
-                stmt1.setString(1,e.getIdeleve());
-                stmt1.setString(2,e.getNummat());
-                stmt1.setInt(3,id);
-                stmt1.setBoolean(4,e.isStatut());
+                stmt1.setString(1, e.getIdeleve());
+                stmt1.setString(2, e.getNummat());
+                stmt1.setInt(3, id);
+                stmt1.setBoolean(4, e.isStatut());
                 stmt1.setDate(5, (Date) e.getecolagemoiAsDate());
-                stmt1.executeUpdate();
+
+                int rows = stmt1.executeUpdate();
+
+                if (rows > 0) {
+                    QueryLogger.append("-- Paiement existant\n" +
+                            "INSERT INTO PAYER (ideleve, nummat, idecolage, statut, ecolagemoi) VALUES (" +
+                            "'" + e.getIdeleve() + "', " +
+                            "'" + e.getNummat() + "', " +
+                            id + ", " +
+                            e.isStatut() + ", " +
+                            "'" + e.getecolagemoiAsDate() + "'" +
+                            ");\n");
+                }
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
         } else {
             String sql2 = "INSERT INTO ECOLAGEPARMOI (moiseco) VALUES (?)";
-            try (Connection conn = Database.connect();PreparedStatement stmt2 = conn.prepareStatement(sql2)) {
-                stmt2.setString(1,e.getMoiseco());
-                stmt2.executeUpdate();
+            try (Connection conn = Database.connect();
+                 PreparedStatement stmt2 = conn.prepareStatement(sql2)) {
+                stmt2.setString(1, e.getMoiseco());
+
+                int rows1 = stmt2.executeUpdate();
+
+                if (rows1 > 0) {
+                    QueryLogger.append("-- Nouveau mois inséré\n" +
+                            "INSERT INTO ECOLAGEPARMOI (moiseco) VALUES ('" + e.getMoiseco() + "');\n");
+                }
+
                 int id2 = selectIdeco(e.getMoiseco());
+
                 String sql3 = "INSERT INTO PAYER (ideleve, nummat, idecolage, statut, ecolagemoi) VALUES (?, ?, ?, ?, ?)";
                 try (PreparedStatement stmt3 = conn.prepareStatement(sql3)) {
-                    stmt3.setString(1,e.getIdeleve());
-                    stmt3.setString(2,e.getNummat());
-                    stmt3.setInt(3,id2);
-                    stmt3.setBoolean(4,e.isStatut());
-                    stmt3.setDate(5,(Date) e.getecolagemoiAsDate());
-                    stmt3.executeUpdate();
+                    stmt3.setString(1, e.getIdeleve());
+                    stmt3.setString(2, e.getNummat());
+                    stmt3.setInt(3, id2);
+                    stmt3.setBoolean(4, e.isStatut());
+                    stmt3.setDate(5, (Date) e.getecolagemoiAsDate());
+
+                    int rows2 = stmt3.executeUpdate();
+
+                    if (rows2 > 0) {
+                        QueryLogger.append("-- Paiement nouveau mois\n" +
+                                "INSERT INTO PAYER (ideleve, nummat, idecolage, statut, ecolagemoi) VALUES (" +
+                                "'" + e.getIdeleve() + "', " +
+                                "'" + e.getNummat() + "', " +
+                                id2 + ", " +
+                                e.isStatut() + ", " +
+                                "'" + e.getecolagemoiAsDate() + "'" +
+                                ");\n");
+                    }
                 }
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
         }
     }
+
     public int selectIdeco(String moi) {
         int res = 0;
         String sql = "SELECT idecolage FROM ECOLAGEPARMOI WHERE moiseco = ?";

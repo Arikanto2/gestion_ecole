@@ -12,16 +12,6 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="light.gestion_ecole.Controller.LoginController"
             prefHeight="400.0" prefWidth="600.0" stylesheets="@../Style/Style.css" id="log" fx:id="log">
-    <top>
-        <HBox spacing="5" alignment="CENTER_LEFT">
-            <ImageView fitWidth="20" fitHeight="20" preserveRatio="true">
-                <image>
-                    <Image url="@../Photo/500px-Lutherrose.svg.png"/>
-                </image>
-            </ImageView>
-            <Label text="LYCEE LOTERANA RAKOTO ANDRIANARIJAONA" style="-fx-font-size: 10; -fx-font-family: 'Agency FB';"/>
-        </HBox>
-    </top>
     <center>
         <VBox alignment="CENTER" spacing="20" id="boxlogin" >
             <BorderPane.margin>

@@ -582,11 +582,11 @@ public class EleveController {
                     }
                     noteDAOT.saveOrUpdate(note, (String) comboEvaluation.getValue(),MatiereNote,idprof,coeff,id);
                     loadEleves();
-                    Notification.showSuccess("Note de "+MatiereNote+ " ajouté avec succé!");
                 } catch (Exception ex){
                     throw new RuntimeException(ex);
                 }
             }
+            Notification.showSuccess("Note de "+MatiereNote+ " ajouté avec succé!");
             comboAnneeNote.setValue(comboAnnee.getValue());
             comboClasseNote.setPromptText("Classe");
             comboProf.setPromptText("Professeur");
@@ -1050,7 +1050,7 @@ public class EleveController {
                 }
                 String result = String.join("-",checkString);
                 int nb = eleveDAO.nbrEleves()+1;
-                String matricule = "00"+ nb + getGenreeleve2();
+                String matricule = String.valueOf(nb + 1);
                 String id = matricule+'-'+ txtAnneeScolaire.getText();
                 Eleve eleve = new Eleve(id,matricule,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
                         txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),

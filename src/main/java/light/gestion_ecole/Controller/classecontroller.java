@@ -40,6 +40,7 @@ public class classecontroller {
     @FXML private TextField txtID, textFielDesignation, txtPrix;
     @FXML private ComboBox<String> comboprof;
     @FXML private Button btnEnregistrer, btnAnnuler;
+    @FXML private Label txtFID;
 
     // ==== Overlay Liste élèves ====
     @FXML public AnchorPane overlayListeEleves;
@@ -57,7 +58,70 @@ public class classecontroller {
 
     @FXML
     public void initialize() throws SQLException {
-        // Double-clic sur une ligne du tableau
+        txtFID.setVisible(false);
+        txtFID.setManaged(false);
+        txtID.setManaged(false);
+        txtID.setVisible(false);
+        anneeScolaire.getItems().addAll(StatDAO.getAnnescolaire());
+        anneeScolaire.getSelectionModel().select(0);
+        StatistiqueParClasseController.anneescolaire = anneeScolaire.getItems().get(0).toString();
+        loadclasse();
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        Designation.setCellValueFactory(cell -> cell.getValue().designationProperty());
+        nbr_eleves.setCellValueFactory(cell -> cell.getValue().nbrElevesProperty().asObject());
+        Ecolage.setCellValueFactory(new PropertyValueFactory<>("prixEcolage"));
+        Titulaire.setCellValueFactory(cell -> cell.getValue().titulaireProperty());
+
+        anneeScolaire.setOnAction(event -> {
+            try {
+                loadclasse();
+                StatistiqueParClasseController.anneescolaire = anneeScolaire.getSelectionModel().getSelectedItem().toString();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Notification.showError("Erreur lors du chargement des classes : " + e.getMessage());
+            }
+        });
+
+
+        btnAjouter.setOnAction(e -> ouvrirFormulaire(null));
+
+        btnModifier.setOnAction(e -> {
+            Classe selected = tableView.getSelectionModel().getSelectedItem();
+            if (selected != null) ouvrirFormulaire(selected);
+            else Notification.showWarning("Sélectionnez une classe à modifier !");
+        });
+
+        btnSupprimer.setOnAction(e -> {
+            Classe selected = tableView.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText("Supprimer cette classe ?");
+                alert.initOwner(btnSupprimer.getScene().getWindow());
+
+                ButtonType yesButton = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
+                ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                alert.getButtonTypes().setAll(yesButton, noButton);
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == yesButton) {
+                        try {
+                            classeDAO.supprimerClasse(selected.getIdClasse());
+                            loadclasse();
+                            Notification.showSuccess("Classe supprimée avec succès !");
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                            Notification.showError("Erreur lors de la suppression : " + ex.getMessage());
+                        }
+                    }
+                });
+            } else {
+                Notification.showWarning("Sélectionnez une classe à supprimer !");
+            }
+        });
+
+
         tableView.setRowFactory(tv -> {
             TableRow<Classe> row = new TableRow<>();
             row.setOnMouseClicked(event -> {

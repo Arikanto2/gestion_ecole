@@ -3,6 +3,7 @@ package light.gestion_ecole.DAO;
 
 import light.gestion_ecole.Model.Classe;
 import light.gestion_ecole.Model.Eleve;
+import light.gestion_ecole.Model.QueryLogger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -88,6 +89,15 @@ public class EleveDAO {
             stmt.setString(11, eleve.getHandicap());
             stmt.executeUpdate();
         }
+        QueryLogger.append(
+                "INSERT INTO ELEVE (ideleve, nummat, idclass, idparent, nomeleve, prenomeleve," +
+                        " adresseeleve, datenaiss, genre, anneescolaire, handicap) VALUES ('" +
+                        eleve.getIdeleve() + "', '" + eleve.getNummat() + "', " + eleve.getIdclass() + ", " +
+                        eleve.getIdparent() + ", '" + eleve.getNomeleve() + "', '" + eleve.getPrenomeleve() +
+                        "', '" + eleve.getAdresseeleve() + "', '" + eleve.getDatenaissance2() + "', '" +
+                        eleve.getGenreeleve() + "', '" + eleve.getAnneescolaire() + "', '" +
+                        eleve.getHandicap() + "')"
+        );
     }
 
     public int nbrEleves() throws SQLException {
@@ -133,7 +143,21 @@ public class EleveDAO {
             stmt.setString(8, eleve.getAnneescolaire());
             stmt.setString(9, eleve.getHandicap());
             stmt.setString(10, eleve.getIdeleve());
-            stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                QueryLogger.append(
+                        "UPDATE ELEVE SET idclass = " + eleve.getIdclass() +
+                                ", idparent = " + eleve.getIdparent() +
+                                ", nomeleve = '" + eleve.getNomeleve() + "'" +
+                                ", prenomeleve = '" + eleve.getPrenomeleve() + "'" +
+                                ", adresseeleve = '" + eleve.getAdresseeleve() + "'" +
+                                ", datenaiss = '" + eleve.getDatenaissance2() + "'" +
+                                ", genre = '" + eleve.getGenreeleve() + "'" +
+                                ", anneescolaire = '" + eleve.getAnneescolaire() + "'" +
+                                ", handicap = '" + eleve.getHandicap() + "'" +
+                                " WHERE ideleve = '" + eleve.getIdeleve() + "';"
+                );
+            }
         }
     }
     public List<Eleve> getNumNom(String classe,String Annee) throws SQLException {
@@ -211,7 +235,13 @@ public class EleveDAO {
         PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, avertir);
             stmt.setString(2, ideleve);
-            stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                QueryLogger.append(
+                        "UPDATE ELEVE SET avertissement = '" + avertir +
+                                "' WHERE ideleve = '" + ideleve + "';"
+                );
+            }
         }
     }
 
