@@ -594,13 +594,7 @@ public class EleveController {
             loadEleves();
             onNote();
         } else {
-            if (comboMatiere.getValue() == null && txtSiMatiere.getText().isEmpty()){
-                Notification.showWarning("Matiére ne doit pas être vide!");
-            } else if (comboCoef.getValue() == null && txtSiCoef.getText().isEmpty()) {
-                Notification.showWarning("La coefficient du matiere ne doit pas être vide!");
-            } else {
-                Notification.showWarning("Veuillez-remplir bien le champs manquant!");
-            }
+            Notification.showWarning("Veuillez-remplir les champs manquant!");
         }
         comboAnneeNote.setValue(comboAnnee.getValue());
         comboClasseNote.setPromptText("Classe");
