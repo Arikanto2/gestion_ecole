@@ -287,7 +287,7 @@ public class classecontroller {
         rangController.setRang(c_pdp, annee);
         rangController.setOverlayParent(overlayRangEleves);
 
-        // Insérer le contenu dans l'AnchorPane overlayRangEleves
+        // Insérer le contenu dans l'AnchorPane overlayRangEleve
         overlayRangEleves.getChildren().clear();
         overlayRangEleves.getChildren().add(root);
         AnchorPane.setTopAnchor(root, 50.0);
