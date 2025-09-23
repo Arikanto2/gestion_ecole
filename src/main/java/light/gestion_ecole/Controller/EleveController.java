@@ -587,7 +587,7 @@ public class EleveController {
             Notification.showSuccess("Note de "+MatiereNote+ " ajouter avec succé!");
         } else {
             if (comboMatiere.getValue() == null || txtSiMatiere.getText().isEmpty()){
-                Notification.showWarning("Matiére ne doit pas être vide!");
+                Notification.showWarning("Matiére ne  pas être vide!");
             } else if (comboCoef.getValue() == null || txtSiCoef.getText().isEmpty()) {
                 Notification.showWarning("La coefficient du matiere ne doit pas être vide!");
             } else {
@@ -1035,7 +1035,7 @@ public class EleveController {
                 }
                 String result = String.join("-",checkString);
                 int nb = eleveDAO.nbrEleves()+1;
-                String matricule = "00"+ nb + getGenreeleve2();
+                String matricule = String.valueOf(nb + 1);
                 String id = matricule+'-'+ txtAnneeScolaire.getText();
                 Eleve eleve = new Eleve(id,matricule,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
                         txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),

@@ -40,6 +40,7 @@ public class classecontroller {
     @FXML private TextField txtID, textFielDesignation, txtPrix;
     @FXML private ComboBox<String> comboprof;
     @FXML private Button btnEnregistrer, btnAnnuler;
+    @FXML private Label txtFID;
 
     // ==== Overlay Liste élèves ====
     @FXML public AnchorPane overlayListeEleves;
@@ -57,7 +58,10 @@ public class classecontroller {
 
     @FXML
     public void initialize() throws SQLException {
-
+        txtFID.setVisible(false);
+        txtFID.setManaged(false);
+        txtID.setManaged(false);
+        txtID.setVisible(false);
         anneeScolaire.getItems().addAll(StatDAO.getAnnescolaire());
         anneeScolaire.getSelectionModel().select(0);
         StatistiqueParClasseController.anneescolaire = anneeScolaire.getItems().get(0).toString();

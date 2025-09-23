@@ -46,9 +46,11 @@ public class AccueilController {
         btnExport.setOnAction(e -> {
             try {
                 List<String> emailutilisateur = UtilisateurDAO.getEmailUtilisateur();
+                String email1 = LoginController.util.getEmail();
                 for(String email : emailutilisateur){
-                    ExportService.envoyerParEmail(email);
-
+                    if(!email.equals(email1)){
+                        ExportService.envoyerParEmail(email);
+                    }
                 }
                 QueryLogger.clear();
                 Notification.showSuccess("Fichier de mise à jour envoyer aux autres utilisateurs.");
