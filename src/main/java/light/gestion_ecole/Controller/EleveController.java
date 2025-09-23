@@ -332,8 +332,9 @@ public class EleveController {
                         }
                         NoteT note = notesBuffer.computeIfAbsent(
                                 e.getNummat(),
-                                k -> noteDAOT.getOrCreateNoteForEleve(e,(String) comboEvaluation.getValue(),MatiereNote)
+                                k -> noteDAOT.getOrCreateNoteForEleve(e, (String) comboEvaluation.getValue(), MatiereNote)
                         );
+
                         try {
                             double val = Double.parseDouble(textField.getText());
                             note.setNote(val);
@@ -359,8 +360,9 @@ public class EleveController {
                         }
                         NoteT note = notesBuffer.computeIfAbsent(
                                 e.getNummat(),
-                                k -> noteDAOT.getOrCreateNoteForEleve(e,(String) comboEvaluation.getValue(),MatiereNote)
+                                k -> noteDAOT.getOrCreateNoteForEleve(e, (String) comboEvaluation.getValue(), MatiereNote)
                         );
+
                         textField.setText(note.getNote() != null ? note.getNote().toString() : "");
                         setGraphic(textField);
                     }
@@ -381,8 +383,9 @@ public class EleveController {
                         }
                         NoteT note = notesBuffer.computeIfAbsent(
                                 e.getNummat(),
-                                k -> noteDAOT.getOrCreateNoteForEleve(e,(String) comboEvaluation.getValue(),MatiereNote)
+                                k -> noteDAOT.getOrCreateNoteForEleve(e, (String) comboEvaluation.getValue(), MatiereNote)
                         );
+
                         note.setCommentaire(textField.getText());
                     }
                 });
@@ -403,8 +406,9 @@ public class EleveController {
                         }
                         NoteT note = notesBuffer.computeIfAbsent(
                                 e.getNummat(),
-                                k -> noteDAOT.getOrCreateNoteForEleve(e,(String) comboEvaluation.getValue(),MatiereNote)
+                                k -> noteDAOT.getOrCreateNoteForEleve(e, (String) comboEvaluation.getValue(), MatiereNote)
                         );
+
                         textField.setText(note.getCommentaire());
                         setGraphic(textField);
                     }
@@ -551,7 +555,6 @@ public class EleveController {
         ecolages.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(moiEcolageColumn);
         autoResizeColumn2(dateEcolageColumn);
-        //autoResizeColumn(statutPayerColumn);
 
         listages.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(idListe);
@@ -577,25 +580,33 @@ public class EleveController {
                     } else {
                         MatiereNote = txtSiMatiere.getText();
                     }
-
                     noteDAOT.saveOrUpdate(note, (String) comboEvaluation.getValue(),MatiereNote,idprof,coeff,id);
                     loadEleves();
                 } catch (Exception ex){
                     throw new RuntimeException(ex);
                 }
             }
-            Notification.showSuccess("Note de "+MatiereNote+ " ajouter avec succé!");
+            Notification.showSuccess("Note de "+MatiereNote+ " ajouté avec succé!");
+            comboAnneeNote.setValue(comboAnnee.getValue());
+            comboClasseNote.setPromptText("Classe");
+            comboProf.setPromptText("Professeur");
+            comboMatiere.setPromptText("Matiere");
+            loadEleves();
+            onNote();
         } else {
-            if (comboMatiere.getValue() == null || txtSiMatiere.getText().isEmpty()){
-                Notification.showWarning("Matiére ne  pas être vide!");
-            } else if (comboCoef.getValue() == null || txtSiCoef.getText().isEmpty()) {
+            if (comboMatiere.getValue() == null && txtSiMatiere.getText().isEmpty()){
+                Notification.showWarning("Matiére ne doit pas être vide!");
+            } else if (comboCoef.getValue() == null && txtSiCoef.getText().isEmpty()) {
                 Notification.showWarning("La coefficient du matiere ne doit pas être vide!");
             } else {
                 Notification.showWarning("Veuillez-remplir bien le champs manquant!");
             }
         }
+        comboAnneeNote.setValue(comboAnnee.getValue());
+        comboClasseNote.setPromptText("Classe");
+        comboProf.setPromptText("Professeur");
+        comboMatiere.setPromptText("Matiere");
         loadEleves();
-        onNote();
     }
     @FXML
     private void onCancelBTN() throws SQLException {
@@ -607,6 +618,10 @@ public class EleveController {
         fadeOut.play();
         loadEleves();
         btnAjouterT();
+        comboAnneeNote.setValue(comboAnnee.getValue());
+        comboClasseNote.setPromptText("Classe");
+        comboProf.setPromptText("Professeur");
+        comboMatiere.setPromptText("Matiere");
     }
     @FXML
     private void onAnnulerListe() throws SQLException {

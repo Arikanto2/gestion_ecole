@@ -68,7 +68,8 @@ public class Eleve {
         this.examennational = examennational;*/
         this.handicap = handicap;
     }
-    public Eleve(String nummat,String nomeleve){
+    public Eleve(String ideleve,String nummat,String nomeleve){
+        this.ideleve = ideleve;
         this.nummat = nummat;
         this.nomeleve = nomeleve;
     }
