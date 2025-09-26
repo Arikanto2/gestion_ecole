@@ -1,8 +1,5 @@
 package light.gestion_ecole.Controller;
 
-
-
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -11,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,9 +21,11 @@ import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.Notification;
 import light.gestion_ecole.Model.Utilisateur;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.SQLException;
-
 
 public class LoginController {
 
@@ -35,8 +35,7 @@ public class LoginController {
     @FXML private ImageView toggleBtn;
     @FXML BorderPane log;
     @FXML Button valider;
-    public  static Utilisateur util;
-
+    public static Utilisateur util;
 
     private boolean isPasswordVisible = false;
 
@@ -58,43 +57,35 @@ public class LoginController {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(true);
         timeline.play();
+
         textField.managedProperty().bind(textField.visibleProperty());
         passwordField.managedProperty().bind(passwordField.visibleProperty());
+
         mail.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case ENTER -> {
                     passwordField.requestFocus();
                     textField.requestFocus();
                 }
-
             }
         });
 
         passwordField.setOnKeyPressed(event -> {
-           switch (event.getCode()) {
-               case ENTER -> {
-                   connecterVous();
-               }
-           }
+            switch (event.getCode()) {
+                case ENTER -> connecterVous();
+            }
         });
 
         textField.setOnKeyPressed(event -> {
             switch (event.getCode()) {
-                case ENTER -> {
-                    connecterVous();
-                }
+                case ENTER -> connecterVous();
             }
         });
-
 
         textField.textProperty().addListener((obs, oldText, newText) -> passwordField.setText(newText));
         passwordField.textProperty().addListener((obs, oldText, newText) -> textField.setText(newText));
         toggleBtn.setOnMouseClicked(this::togglePasswordVisibility);
-        valider.setOnMouseClicked(e -> {
-            connecterVous();
-        });
-
-
+        valider.setOnMouseClicked(e -> connecterVous());
     }
 
     private void togglePasswordVisibility(MouseEvent event) {
@@ -115,12 +106,12 @@ public class LoginController {
         String nom1 = mail.getText();
         String password = passwordField.getText();
         try {
-            Utilisateur isUtilexist = UtilisateurDAO.Connecter(password,nom1);
+            Utilisateur isUtilexist = UtilisateurDAO.Connecter(password, nom1);
             if (isUtilexist != null) {
-
                 util = isUtilexist;
                 Stage stage = (Stage) valider.getScene().getWindow();
                 stage.close();
+
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/light/gestion_ecole/View/Main-View.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
 
@@ -133,20 +124,47 @@ public class LoginController {
                 mainStage.show();
                 Main.setStageIcon(mainStage);
                 Notification.mainStage = mainStage;
-                Notification.showSuccess("Connexion réussi!");
-
+                Notification.showSuccess("Connexion réussie!");
 
                 Stage loginStage = (Stage) valider.getScene().getWindow();
                 loginStage.close();
-
-
-
-
             } else {
                 Notification.showWarning("Nom d'utilisateur ou mot de passe incorrect.");
             }
         } catch (SQLException | IOException ex) {
-            throw new RuntimeException(ex);
+            logError(ex);
+            showAlertWithStackTrace(ex);
         }
+    }
+
+    private void logError(Exception ex) {
+        ex.printStackTrace();
+        try (FileWriter fw = new FileWriter("app.log", true);
+             PrintWriter pw = new PrintWriter(fw)) {
+            pw.println("==== Nouvelle erreur (" + java.time.LocalDateTime.now() + ") ====");
+            ex.printStackTrace(pw);
+            pw.println();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlertWithStackTrace(Exception ex) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText("Une erreur est survenue");
+
+        StringWriter sw = new StringWriter();
+        ex.printStackTrace(new PrintWriter(sw));
+        String exceptionText = sw.toString();
+
+        TextArea textArea = new TextArea(exceptionText);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+
+        alert.getDialogPane().setExpandableContent(textArea);
+        alert.showAndWait();
     }
 }
