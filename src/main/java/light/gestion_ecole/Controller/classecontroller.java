@@ -62,8 +62,10 @@ public class classecontroller {
         txtID.setVisible(false);
         anneeScolaire.getItems().addAll(StatDAO.getAnnescolaire());
         anneeScolaire.getSelectionModel().select(0);
-        StatistiqueParClasseController.anneescolaire = anneeScolaire.getItems().get(0).toString();
-        loadclasse();
+        if (anneeScolaire.getValue() != null) {
+            StatistiqueParClasseController.anneescolaire = anneeScolaire.getItems().get(0).toString();
+            loadclasse();
+        }
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         Designation.setCellValueFactory(cell -> cell.getValue().designationProperty());
         nbr_eleves.setCellValueFactory(cell -> cell.getValue().nbrElevesProperty().asObject());

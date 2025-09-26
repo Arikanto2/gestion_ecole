@@ -24,11 +24,10 @@
     </top>
     <center>
         <StackPane>
-        <BorderPane.margin>
+            <BorderPane.margin>
                 <Insets left="25" top="20" right="20"/>
             </BorderPane.margin>
-            <HBox alignment="CENTER">
-
+            <HBox>
                 <TableView fx:id="eleves" styleClass="table-view">
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
