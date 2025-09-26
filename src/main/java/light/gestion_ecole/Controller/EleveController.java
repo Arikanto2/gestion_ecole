@@ -262,7 +262,7 @@ public class EleveController {
     private double coeff;
     private List<String> moisPayes;
     private  int prix = 0;
-
+    private String annee;
 
     @FXML
     public void initialize() throws SQLException {
@@ -906,21 +906,23 @@ public class EleveController {
         comboClasseR.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
     }
     private void loadEleves() throws SQLException {
-        String annee = comboAnnee.getSelectionModel().getSelectedItem().toString();
-        String design = "";
-        if (comboClasse.getSelectionModel().getSelectedItem() == null) {
-            allEleves = FXCollections.observableArrayList(eleveDAO.getEleves(annee));
-        } else {
-            design = comboClasse.getSelectionModel().getSelectedItem().toString();
-            allEleves = FXCollections.observableArrayList(eleveDAO.filtreDeuxCombo(annee,design));
+        if (comboAnnee.getSelectionModel().getSelectedItem() != null) {
+            annee = comboAnnee.getSelectionModel().getSelectedItem().toString();
+            String design = "";
+            if (comboClasse.getSelectionModel().getSelectedItem() == null) {
+                allEleves = FXCollections.observableArrayList(eleveDAO.getEleves(annee));
+            } else {
+                design = comboClasse.getSelectionModel().getSelectedItem().toString();
+                allEleves = FXCollections.observableArrayList(eleveDAO.filtreDeuxCombo(annee,design));
+            }
+            eleves.setItems(allEleves);
+            if (selectedEleve != null){
+                loadAttitude(selectedEleve.getIdeleve());
+            }
+            txtSearch.textProperty().addListener((obs, oldVal, newVal) -> filterTable());
+            comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
+            comboClasse.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
         }
-        eleves.setItems(allEleves);
-        if (selectedEleve != null){
-            loadAttitude(selectedEleve.getIdeleve());
-        }
-        txtSearch.textProperty().addListener((obs, oldVal, newVal) -> filterTable());
-        comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
-        comboClasse.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
     }
     private void loadAttribuerNotes() throws SQLException {
         if (comboAnneeNote.getValue() != null && comboClasseNote.getValue() != null){
@@ -938,10 +940,12 @@ public class EleveController {
     }
 
     private void filterTable() {
+        if (allEleves == null) {
+            return;
+        }
         String searchText = txtSearch.getText() == null ? "" : txtSearch.getText().toLowerCase();
         String selectedAnnee = comboAnnee.getValue() == null ? null : comboAnnee.getValue().toString();
         String selectedClasse = comboClasse.getValue() == null ? null : comboClasse.getValue().toString();
-
         eleves.setItems(allEleves.filtered(eleve ->
                 {
                     try {
@@ -988,7 +992,9 @@ public class EleveController {
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
         fadeIn.play();
-        txtAnneeScolaire.setText(comboAnnee.getValue().toString());
+        if (comboAnnee.getValue() != null) {
+            txtAnneeScolaire.setText(comboAnnee.getValue().toString());
+        }
     }
 
     // Bouton "Annuler"
@@ -1050,6 +1056,7 @@ public class EleveController {
             Notification.showWarning("Veuillez-remplir les formulaires du parent!");
         }
         loadEleves();
+        loadComboData();
     }
     @FXML
     private void onSaveReinscrit() throws SQLException {

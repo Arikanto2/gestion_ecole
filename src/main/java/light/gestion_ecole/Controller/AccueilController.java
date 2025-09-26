@@ -25,7 +25,11 @@ public class AccueilController {
 
     String annescolaire;
     @FXML void initialize(){
-        annescolaire = StatDAO.getAnnescolaire().get(0);
+        if (annescolaire == null) {
+            annescolaire = " ";
+        } else {
+            annescolaire = StatDAO.getAnnescolaire().get(0);
+        }
 
         titreAnne.setText("ANNEES SCOLAIRE " + annescolaire);
         menuPointage.setOnMouseClicked(e->{
