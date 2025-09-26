@@ -178,7 +178,6 @@ public class NoteDAOT {
                     ps.setString(6, commentaire);
                     ps.setString(7, typeevaluation);
                     ps.setString(8, mat);
-                    ps.executeUpdate();
                     int rows = ps.executeUpdate();
                     if (rows > 0) {
                         QueryLogger.append(

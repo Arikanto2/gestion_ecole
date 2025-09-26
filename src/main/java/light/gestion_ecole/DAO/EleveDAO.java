@@ -162,13 +162,13 @@ public class EleveDAO {
     }
     public List<Eleve> getNumNom(String classe,String Annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT e.nummat,e.nomeleve || ' ' || e.prenomeleve as nomeleve from ELEVE e JOIN CLASSE c ON e.idclass = c.idclass WHERE c.designation = ? AND e.anneescolaire = ? ORDER BY e.nummat";
+        String sql = "SELECT e.ideleve,e.nummat,e.nomeleve || ' ' || e.prenomeleve as nomeleve from ELEVE e JOIN CLASSE c ON e.idclass = c.idclass WHERE c.designation = ? AND e.anneescolaire = ? ORDER BY e.nummat";
         try (Connection conn  = Database.connect();PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, classe);
             stmt.setString(2, Annee);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                eleves.add(new Eleve(rs.getString("nummat"),rs.getString("nomeleve")));
+                eleves.add(new Eleve(rs.getString("ideleve"),rs.getString("nummat"),rs.getString("nomeleve")));
             }
         }
         return eleves;

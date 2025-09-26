@@ -25,10 +25,14 @@ public class AccueilController {
 
     String annescolaire;
     @FXML void initialize(){
-        if (annescolaire == null) {
-            annescolaire = " ";
+        List<String> annees = StatDAO.getAnnescolaire();
+        if (!annees.isEmpty()) {
+            annescolaire = annees.get(0);
+            titreAnne.setText("ANNEES SCOLAIRE " + annescolaire);
         } else {
-            annescolaire = StatDAO.getAnnescolaire().get(0);
+            annescolaire = "";
+            titreAnne.setText("ANNEES SCOLAIRE : Aucune donnée");
+            System.out.println("Attention : aucune année scolaire trouvée dans la base de données !");
         }
 
         titreAnne.setText("ANNEES SCOLAIRE " + annescolaire);
@@ -50,9 +54,11 @@ public class AccueilController {
         btnExport.setOnAction(e -> {
             try {
                 List<String> emailutilisateur = UtilisateurDAO.getEmailUtilisateur();
+                String email1 = LoginController.util.getEmail();
                 for(String email : emailutilisateur){
-                    ExportService.envoyerParEmail(email);
-
+                    if(!email.equals(email1)){
+                        ExportService.envoyerParEmail(email);
+                    }
                 }
                 QueryLogger.clear();
                 Notification.showSuccess("Fichier de mise à jour envoyer aux autres utilisateurs.");
