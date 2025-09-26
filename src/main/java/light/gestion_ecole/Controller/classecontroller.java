@@ -24,7 +24,7 @@ import java.sql.SQLException;
 
 public class classecontroller {
 
-    // ==== Table principale ====
+
     @FXML private TableView<Classe> tableView;
     @FXML private TableColumn<Classe, String> Designation;
     @FXML private TableColumn<Classe, Integer> nbr_eleves;
@@ -33,8 +33,6 @@ public class classecontroller {
     @FXML private TextField searchField;
     @FXML private ComboBox<String> anneeScolaire;
     @FXML private Button btnAjouter, btnModifier, btnSupprimer;
-
-    // ==== Overlay Formulaire ====
     @FXML private AnchorPane formOverlayClasse;
     @FXML private Label lblTitreClasse;
     @FXML private TextField txtID, textFielDesignation, txtPrix;
@@ -42,12 +40,12 @@ public class classecontroller {
     @FXML private Button btnEnregistrer, btnAnnuler;
     @FXML private Label txtFID;
 
-    // ==== Overlay Liste élèves ====
+
     @FXML public AnchorPane overlayListeEleves;
     @FXML private TableView<Eleve> tableListeEleves;
     @FXML private Button btnFermerListeEleves;
 
-    // ==== Overlay Rang élèves ====
+
     @FXML private AnchorPane overlayRangEleves;
     @FXML private TableView<NoteT> tableRangEleves;
     @FXML private Button btnFermerRangEleves;
@@ -180,7 +178,6 @@ public class classecontroller {
             }
         });
 
-        // Boutons CRUD
         btnAjouter.setOnAction(e -> ouvrirFormulaire(null));
         btnModifier.setOnAction(e -> {
             Classe selected = tableView.getSelectionModel().getSelectedItem();
@@ -188,8 +185,6 @@ public class classecontroller {
             else Notification.showWarning("Sélectionnez une classe à modifier !");
         });
         btnSupprimer.setOnAction(e -> supprimerClasse());
-
-        // Boutons overlays
         btnAnnuler.setOnAction(e -> fermerOverlay(formOverlayClasse));
         btnFermerListeEleves.setOnAction(e -> fermerOverlay(overlayListeEleves));
         btnFermerRangEleves.setOnAction(e -> fermerOverlay(overlayRangEleves));
