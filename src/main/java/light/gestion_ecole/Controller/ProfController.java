@@ -31,7 +31,7 @@ public class ProfController {
 
     // === Champs overlay (formulaire Prof) ===
     @FXML private AnchorPane formOverlayProf;
-    @FXML private Label lblTitreProf;
+    @FXML private Label lblTitreProf, lblId;
     @FXML private TextField txtIdProf, txtNomProf, txtContactProf, txtAdresseProf, txtEmailProf;
     @FXML private ComboBox<String> comboTitulaire;
     @FXML private Button btnEnregistrerProf, btnAnnulerProf;
@@ -41,6 +41,10 @@ public class ProfController {
 
     @FXML
     public void initialize() throws SQLException {
+        lblId.setVisible(false);
+        txtIdProf.setVisible(false);
+        lblId.setManaged(false);
+        txtIdProf.setManaged(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         Nom.setCellValueFactory(cell -> cell.getValue().nomProperty());
         Titulaire.setCellValueFactory(cell -> cell.getValue().titulaireProperty());
