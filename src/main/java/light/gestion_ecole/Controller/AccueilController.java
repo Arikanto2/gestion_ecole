@@ -25,7 +25,15 @@ public class AccueilController {
 
     String annescolaire;
     @FXML void initialize(){
-        annescolaire = StatDAO.getAnnescolaire().get(0);
+        List<String> annees = StatDAO.getAnnescolaire();
+        if (!annees.isEmpty()) {
+            annescolaire = annees.get(0);
+            titreAnne.setText("ANNEES SCOLAIRE " + annescolaire);
+        } else {
+            annescolaire = "";
+            titreAnne.setText("ANNEES SCOLAIRE : Aucune donnée");
+            System.out.println("Attention : aucune année scolaire trouvée dans la base de données !");
+        }
 
         titreAnne.setText("ANNEES SCOLAIRE " + annescolaire);
         menuPointage.setOnMouseClicked(e->{
