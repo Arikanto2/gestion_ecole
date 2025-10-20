@@ -176,6 +176,9 @@ public class Eleve {
     }
     public String getDatenaissance() {
         SimpleDateFormat sdf = new SimpleDateFormat("d MMMM yyyy", Locale.FRENCH);
+        if(datenaissance == null){
+            return "";
+        }
         return sdf.format(datenaissance);
     }
     public Date getDatenaissance2() {
