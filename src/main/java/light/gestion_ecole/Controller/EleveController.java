@@ -917,22 +917,23 @@ public class EleveController {
     private void loadEleves() throws SQLException {
         if (comboAnnee.getSelectionModel().getSelectedItem() != null) {
             annee = comboAnnee.getSelectionModel().getSelectedItem().toString();
-            String design = "";
-            if (comboClasse.getSelectionModel().getSelectedItem() == null) {
-                allEleves = FXCollections.observableArrayList(eleveDAO.getEleves(annee));
-            } else {
-                design = comboClasse.getSelectionModel().getSelectedItem().toString();
-                allEleves = FXCollections.observableArrayList(eleveDAO.filtreDeuxCombo(annee,design));
-            }
+            allEleves = FXCollections.observableArrayList(eleveDAO.getEleves(annee));
             eleves.setItems(allEleves);
             if (selectedEleve != null){
                 loadAttitude(selectedEleve.getIdeleve());
             }
             txtSearch.textProperty().addListener((obs, oldVal, newVal) -> filterTable());
-            comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
+            comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> {
+                try {
+                    loadEleves(); // recharge la nouvelle année
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             comboClasse.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
         }
     }
+
     private void loadAttribuerNotes() throws SQLException {
         if (comboAnneeNote.getValue() != null && comboClasseNote.getValue() != null){
             List<Eleve> list = eleveDAO.getNumNom(comboClasseNote.getValue().toString(),(String) comboAnneeNote.getValue());
@@ -1049,10 +1050,9 @@ public class EleveController {
                     }
                 }
                 String result = String.join("-",checkString);
-                int nb = eleveDAO.nbrEleves()+1;
-                String matricule = String.valueOf(nb + 1);
-                String id = matricule+'-'+ txtAnneeScolaire.getText();
-                Eleve eleve = new Eleve(id,matricule,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
+                String nummat = String.valueOf(eleveDAO.getLastMatricule() + 1);
+                String id = nummat+'-'+ txtAnneeScolaire.getText();
+                Eleve eleve = new Eleve(id,nummat,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
                         txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),
                         result);
                 eleveDAO.insertEleve(eleve);

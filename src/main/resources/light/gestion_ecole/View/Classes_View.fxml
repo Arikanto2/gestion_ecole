@@ -32,9 +32,9 @@
                 <Insets right="150" left="150"/>
             </VBox.margin>
             <columns>
-                <TableColumn fx:id="Designation" text="Classe" prefWidth="200"/>
-                <TableColumn fx:id="nbr_eleves" text="Effectifs" prefWidth="200"/>
-                <TableColumn fx:id="Ecolage" text="Ecolage" prefWidth="200"/>
+                <TableColumn fx:id="Designation" text="Classe" prefWidth="200" style="-fx-alignment: center"/>
+                <TableColumn fx:id="nbr_eleves" text="Effectifs" prefWidth="100" style="-fx-alignment: center"/>
+                <TableColumn fx:id="Ecolage" text="Ecolage" prefWidth="200" style="-fx-alignment: center"/>
                 <TableColumn fx:id="Titulaire" text="Titulaire" prefWidth="250"/>
             </columns>
         </TableView>
