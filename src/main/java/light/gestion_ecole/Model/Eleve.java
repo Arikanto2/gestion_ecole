@@ -30,10 +30,11 @@ public class Eleve {
     private String handicap;
     private String listMoi;
     private String avertissement;
+    private String designation;
 
     public Eleve(String idEleve, String matricule,int idclass, int idparent,
                  String nom, String prenom, String adresse, Date datenaiss, String sex,
-                 String annee_scolaire,String handicap,String avertir) {
+                 String annee_scolaire,String handicap,String avertir,String designation) {
         this.ideleve = idEleve;
         this.nummat = matricule;
         //this.idattitude = idattitude;
@@ -49,6 +50,7 @@ public class Eleve {
         this.examennational = examennational;*/
         this.handicap = handicap;
         this.avertissement = avertir;
+        this.designation = designation;
     }
     public Eleve(String idEleve, String matricule,int idclass, int idparent,
                  String nom, String prenom, String adresse, Date datenaiss, String sex,
@@ -91,6 +93,8 @@ public class Eleve {
         this.nom = nom;
         this.prenom = prenom;
     }
+
+
 
     public int getNumero() {
         return numero;
@@ -238,8 +242,7 @@ public class Eleve {
         this.examennational = examennational;
     }
     public String getClasse() throws SQLException {
-        String classe = EleveDAO.getDistinctClasse(idclass);
-        return String.valueOf(classe);
+        return designation;
     }
     public String getHandicap(){
         if(handicap==null){
