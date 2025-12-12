@@ -124,6 +124,7 @@ public class EleveController {
     @FXML private ComboBox comboClasse2;
     @FXML private ComboBox comboSexe;
     @FXML private TextField txtNom;
+    @FXML private TextField IM;
     @FXML private TextField txtPrenom;
     @FXML private TextField txtAnneeScolaire;
     @FXML private DatePicker txtdateNaissance;
@@ -269,7 +270,8 @@ public class EleveController {
         buttonList = List.of(btnAjouterT,btnModifierT,btnNewEleve,btnEnregistrerT,btnAnnulerT,btnEnregistrerModifT,btnAnnulerModifT);
 
         idEleve.setCellValueFactory(new PropertyValueFactory<>("nummat"));
-        nomEleve.setCellValueFactory(new PropertyValueFactory<>("nomeleve"));
+        nomEleve.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getNomeleve() + " " + cellData.getValue().getPrenomeleve()));
         datenaiss.setCellValueFactory(new PropertyValueFactory<>("datenaissance"));
         genreEleve.setCellValueFactory(data ->
                 new SimpleObjectProperty<>(data.getValue().getGenreeleveIcon()));
@@ -288,8 +290,10 @@ public class EleveController {
         dateEcolageColumn.setCellValueFactory(new PropertyValueFactory<>("ecolagemoi"));
         statutPayerColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
         idListe.setCellValueFactory(new PropertyValueFactory<>("nummat"));
-        nomListe.setCellValueFactory(new PropertyValueFactory<>("nomeleve"));
+        nomListe.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getNomeleve() + " " + cellData.getValue().getPrenomeleve()));
         ecoListe.setCellValueFactory(new PropertyValueFactory<>("listMoi"));
+
         btNStat.setOnMouseClicked(event -> {
             if(selectedEleve != null){
                 StatUnElveController.eleve = selectedEleve;
@@ -310,14 +314,15 @@ public class EleveController {
                 stage.setMaximized(false);
                 stage.show();
 
-            }
-            else {
+            } else {
                 Notification.showWarning("Veuillez selectionné un élève.");
             }
         });
 
         columnMat.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNummat()));
-        columnNom.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNomeleve()));
+        columnNom.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getNomeleve() + " " + cellData.getValue().getPrenomeleve()));
+
         columnNote.setCellFactory(col -> new TableCell<Eleve, Double>() {
             private final TextField textField = new TextField();
 
@@ -327,7 +332,7 @@ public class EleveController {
                     if (e != null) {
                         if (comboMatiere.getValue() != null){
                             MatiereNote = (String) comboMatiere.getValue();
-                         } else {
+                        } else {
                             MatiereNote = txtSiMatiere.getText();
                         }
                         NoteT note = notesBuffer.computeIfAbsent(
@@ -369,6 +374,7 @@ public class EleveController {
                 }
             }
         });
+
         columnComment.setCellFactory(col -> new TableCell<Eleve, String>() {
             private final TextField textField = new TextField();
 
@@ -415,6 +421,7 @@ public class EleveController {
                 }
             }
         });
+
         attribuerNotes.setEditable(true);
         moiColumn.setCellValueFactory(cellData ->new SimpleStringProperty(cellData.getValue().getMoiseco()));
         columnPayer.setCellValueFactory(cellData -> {
@@ -426,23 +433,20 @@ public class EleveController {
             return property;
         });
         columnPayer.setCellFactory(col -> {
-            CheckBoxTableCell<EcolageparmoiT, Boolean> cell = new CheckBoxTableCell<>(){
+            CheckBoxTableCell<EcolageparmoiT, Boolean> cell = new CheckBoxTableCell<>() {
                 @Override
                 public void updateItem(Boolean item, boolean empty) {
                     super.updateItem(item, empty);
                     if (!empty) {
                         EcolageparmoiT rowData = getTableView().getItems().get(getIndex());
-                        if (rowData.isDisabled()) {
-                            setDisable(true);
-                        } else {
-                            setDisable(false);
-                        }
+                        setDisable(rowData.isDisabled());
                     }
                 }
             };
             return cell;
         });
         attribuerEcolages.setEditable(true);
+
         eleves.getColumns().forEach(col -> {
             col.setReorderable(false);
             col.setResizable(false);
@@ -467,12 +471,13 @@ public class EleveController {
             col.setReorderable(false);
             col.setResizable(false);
         });
+
         eleves.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 selectedEleve = newSelection;
                 try {
                     lblNum.setText(newSelection.getNummat());
-                    lblNom.setText(newSelection.getNomeleve());
+                    lblNom.setText(newSelection.getNomeleve() + " " + newSelection.getPrenomeleve());
                     lblAdresse.setText(newSelection.getAdresseeleve());
                     lblDateNaiss.setText(newSelection.getDatenaissance());
                     lblSexe.setText(newSelection.getGenreeleve());
@@ -493,10 +498,10 @@ public class EleveController {
             }
         });
 
-
         buttonList.forEach(button -> {
-           button.setCursor(Cursor.HAND);
+            button.setCursor(Cursor.HAND);
         });
+
         loadComboData();
         loadEleves();
         loadAttribuerNotes();
@@ -528,6 +533,7 @@ public class EleveController {
                 }
             }
         });
+
         comboMatiere.setOnAction(event -> {
             notesBuffer.clear();
             attribuerNotes.refresh();
@@ -537,7 +543,6 @@ public class EleveController {
         eleves.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(nomEleve);
         autoResizeColumn2(datenaiss);
-
 
         attitudes.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(participationColumn);
@@ -561,6 +566,7 @@ public class EleveController {
         autoResizeColumn2(nomListe);
         autoResizeColumn2(ecoListe);
     }
+
     @FXML
     private void onSaveBTN() throws SQLException {
         if ((comboCoef.getValue() != null || !txtSiCoef.getText().isEmpty()) && (comboMatiere.getValue() != null || !txtSiMatiere.getText().isEmpty()) && comboProf.getValue() != null ) {
@@ -956,21 +962,28 @@ public class EleveController {
         String searchText = txtSearch.getText() == null ? "" : txtSearch.getText().toLowerCase();
         String selectedAnnee = comboAnnee.getValue() == null ? null : comboAnnee.getValue().toString();
         String selectedClasse = comboClasse.getValue() == null ? null : comboClasse.getValue().toString();
-        eleves.setItems(allEleves.filtered(eleve ->
-                {
-                    try {
-                        return (searchText.isEmpty()
-                                || eleve.getNomeleve().toLowerCase().contains(searchText)
-                                || eleve.getPrenomeleve().toLowerCase().contains(searchText)
-                                || eleve.getNummat().toLowerCase().contains(searchText))
-                                && (selectedAnnee == null || eleve.getAnneescolaire().equals(selectedAnnee))
-                                && (selectedClasse == null || eleve.getClasse().equals(selectedClasse));
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-        ));
+
+        eleves.setItems(allEleves.filtered(eleve -> {
+            try {
+                String nom = eleve.getNomeleve() == null ? "" : eleve.getNomeleve().toLowerCase();
+                String prenom = eleve.getPrenomeleve() == null ? "" : eleve.getPrenomeleve().toLowerCase();
+                String nummat = eleve.getNummat() == null ? "" : eleve.getNummat().toLowerCase();
+
+                boolean matchesSearch = searchText.isEmpty()
+                        || nom.contains(searchText)
+                        || prenom.contains(searchText)
+                        || nummat.contains(searchText);
+
+                boolean matchesAnnee = selectedAnnee == null || eleve.getAnneescolaire().equals(selectedAnnee);
+                boolean matchesClasse = selectedClasse == null || eleve.getClasse().equals(selectedClasse);
+
+                return matchesSearch && matchesAnnee && matchesClasse;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }));
     }
+
 
     private void filterTableListe() {
         String searchText = txtSearchListe.getText() == null ? "" : txtSearchListe.getText().toLowerCase();
@@ -1040,6 +1053,7 @@ public class EleveController {
             if (comboClasse2.getValue() != null && txtAnneeScolaire.getText() != null && txtNom.getText() != null && txtAdresse.getText() != null
                     && txtdateNaissance.getValue() != null && comboSexe.getValue() != null) {
                 parentDAOT.insertParents(parent);
+                String im = IM.getText().trim();
                 int idClass = eleveDAO.getIdClass((String) comboClasse2.getValue());
                 int idPrt = parentDAOT.getIdParents(txtContact.getText());
                 List<CheckBox> checkBoxes = List.of(check1,check2,check3,check4);
@@ -1050,7 +1064,14 @@ public class EleveController {
                     }
                 }
                 String result = String.join("-",checkString);
-                String nummat = String.valueOf(eleveDAO.getLastMatricule() + 1);
+                String nummat;
+
+                if (im == null || im.isBlank()) {
+                    nummat = String.valueOf(eleveDAO.getLastMatricule() + 1);
+                } else {
+                    nummat = im;
+                }
+
                 String id = nummat+'-'+ txtAnneeScolaire.getText();
                 Eleve eleve = new Eleve(id,nummat,idClass,idPrt,txtNom.getText(),txtPrenom.getText(),
                         txtAdresse.getText(),java.sql.Date.valueOf(txtdateNaissance.getValue()),(String) comboSexe.getValue(),txtAnneeScolaire.getText(),

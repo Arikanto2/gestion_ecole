@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -47,6 +48,10 @@ public class MainController {
             imageView.setFitHeight(48);
             imageView.setFitWidth(48);
             alert.setGraphic(imageView);
+            Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+            alertStage.getIcons().setAll(
+                    new Image(getClass().getResource("/light/gestion_ecole/Photo/icons8-power-off-80.png").toExternalForm())
+            );
 
             ButtonType buttonOui = new ButtonType("Oui");
             ButtonType buttonNon = new ButtonType("Non");
