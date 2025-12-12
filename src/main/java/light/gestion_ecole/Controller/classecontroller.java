@@ -60,8 +60,6 @@ public class classecontroller {
         txtFID.setManaged(false);
         txtID.setManaged(false);
         txtID.setVisible(false);
-        anneeScolaire.getItems().addAll(StatDAO.getAnnescolaire());
-        anneeScolaire.getSelectionModel().select(0);
         if (anneeScolaire.getValue() != null) {
             StatistiqueParClasseController.anneescolaire = anneeScolaire.getItems().get(0).toString();
             loadclasse();

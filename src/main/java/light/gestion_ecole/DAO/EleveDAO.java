@@ -12,7 +12,7 @@ import java.util.List;
 public class EleveDAO {
     public List<Eleve> getEleves(String annee) throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
-        String sql = "SELECT e.ideleve, e.nummat, c.idclass, c.designation,e.idparent, (e.nomeleve ||' ' || e.prenomeleve) as nomeleve, e.prenomeleve, e.adresseeleve," +
+        String sql = "SELECT e.ideleve, e.nummat, c.idclass, c.designation,e.idparent, e.nomeleve  as nomeleve, e.prenomeleve, e.adresseeleve," +
                 "e.datenaiss, e.genre, e.anneescolaire, e.handicap,e.avertissement FROM eleve e JOIN classe c ON e.idclass = c.idclass WHERE anneescolaire = ? ORDER BY nummat";
 
         try (Connection conn  = Database.connect();

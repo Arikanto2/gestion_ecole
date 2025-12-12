@@ -55,20 +55,32 @@
 
                             <TitledPane text="Informations Générales">
                                 <GridPane hgap="10" vgap="10">
-                                    <Label text="Classe:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                    <ComboBox fx:id="comboClasse2" promptText="Choisir une classe" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                                    <Label text="Année Scolaire:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                    <TextField fx:id="txtAnneeScolaire" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                    <!-- Ligne 0 -->
+                                    <Label text="IM:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <TextField fx:id="IM" promptText="Numero matricule" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                    <!-- Ligne 1 -->
+                                    <Label text="Classe:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                    <ComboBox fx:id="comboClasse2" promptText="Choisir une classe" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                    <!-- Ligne 2 -->
+                                    <Label text="Année Scolaire:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                    <TextField fx:id="txtAnneeScolaire" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                    <!-- Ligne 3 -->
                                     <Label text="Nom:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                                     <TextField fx:id="txtNom" promptText="RAKOTO" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
+                                    <!-- Ligne 4 -->
                                     <Label text="Prénom:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                                     <TextField fx:id="txtPrenom" promptText="Randria" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
+                                    <!-- Ligne 5 -->
                                     <Label text="Date Naissance:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                                    <DatePicker fx:id="txtdateNaissance" GridPane.rowIndex="5" promptText="JJ/MM/AAAA" GridPane.columnIndex="1"/>
+                                    <DatePicker fx:id="txtdateNaissance" promptText="JJ/MM/AAAA" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
+                                    <!-- Ligne 6 -->
                                     <Label text="Sexe:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                                     <ComboBox fx:id="comboSexe" promptText="Choisir" GridPane.rowIndex="6" GridPane.columnIndex="1">
                                         <items>
@@ -79,14 +91,21 @@
                                         </items>
                                     </ComboBox>
 
+                                    <!-- Ligne 7 -->
                                     <Label text="Adresse:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-                                    <TextField fx:id="txtAdresse" GridPane.rowIndex="7" GridPane.columnIndex="1" promptText="Adresse"/>
+                                    <TextField fx:id="txtAdresse" promptText="Adresse" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+                                    <!-- Ligne 8 -->
                                     <Label text="Handicap:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
-                                    <CheckBox GridPane.rowIndex="8" GridPane.columnIndex="1" fx:id="check1" text="Audition"/>
-                                    <CheckBox GridPane.rowIndex="8" GridPane.columnIndex="2" fx:id="check2" text="Vision"/>
-                                    <CheckBox GridPane.rowIndex="9" GridPane.columnIndex="1" fx:id="check3" text="Intelectuel"/>
-                                    <CheckBox GridPane.rowIndex="9" GridPane.columnIndex="2" fx:id="check4" text="Psychomoteur"/>
+                                    <CheckBox fx:id="check1" text="Audition" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+                                    <CheckBox fx:id="check2" text="Vision" GridPane.rowIndex="8" GridPane.columnIndex="2"/>
+
+                                    <!-- Ligne 9 -->
+                                    <CheckBox fx:id="check3" text="Intelectuel" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+                                    <CheckBox fx:id="check4" text="Psychomoteur" GridPane.rowIndex="9" GridPane.columnIndex="2"/>
+
                                 </GridPane>
+
                             </TitledPane>
 
                             <!-- Section Parents -->
