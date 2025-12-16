@@ -75,12 +75,13 @@ public class Eleve {
         this.nummat = nummat;
         this.nomeleve = nomeleve;
     }
-    public Eleve(String nummat, String nomeleve, String listMoi, String annee, int idclass) {
+    public Eleve(String nummat, String nomeleve, String listMoi, String annee, String designation) {
         this.nummat = nummat;
         this.nomeleve = nomeleve;
         this.listMoi = listMoi;
         this.anneescolaire = annee;
-        this.idclass = idclass;
+        //this.idclass = idclass;
+        this.designation = designation;
     }
 
     /////////////// constructeur pour pdf pour chaque classe //////////////

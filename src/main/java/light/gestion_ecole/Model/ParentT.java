@@ -87,7 +87,7 @@ public class ParentT {
     }
     public String getTuteur() {
         if (tuteur == null) {
-            return "****Pas de tuteur****";
+            return " ";
         }
         return tuteur;
     }
@@ -96,7 +96,7 @@ public class ParentT {
     }
     public String getProfessiontuteur() {
         if (tuteur == null) {
-            return "****Pas de tuteur****";
+            return " ";
         }
         return professiontuteur;
     }

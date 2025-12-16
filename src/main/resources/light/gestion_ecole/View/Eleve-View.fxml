@@ -475,7 +475,7 @@
                         <Label text="Classe:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                         <Label fx:id="lblClasseAvertissement" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
                         <Label text="Avertissement:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                        <ComboBox fx:id="comboAvertissement" GridPane.rowIndex="3" GridPane.columnIndex="1" promptText="Participation">
+                        <ComboBox fx:id="comboAvertissement" GridPane.rowIndex="3" GridPane.columnIndex="1" promptText="Avertissement">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
                                     <String fx:value="première avertissement"/>
@@ -624,18 +624,18 @@
                             </padding>
                             <Label text="Nom Pere:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                             <Label fx:id="lblNomPere" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                            <Label text="Profession:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                            <Label fx:id="lblProfessionPere" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+<!--                            <Label text="Profession:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>-->
+<!--                            <Label fx:id="lblProfessionPere" GridPane.rowIndex="1" GridPane.columnIndex="1"/>-->
                             <Label text="Nom Mere:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                             <Label fx:id="lblNomMere" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                            <Label text="Profession:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                            <Label fx:id="lblProfessionMere" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                            <Label text="Nom Tuteur:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                            <Label fx:id="lblTuteurNom" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-                            <Label text="Profession:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-                            <Label fx:id="lblProfessionTuteur" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-                            <Label text="Contact Tuteur:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
-                            <Label fx:id="lblTuteurTel" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+<!--                            <Label text="Profession:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>-->
+<!--                            <Label fx:id="lblProfessionMere" GridPane.rowIndex="3" GridPane.columnIndex="1"/>-->
+                            <Label text="Nom Tuteur:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                            <Label fx:id="lblTuteurNom" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+<!--                            <Label text="Profession:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>-->
+<!--                            <Label fx:id="lblProfessionTuteur" GridPane.rowIndex="6" GridPane.columnIndex="1"/>-->
+                            <Label text="Contact Tuteur:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                            <Label fx:id="lblTuteurTel" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
                             <Label text="Email Tuteur:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
                             <Label fx:id="lblTuteurEmail" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
                         </GridPane>

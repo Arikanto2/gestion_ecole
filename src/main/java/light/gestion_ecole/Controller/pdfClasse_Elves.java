@@ -154,9 +154,10 @@ public class pdfClasse_Elves {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+                String titulaire = classeselected.getTitulaire()==null ?"":classeselected.getTitulaire();
 
                 document.add(new Paragraph("Classe : " + classeselected.getDesignation()).setBold().setFontSize(14));
-                document.add(new Paragraph("Titulaire : " + classeselected.getTitulaire()));
+                document.add(new Paragraph("Titulaire : " + titulaire));
                 document.add(new Paragraph("Effectifs : " + tableView.getItems().size()));
                 document.add(new Paragraph("\n"));
 
