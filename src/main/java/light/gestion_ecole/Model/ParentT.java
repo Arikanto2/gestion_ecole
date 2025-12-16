@@ -10,6 +10,22 @@ public class ParentT {
     private String professiontuteur;
     private String contact;
     private String emailparent;
+    private String classeEleve; // Nouvelle propriété pour la classe de l'élève
+
+    public ParentT(int idparent, String nompere, String professionpere, String nommere, String professionmere,
+                   String tuteur, String professiontuteur, String contact, String emailparent, String classeEleve)
+    {
+        this.idparent = idparent;
+        this.nompere = nompere;
+        this.professionpere = professionpere;
+        this.nommere = nommere;
+        this.professionmere = professionmere;
+        this.tuteur = tuteur;
+        this.professiontuteur = professiontuteur;
+        this.contact = contact;
+        this.emailparent = emailparent;
+        this.classeEleve = classeEleve;
+    }
 
     public ParentT(int idparent, String nompere, String professionpere, String nommere, String professionmere,
                    String tuteur, String professiontuteur, String contact, String emailparent)
@@ -23,7 +39,9 @@ public class ParentT {
         this.professiontuteur = professiontuteur;
         this.contact = contact;
         this.emailparent = emailparent;
+        this.classeEleve = ""; // Par défaut vide
     }
+    
     public ParentT(String nompere, String professionpere, String nommere, String professionmere,
                    String tuteur, String professiontuteur, String contact, String emailparent)
     {
@@ -35,6 +53,7 @@ public class ParentT {
         this.professiontuteur = professiontuteur;
         this.contact = contact;
         this.emailparent = emailparent;
+        this.classeEleve = ""; // Par défaut vide
     }
     public int getIdparent() {
         return idparent;
@@ -95,5 +114,13 @@ public class ParentT {
     }
     public void setEmailparent(String emailparent) {
         this.emailparent = emailparent;
+    }
+
+    public String getClasseEleve() {
+        return classeEleve != null ? classeEleve : "";
+    }
+
+    public void setClasseEleve(String classeEleve) {
+        this.classeEleve = classeEleve;
     }
 }

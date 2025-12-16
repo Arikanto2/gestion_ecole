@@ -23,6 +23,7 @@
         </Pane>
         <Label text="Recherche :" styleClass="labelEntete"/>
         <TextField fx:id="rechercheParent" promptText="Tapez ici..."/>
+        <ComboBox fx:id="comboClasse" promptText="Toutes les classes" prefWidth="150"/>
     </HBox>
     <StackPane>
         <TableView fx:id="tableParent" VBox.vgrow="ALWAYS">

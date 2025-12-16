@@ -68,14 +68,20 @@ public class ParentDAOT {
     }
     public List<ParentT> getAllParents() throws SQLException {
         List<ParentT>parent = new ArrayList<>();
-        String sql = "select * from PARENT";
+        String sql = "SELECT DISTINCT p.*, " +
+                     "CASE WHEN c.designation IS NOT NULL THEN c.designation ELSE 'Aucune classe' END as classe " +
+                     "FROM PARENT p " +
+                     "LEFT JOIN ELEVE e ON p.idparent = e.idparent " +
+                     "LEFT JOIN CLASSE c ON e.idclass = c.idclass " +
+                     "ORDER BY p.idparent";
         try (Connection conn = Database.connect();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(sql)){
             while (rs.next()) {
                 parent.add(new ParentT(rs.getInt("idparent"),rs.getString("nompere"),
                         rs.getString("professionpere"),rs.getString("nommere"),rs.getString("professionmere"),
-                        rs.getString("tuteur"),rs.getString("professiontuteur"),rs.getString("contact"),rs.getString("emailparent") ));
+                        rs.getString("tuteur"),rs.getString("professiontuteur"),rs.getString("contact"),
+                        rs.getString("emailparent"), rs.getString("classe")));
             }
         } catch (SQLException ex) {
             throw new SQLException(ex.getMessage());
