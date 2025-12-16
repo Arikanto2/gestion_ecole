@@ -147,15 +147,15 @@ public class EcolageDAOT {
     public List<Eleve> getListNonPayer() throws SQLException {
         List<Eleve> eleves = new ArrayList<>();
         String sql = "SELECT e.nummat,(e.nomeleve ||' ' || e.prenomeleve) as nomeleve," +
-                " STRING_AGG(en.moiseco, '-' ORDER BY en.idecolage) as Moi_Non_Payer, e.anneescolaire, e.idclass FROM " +
-                "ELEVE e CROSS JOIN ECOLAGEPARMOI en LEFT JOIN PAYER p ON p.ideleve = e.ideleve AND en.idecolage= p.idecolage" +
-                " WHERE p.idecolage IS NULL GROUP BY e.nummat,e.nomeleve,e.prenomeleve, e.anneescolaire, e.idclass";
+                " STRING_AGG(en.moiseco, '-' ORDER BY en.idecolage) as Moi_Non_Payer, e.anneescolaire, c.designation FROM " +
+                "ELEVE e CROSS JOIN ECOLAGEPARMOI en LEFT JOIN PAYER p ON p.ideleve = e.ideleve AND en.idecolage= p.idecolage LEFT JOIN " +
+                "CLASSE c ON c.idclass = e.idclass WHERE p.idecolage IS NULL GROUP BY e.nummat,e.nomeleve,e.prenomeleve, e.anneescolaire, c.designation";
         try (Connection conn = Database.connect();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 eleves.add(new Eleve(rs.getString("nummat"),rs.getString("nomeleve"),
-                        rs.getString("Moi_Non_Payer"),rs.getString("anneescolaire"),rs.getInt("idclass")));
+                        rs.getString("Moi_Non_Payer"),rs.getString("anneescolaire"),rs.getString("designation")));
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
