@@ -494,7 +494,13 @@ public class EleveController {
         loadEcolageNonPayer();
 
         txtSearch.textProperty().addListener((obs, oldVal, newVal) -> filterTable());
-        comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
+        comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                loadEleves(); // Recharge les élèves quand l'année change
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
         comboClasse.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
         comboNote.valueProperty().addListener((obs, oldVal, newVal) -> filterNote());
         comboClasseListe.valueProperty().addListener((obs, oldVal, newVal) -> filterTableListe());
@@ -882,20 +888,6 @@ public class EleveController {
     private void loadComboData() throws SQLException {
         comboAnnee.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctAnnees()));
         comboAnnee.getSelectionModel().select(0);
-        comboAnnee.setOnAction(event -> {
-            try {
-                loadEleves();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        comboClasse.setOnAction(event -> {
-            try {
-                loadEleves();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
         comboClasse.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
         comboClasse2.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
         comboClasseModif.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
@@ -910,19 +902,10 @@ public class EleveController {
         if (comboAnnee.getSelectionModel().getSelectedItem() != null) {
             annee = comboAnnee.getSelectionModel().getSelectedItem().toString();
             allEleves = FXCollections.observableArrayList(eleveDAO.getEleves(annee));
-            eleves.setItems(allEleves);
+            filterTable(); // Applique le filtre après le chargement
             if (selectedEleve != null){
                 loadAttitude(selectedEleve.getIdeleve());
             }
-            txtSearch.textProperty().addListener((obs, oldVal, newVal) -> filterTable());
-            comboAnnee.valueProperty().addListener((obs, oldVal, newVal) -> {
-                try {
-                    loadEleves(); // recharge la nouvelle année
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            comboClasse.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
         }
     }
 
@@ -978,19 +961,19 @@ public class EleveController {
         String selectedClasse = comboClasseListe.getValue() == null ? null : comboClasseListe.getValue().toString();
 
         listages.setItems(allElevesNonPayer.filtered(eleve ->
-        {
-            try {
-                return (searchText.isEmpty()
-                || eleve.getNomeleve().toLowerCase().contains(searchText)
-                || eleve.getNummat().toLowerCase().contains(searchText))
-                && (selectedAnnee == null || eleve.getAnneescolaire().equals(selectedAnnee))
-                && (selectedClasse == null || eleve.getClasse().equals(selectedClasse))
-//                && (selectedClasse == null || eleve.getIdclass() == eleveDAO.getIdClass(selectedClasse))
-                && (selectedMoi == null || eleve.getListMoi().contains(selectedMoi));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
+                {
+                    try {
+                        return (searchText.isEmpty()
+                                || eleve.getNomeleve().toLowerCase().contains(searchText)
+                                || eleve.getNummat().toLowerCase().contains(searchText))
+                                && (selectedAnnee == null || eleve.getAnneescolaire().equals(selectedAnnee))
+                                && (selectedClasse == null || eleve.getClasse().equals(selectedClasse))
+                                && (selectedMoi == null || eleve.getListMoi().contains(selectedMoi));
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
         ));
     }
 
@@ -1125,7 +1108,7 @@ public class EleveController {
     private void handleSaveUpdate() throws SQLException {
         selectedEleve = eleves.getSelectionModel().getSelectedItem();
         if (txtNomModif.getText() != null && txtPrenomModif.getText() != null && txtPrenomModif.getText() != null && txtAdresseModif != null
-        && txtdateNaissanceModif.getValue() != null && comboSexeModif.getValue() != null && txtAnneeScolaireModif.getText() != null && txtContactModif.getText() != null) {
+                && txtdateNaissanceModif.getValue() != null && comboSexeModif.getValue() != null && txtAnneeScolaireModif.getText() != null && txtContactModif.getText() != null) {
             int idClass = eleveDAO.getIdClass((String) comboClasseModif.getValue());
             List<CheckBox> checkBoxes = List.of(checkModif1,checkModif2,checkModif3,checkModif4);
             List<String> checkString = new ArrayList<>();

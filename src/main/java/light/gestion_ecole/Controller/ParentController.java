@@ -43,6 +43,7 @@ public class ParentController {
     @FXML private TextField txtContact;
     @FXML private TextField txtEmail;
     @FXML private TextField rechercheParent;
+    @FXML private ComboBox<String> comboClasse;
 
     @FXML private TextField txtNomPere2;
     @FXML private TextField txtProfessionPere2;
@@ -90,6 +91,7 @@ public class ParentController {
         contact.setCellValueFactory(new PropertyValueFactory<>("contact"));
 //        emailParent.setCellValueFactory(new PropertyValueFactory<>("emailparent"));
         rechercheParent.textProperty().addListener((observable, oldValue, newValue) -> filterTable());
+        comboClasse.valueProperty().addListener((obs, oldVal, newVal) -> filterTable());
         buttonList.forEach(button -> {
             button.setCursor(Cursor.HAND);
         });
@@ -111,6 +113,12 @@ public class ParentController {
     }
     private void loadComboData() throws SQLException {
         comboClasse2.setItems(FXCollections.observableArrayList(eleveDAO.getDistinctClasses()));
+        
+        // Charger les classes pour le filtre
+        List<String> classes = eleveDAO.getDistinctClasses();
+        classes.add(0, "Toutes les classes"); // Ajouter l'option par défaut au début
+        comboClasse.setItems(FXCollections.observableArrayList(classes));
+        comboClasse.getSelectionModel().select(0); // Sélectionner "Toutes les classes" par défaut
     }
 
     @FXML
@@ -254,18 +262,34 @@ public class ParentController {
     }
     private void filterTable() {
         String txtRecherche = rechercheParent.getText() == null ? "" : rechercheParent.getText().toLowerCase();
+        String selectedClasse = comboClasse.getValue() == null ? "Toutes les classes" : comboClasse.getValue().toString();
+        
         tableParent.setItems(observableParent.filtered(parentT ->
         {
             try {
-                return (txtRecherche.isEmpty()
-                || parentT.getNompere().toLowerCase().contains(txtRecherche)
-                || parentT.getProfessionpere().toLowerCase().contains(txtRecherche)
-                || parentT.getNommere().toLowerCase().contains(txtRecherche)
-                || parentT.getProfessionmere().toLowerCase().contains(txtRecherche)
-                || parentT.getTuteur().toLowerCase().contains(txtRecherche)
-                || parentT.getProfessiontuteur().toLowerCase().contains(txtRecherche)
-                || parentT.getContact().toLowerCase().contains(txtRecherche)
-                || parentT.getEmailparent().toLowerCase().contains(txtRecherche));
+                String nompere = parentT.getNompere() == null ? "" : parentT.getNompere().toLowerCase();
+                String professionpere = parentT.getProfessionpere() == null ? "" : parentT.getProfessionpere().toLowerCase();
+                String nommere = parentT.getNommere() == null ? "" : parentT.getNommere().toLowerCase();
+                String professionmere = parentT.getProfessionmere() == null ? "" : parentT.getProfessionmere().toLowerCase();
+                String tuteur = parentT.getTuteur() == null ? "" : parentT.getTuteur().toLowerCase();
+                String professiontuteur = parentT.getProfessiontuteur() == null ? "" : parentT.getProfessiontuteur().toLowerCase();
+                String contact = parentT.getContact() == null ? "" : parentT.getContact().toLowerCase();
+                String email = parentT.getEmailparent() == null ? "" : parentT.getEmailparent().toLowerCase();
+                
+                boolean matchesSearch = (txtRecherche.isEmpty()
+                || nompere.contains(txtRecherche)
+                || professionpere.contains(txtRecherche)
+                || nommere.contains(txtRecherche)
+                || professionmere.contains(txtRecherche)
+                || tuteur.contains(txtRecherche)
+                || professiontuteur.contains(txtRecherche)
+                || contact.contains(txtRecherche)
+                || email.contains(txtRecherche));
+                
+                boolean matchesClasse = selectedClasse.equals("Toutes les classes") 
+                    || parentT.getClasseEleve().equals(selectedClasse);
+                
+                return matchesSearch && matchesClasse;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
