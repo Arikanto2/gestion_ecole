@@ -4,22 +4,17 @@ import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import light.gestion_ecole.DAO.*;
 import light.gestion_ecole.Model.*;
 
-import javax.sound.sampled.Mixer;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +24,13 @@ public class ParentController {
 
     @FXML private TableView<ParentT>tableParent;
     @FXML private TableColumn<Parent,String> nomPere;
-    @FXML private TableColumn<Parent,String> professionPere;
+//    @FXML private TableColumn<Parent,String> professionPere;
     @FXML private TableColumn<Parent,String> nomMere;
-    @FXML private TableColumn<Parent,String> professionMere;
+//    @FXML private TableColumn<Parent,String> professionMere;
     @FXML private TableColumn<Parent,String> tuteur;
-    @FXML private TableColumn<Parent,String> professionTuteur;
+//    @FXML private TableColumn<Parent,String> professionTuteur;
     @FXML private TableColumn<Parent,String> contact;
-    @FXML private TableColumn<Parent,String> emailParent;
+//    @FXML private TableColumn<Parent,String> emailParent;
     @FXML private ObservableList<ParentT> observableParent;
     @FXML private AnchorPane formOverlayParent;
 
@@ -87,13 +82,13 @@ public class ParentController {
     public void initialize() throws SQLException {
         buttonList = List.of(enregistrerBtn, annulerBtn,btnAjouterT, btnModifierT, btnSupprimerT,btnEnregistrerT,btnAnnulerT);
         nomPere.setCellValueFactory(new PropertyValueFactory<>("nompere"));
-        professionPere.setCellValueFactory(new PropertyValueFactory<>("professionpere"));
+//        professionPere.setCellValueFactory(new PropertyValueFactory<>("professionpere"));
         nomMere.setCellValueFactory(new PropertyValueFactory<>("nommere"));
-        professionMere.setCellValueFactory(new PropertyValueFactory<>("professionmere"));
+//        professionMere.setCellValueFactory(new PropertyValueFactory<>("professionmere"));
         tuteur.setCellValueFactory(new PropertyValueFactory<>("tuteur"));
-        professionTuteur.setCellValueFactory(new PropertyValueFactory<>("professiontuteur"));
+//        professionTuteur.setCellValueFactory(new PropertyValueFactory<>("professiontuteur"));
         contact.setCellValueFactory(new PropertyValueFactory<>("contact"));
-        emailParent.setCellValueFactory(new PropertyValueFactory<>("emailparent"));
+//        emailParent.setCellValueFactory(new PropertyValueFactory<>("emailparent"));
         rechercheParent.textProperty().addListener((observable, oldValue, newValue) -> filterTable());
         buttonList.forEach(button -> {
             button.setCursor(Cursor.HAND);
@@ -102,13 +97,9 @@ public class ParentController {
         loadParent();
         tableParent.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         autoResizeColumn2(nomPere);
-        autoResizeColumn2(professionPere);
         autoResizeColumn2(nomMere);
-        autoResizeColumn2(professionMere);
         autoResizeColumn2(tuteur);
-        autoResizeColumn2(professionTuteur);
         autoResizeColumn2(contact);
-        autoResizeColumn2(emailParent);
         tableParent.getColumns().forEach(column -> {
             column.setReorderable(false);
             column.setResizable(false);

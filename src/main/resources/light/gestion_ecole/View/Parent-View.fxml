@@ -28,13 +28,13 @@
         <TableView fx:id="tableParent" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="nomPere" text="Nom du Père"/>
-            <TableColumn fx:id="professionPere" text="Profession Père"/>
+<!--            <TableColumn fx:id="professionPere" text="Profession Père"/>-->
             <TableColumn fx:id="nomMere" text="Nom du Mère"/>
-            <TableColumn fx:id="professionMere" text="Profession Mère"/>
+<!--            <TableColumn fx:id="professionMere" text="Profession Mère"/>-->
             <TableColumn fx:id="tuteur" text="Nom du tuteur"/>
-            <TableColumn fx:id="professionTuteur" text="Profession Tuteur"/>
+<!--            <TableColumn fx:id="professionTuteur" text="Profession Tuteur"/>-->
             <TableColumn fx:id="contact" text="Contact"/>
-            <TableColumn fx:id="emailParent" text="Email"/>
+<!--            <TableColumn fx:id="emailParent" text="Email"/>-->
         </columns>
     </TableView>
         <AnchorPane fx:id="formOverlayParent" visible="false" opacity="0"

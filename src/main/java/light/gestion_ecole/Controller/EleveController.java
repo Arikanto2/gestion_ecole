@@ -27,41 +27,27 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.util.converter.DoubleStringConverter;
 import light.gestion_ecole.DAO.*;
 import light.gestion_ecole.Main;
 import light.gestion_ecole.Model.*;
-import org.controlsfx.control.Notifications;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.element.Paragraph;
 
 
 public class EleveController {
@@ -83,11 +69,11 @@ public class EleveController {
     @FXML private Label lblAvertissement;
     //tuteur
     @FXML private Label lblNomPere;
-    @FXML private Label lblProfessionPere;
+//    @FXML private Label lblProfessionPere;
     @FXML private Label lblNomMere;
-    @FXML private Label lblProfessionMere;
+//    @FXML private Label lblProfessionMere;
     @FXML private Label lblTuteurNom;
-    @FXML private Label lblProfessionTuteur;
+//    @FXML private Label lblProfessionTuteur;
     @FXML private Label lblTuteurTel;
     @FXML private Label lblTuteurEmail;
     //attitude
@@ -291,7 +277,7 @@ public class EleveController {
         statutPayerColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
         idListe.setCellValueFactory(new PropertyValueFactory<>("nummat"));
         nomListe.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getNomeleve() + " " + cellData.getValue().getPrenomeleve()));
+                new SimpleStringProperty(cellData.getValue().getNomeleve()));
         ecoListe.setCellValueFactory(new PropertyValueFactory<>("listMoi"));
 
         btNStat.setOnMouseClicked(event -> {
@@ -805,11 +791,11 @@ public class EleveController {
             ParentT parentT = parentDAOT.getParents(idparent);
             if(parentT != null){
                 lblNomPere.setText(parentT.getNompere());
-                lblProfessionPere.setText(parentT.getProfessionpere());
+                //lblProfessionPere.setText(parentT.getProfessionpere());
                 lblNomMere.setText(parentT.getNommere());
-                lblProfessionMere.setText(parentT.getProfessionmere());
+                //lblProfessionMere.setText(parentT.getProfessionmere());
                 lblTuteurNom.setText(parentT.getTuteur());
-                lblProfessionTuteur.setText(parentT.getProfessiontuteur());
+                //lblProfessionTuteur.setText(parentT.getProfessiontuteur());
                 lblTuteurTel.setText(parentT.getContact());
                 lblTuteurEmail.setText(parentT.getEmailparent());
             }
@@ -999,6 +985,7 @@ public class EleveController {
                 || eleve.getNummat().toLowerCase().contains(searchText))
                 && (selectedAnnee == null || eleve.getAnneescolaire().equals(selectedAnnee))
                 && (selectedClasse == null || eleve.getClasse().equals(selectedClasse))
+//                && (selectedClasse == null || eleve.getIdclass() == eleveDAO.getIdClass(selectedClasse))
                 && (selectedMoi == null || eleve.getListMoi().contains(selectedMoi));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
